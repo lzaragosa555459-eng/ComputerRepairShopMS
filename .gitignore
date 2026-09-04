@@ -1,0 +1,141 @@
+# ==========================================
+# Visual Studio / .NET
+# ==========================================
+
+.vs/
+.vscode/
+.idea/
+
+**/bin/
+**/obj/
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.history/
+
+# ==========================================
+# .NET / NuGet
+# ==========================================
+
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# NuGet generated files
+project.assets.json
+project.nuget.cache
+
+# ==========================================
+# Build / Publish output
+# ==========================================
+
+**/Debug/
+**/Release/
+**/x64/
+**/x86/
+**/AnyCPU/
+
+publish/
+artifacts/
+
+# ==========================================
+# EF Core / Local Database
+# ==========================================
+
+# Local database files
+*.mdf
+*.ldf
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# ==========================================
+# Secrets / Local Configuration
+# ==========================================
+
+appsettings.Local.json
+appsettings.Development.json
+appsettings.*.Local.json
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# User-specific configuration
+secrets.json
+
+# ==========================================
+# Logs
+# ==========================================
+
+*.log
+logs/
+
+# ==========================================
+# OS generated files
+# ==========================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# Temporary files
+# ==========================================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# ==========================================
+# Test results / Coverage
+# ==========================================
+
+TestResults/
+**/TestResults/
+*.trx
+coverage/
+.coverage
+.coveragexml
+
+# ==========================================
+# ReSharper / Rider
+# ==========================================
+
+_ReSharper*/
+*.DotSettings.user
+
+# ==========================================
+# ASP.NET generated files
+# ==========================================
+
+wwwroot/lib/
+
+# ==========================================
+# User-specific publish profiles
+# ==========================================
+
+**/Properties/PublishProfiles/*.pubxml
+**/Properties/PublishProfiles/*.pubxml.user
+
+# ==========================================
+# Configuration / Secrets
+# ==========================================
+
+# Ignore all appsettings files
+appsettings.json
+appsettings.*.json
+
+# But keep a template/example
+!appsettings.example.json

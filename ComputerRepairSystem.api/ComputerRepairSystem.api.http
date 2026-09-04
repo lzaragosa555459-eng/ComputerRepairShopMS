@@ -1,0 +1,6 @@
+@ComputerRepairSystem.api_HostAddress = http://localhost:5285
+
+GET {{ComputerRepairSystem.api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
