@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerRepairSystem.company.Migrations
 {
     [DbContext(typeof(TenantDbContext))]
-    [Migration("20260904163712_InitialTenantErp")]
+    [Migration("20260905044435_InitialTenantErp")]
     partial class InitialTenantErp
     {
         /// <inheritdoc />
@@ -27,11 +27,11 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Branch", b =>
                 {
-                    b.Property<long>("BranchId")
+                    b.Property<int>("BranchId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BranchId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BranchId"));
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -72,11 +72,11 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Customer", b =>
                 {
-                    b.Property<long>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CustomerId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
 
                     b.Property<string>("Address")
                         .HasMaxLength(300)
@@ -114,11 +114,11 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Department", b =>
                 {
-                    b.Property<long>("DepartmentId")
+                    b.Property<int>("DepartmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("DepartmentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -142,19 +142,19 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Device", b =>
                 {
-                    b.Property<long>("DeviceId")
+                    b.Property<int>("DeviceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("DeviceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeviceId"));
 
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<long>("CustomerId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("DeviceCondition")
                         .HasMaxLength(100)
@@ -187,21 +187,21 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Employee", b =>
                 {
-                    b.Property<long>("EmployeeId")
+                    b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("EmployeeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
                     b.Property<string>("Address")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<long>("BranchId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
 
-                    b.Property<long?>("DepartmentId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(150)
@@ -222,6 +222,9 @@ namespace ComputerRepairSystem.company.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("MasterUserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("MiddleName")
                         .HasMaxLength(100)
@@ -247,17 +250,17 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Inventory", b =>
                 {
-                    b.Property<long>("InventoryId")
+                    b.Property<int>("InventoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("InventoryId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InventoryId"));
 
-                    b.Property<long>("BranchId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
 
-                    b.Property<long>("ItemId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("QuantityOnHand")
                         .HasPrecision(18, 2)
@@ -275,11 +278,11 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.InventoryItem", b =>
                 {
-                    b.Property<long>("ItemId")
+                    b.Property<int>("ItemId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ItemId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
 
                     b.Property<string>("Brand")
                         .HasMaxLength(100)
@@ -333,11 +336,11 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Invoice", b =>
                 {
-                    b.Property<long>("InvoiceId")
+                    b.Property<int>("InvoiceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("InvoiceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("InvoiceId"));
 
                     b.Property<decimal>("Discount")
                         .HasPrecision(18, 2)
@@ -351,8 +354,8 @@ namespace ComputerRepairSystem.company.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<long>("RepairId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("RepairId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -384,18 +387,18 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Payment", b =>
                 {
-                    b.Property<long>("PaymentId")
+                    b.Property<int>("PaymentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("PaymentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
 
                     b.Property<decimal>("Amount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long>("InvoiceId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -423,25 +426,25 @@ namespace ComputerRepairSystem.company.Migrations
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.RepairItem", b =>
                 {
-                    b.Property<long>("RepairItemId")
+                    b.Property<int>("RepairItemId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RepairItemId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RepairItemId"));
 
                     b.Property<decimal>("Discount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long>("ItemId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("Quantity")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long>("RepairId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("RepairId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)
@@ -456,52 +459,21 @@ namespace ComputerRepairSystem.company.Migrations
                     b.ToTable("RepairItems");
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.company.Entities.Role", b =>
-                {
-                    b.Property<long>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RoleId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("RoleId");
-
-                    b.HasIndex("RoleName")
-                        .IsUnique();
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.ServiceRequest", b =>
                 {
-                    b.Property<long>("ServiceRequestId")
+                    b.Property<int>("ServiceRequestId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ServiceRequestId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceRequestId"));
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<long>("DeviceId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("DeviceId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Priority")
                         .IsRequired()
@@ -523,60 +495,53 @@ namespace ComputerRepairSystem.company.Migrations
                     b.ToTable("ServiceRequests");
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.company.Entities.User", b =>
+            modelBuilder.Entity("ComputerRepairSystem.company.Entities.SyncQueue", b =>
                 {
-                    b.Property<long>("UserId")
+                    b.Property<int>("SyncId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SyncId"));
 
-                    b.Property<long?>("EmployeeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastLogin")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<bool>("IsSynced")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Operation")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("RecordId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Username")
+                    b.Property<DateTime?>("SyncedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TableName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("SyncId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique()
-                        .HasFilter("[EmployeeId] IS NOT NULL");
+                    b.HasIndex("IsSynced", "CreatedAt");
 
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("Username")
-                        .IsUnique();
-
-                    b.ToTable("Users");
+                    b.ToTable("SyncQueues");
                 });
 
             modelBuilder.Entity("Repair", b =>
                 {
-                    b.Property<long>("RepairId")
+                    b.Property<int>("RepairId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RepairId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RepairId"));
 
-                    b.Property<long>("BranchId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Diagnosis")
                         .HasMaxLength(2000)
@@ -589,8 +554,8 @@ namespace ComputerRepairSystem.company.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<long>("ServiceRequestId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("ServiceRequestId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
@@ -600,8 +565,8 @@ namespace ComputerRepairSystem.company.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<long>("TechnicianId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("TechnicianId")
+                        .HasColumnType("int");
 
                     b.HasKey("RepairId");
 
@@ -715,24 +680,6 @@ namespace ComputerRepairSystem.company.Migrations
                     b.Navigation("Device");
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.company.Entities.User", b =>
-                {
-                    b.HasOne("ComputerRepairSystem.company.Entities.Employee", "Employee")
-                        .WithOne("User")
-                        .HasForeignKey("ComputerRepairSystem.company.Entities.User", "EmployeeId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("ComputerRepairSystem.company.Entities.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("Repair", b =>
                 {
                     b.HasOne("ComputerRepairSystem.company.Entities.Branch", "Branch")
@@ -780,11 +727,6 @@ namespace ComputerRepairSystem.company.Migrations
                     b.Navigation("ServiceRequests");
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.company.Entities.Employee", b =>
-                {
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.InventoryItem", b =>
                 {
                     b.Navigation("Inventories");
@@ -795,11 +737,6 @@ namespace ComputerRepairSystem.company.Migrations
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.Invoice", b =>
                 {
                     b.Navigation("Payments");
-                });
-
-            modelBuilder.Entity("ComputerRepairSystem.company.Entities.Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("ComputerRepairSystem.company.Entities.ServiceRequest", b =>
