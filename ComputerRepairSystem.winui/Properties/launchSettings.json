@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ComputerRepairSystem.winui (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ComputerRepairSystem.winui (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 ﻿namespace ComputerRepairSystem_winforms
 {
-    partial class Form1
+    partial class lblFirstName
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,12 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(lblFirstName));
+            label1 = new Label();
+            SuspendLayout();
+            // 
+            // label1
+            // 
+            resources.ApplyResources(label1, "label1");
+            label1.Name = "label1";
+            label1.Click += label1_Click;
+            // 
+            // lblFirstName
+            // 
+            resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Text = "Form1";
+            Controls.Add(label1);
+            Name = "lblFirstName";
+            Load += Form1_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private Label label1;
     }
 }

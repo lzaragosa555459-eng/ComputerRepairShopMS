@@ -3,5 +3,9 @@
   <Project Path="ComputerRepairSystem.customer/ComputerRepairSystem.company.csproj" Id="4ff56093-2625-4e6e-89aa-dfaa9a5dc67c" />
   <Project Path="ComputerRepairSystem.domain/ComputerRepairSystem.domain.csproj" />
   <Project Path="ComputerRepairSystem.infrastructure/ComputerRepairSystem.infrastructure.csproj" />
-  <Project Path="ComputerRepairSystem_winforms/ComputerRepairSystem.winforms.csproj" />
+  <Project Path="ComputerRepairSystem.winui/ComputerRepairSystem.winui.csproj">
+    <Platform Solution="Debug|*" Project="x64" />
+    <Platform Solution="Release|*" Project="x86" />
+    <Deploy Solution="Debug|*" />
+  </Project>
 </Solution>
