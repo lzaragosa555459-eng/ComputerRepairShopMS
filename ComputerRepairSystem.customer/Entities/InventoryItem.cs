@@ -2,7 +2,7 @@
 
 public class InventoryItem
 {
-    public long ItemId { get; set; }
+    public int ItemId { get; set; }
 
     public string ItemName { get; set; } = string.Empty;
 

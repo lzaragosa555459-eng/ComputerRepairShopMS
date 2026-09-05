@@ -2,7 +2,7 @@
 
 public class Branch
 {
-    public long BranchId { get; set; }
+    public int BranchId { get; set; }
 
     public string BranchCode { get; set; } = string.Empty;
 

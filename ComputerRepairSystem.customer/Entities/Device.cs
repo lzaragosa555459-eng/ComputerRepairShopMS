@@ -2,9 +2,9 @@
 
 public class Device
 {
-    public long DeviceId { get; set; }
+    public int DeviceId { get; set; }
 
-    public long CustomerId { get; set; }
+    public int CustomerId { get; set; }
 
     public string DeviceType { get; set; } = string.Empty;
 

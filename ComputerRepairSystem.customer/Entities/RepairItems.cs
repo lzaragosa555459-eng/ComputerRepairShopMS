@@ -4,11 +4,11 @@ namespace ComputerRepairSystem.company.Entities;
 
 public class RepairItem
 {
-    public long RepairItemId { get; set; }
+    public int RepairItemId { get; set; }
 
-    public long RepairId { get; set; }
+    public int RepairId { get; set; }
 
-    public long ItemId { get; set; }
+    public int ItemId { get; set; }
 
     public decimal Quantity { get; set; }
 

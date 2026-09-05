@@ -2,9 +2,9 @@
 
 public class ServiceRequest
 {
-    public long ServiceRequestId { get; set; }
+    public int ServiceRequestId { get; set; }
 
-    public long DeviceId { get; set; }
+    public int DeviceId { get; set; }
 
     public DateTime RequestDate { get; set; } = DateTime.UtcNow;
 

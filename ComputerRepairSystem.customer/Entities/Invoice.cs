@@ -2,9 +2,9 @@
 
 public class Invoice
 {
-    public long InvoiceId { get; set; }
+    public int InvoiceId { get; set; }
 
-    public long RepairId { get; set; }
+    public int RepairId { get; set; }
 
     public string InvoiceNumber { get; set; } = string.Empty;
 

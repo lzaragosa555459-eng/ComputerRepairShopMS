@@ -2,11 +2,11 @@
 
 public class Inventory
 {
-    public long InventoryId { get; set; }
+    public int InventoryId { get; set; }
 
-    public long BranchId { get; set; }
+    public int BranchId { get; set; }
 
-    public long ItemId { get; set; }
+    public int ItemId { get; set; }
 
     public decimal QuantityOnHand { get; set; } = 0;
 

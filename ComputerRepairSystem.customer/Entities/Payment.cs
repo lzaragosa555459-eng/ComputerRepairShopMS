@@ -2,9 +2,9 @@
 
 public class Payment
 {
-    public long PaymentId { get; set; }
+    public int PaymentId { get; set; }
 
-    public long InvoiceId { get; set; }
+    public int InvoiceId { get; set; }
 
     public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ComputerRepairSystem.domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,6 +14,8 @@ public class Company
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<DeviceSample> Devices { get; set; } = new List<DeviceSample>();
+
+
 
     }
 }
