@@ -37,17 +37,29 @@
         <!-- ACTION BAR -->
 
         <StackPanel
-            Grid.Row="1"
-            Orientation="Horizontal"
-            Spacing="12">
+    Grid.Row="1"
+    Orientation="Horizontal"
+    Spacing="12">
 
             <Button
-                Content="Add User"
-                Click="AddUserButton_Click" />
+        Content="Add User"
+        Click="AddUserButton_Click" />
 
             <Button
-                Content="Refresh"
-                Click="RefreshButton_Click" />
+        x:Name="EditUserButton"
+        Content="Edit User"
+        Click="EditUserButton_Click"
+        IsEnabled="False" />
+
+            <Button
+        x:Name="DeleteUserButton"
+        Content="Delete User"
+        Click="DeleteUserButton_Click"
+        IsEnabled="False" />
+
+            <Button
+        Content="Refresh"
+        Click="RefreshButton_Click" />
 
         </StackPanel>
 
@@ -57,7 +69,8 @@
         <ListView
     x:Name="UsersListView"
     Grid.Row="2"
-    SelectionMode="Single">
+    SelectionMode="Single"
+    SelectionChanged="UsersListView_SelectionChanged">
 
             <ListView.Header>
 
