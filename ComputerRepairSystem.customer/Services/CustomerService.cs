@@ -1,53 +1,102 @@
 ﻿using ComputerRepairSystem.company.Data;
 using ComputerRepairSystem.company.Entities;
 using ComputerRepairSystem.company.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComputerRepairSystem.company.Services;
 
 public class CustomerService
 {
-    private readonly TenantDbContext _context;
-    private readonly ICustomerRepository _customerRepository;
+    private readonly
+        IDbContextFactory<TenantDbContext>
+        _contextFactory;
+
+    private readonly
+        ICustomerRepository
+        _customerRepository;
+
 
     public CustomerService(
-        TenantDbContext context,
-        ICustomerRepository customerRepository)
+        IDbContextFactory<TenantDbContext>
+            contextFactory,
+
+        ICustomerRepository
+            customerRepository)
     {
-        _context = context;
-        _customerRepository = customerRepository;
+        _contextFactory =
+            contextFactory;
+
+        _customerRepository =
+            customerRepository;
     }
 
-    public async Task<List<Customer>> GetAllAsync()
+
+    // ==========================================
+    // GET ALL
+    // ==========================================
+
+    public async Task<List<Customer>>
+        GetAllAsync()
     {
-        return await _customerRepository.GetAllAsync();
+        return await _customerRepository
+            .GetAllAsync();
     }
 
-    public async Task<Customer?> GetByIdAsync(int customerId)
+
+    // ==========================================
+    // GET BY ID
+    // ==========================================
+
+    public async Task<Customer?>
+        GetByIdAsync(int customerId)
     {
-        return await _customerRepository.GetByIdAsync(customerId);
+        return await _customerRepository
+            .GetByIdAsync(customerId);
     }
 
-    public async Task<Customer> AddAsync(Customer customer)
+
+    // ==========================================
+    // ADD
+    // ==========================================
+
+    public async Task<Customer>
+        AddAsync(Customer customer)
     {
+        await using var context =
+            await _contextFactory
+                .CreateDbContextAsync();
+
         await using var transaction =
-            await _context.Database.BeginTransactionAsync();
+            await context.Database
+                .BeginTransactionAsync();
 
         try
         {
-            _context.Customers.Add(customer);
+            // Add customer
+            context.Customers.Add(customer);
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-            _context.SyncQueues.Add(new SyncQueue
-            {
-                TableName = "Customers",
-                RecordId = customer.CustomerId,
-                Operation = "INSERT",
-                CreatedAt = DateTime.UtcNow,
-                IsSynced = false
-            });
 
-            await _context.SaveChangesAsync();
+            // Add sync queue
+            context.SyncQueues.Add(
+                new SyncQueue
+                {
+                    TableName = "Customers",
+
+                    RecordId =
+                        customer.CustomerId,
+
+                    Operation = "INSERT",
+
+                    CreatedAt =
+                        DateTime.UtcNow,
+
+                    IsSynced = false
+                });
+
+
+            await context.SaveChangesAsync();
 
             await transaction.CommitAsync();
 
@@ -56,74 +105,127 @@ public class CustomerService
         catch
         {
             await transaction.RollbackAsync();
+
             throw;
         }
     }
 
-    public async Task UpdateAsync(Customer customer)
+
+    // ==========================================
+    // UPDATE
+    // ==========================================
+
+    public async Task UpdateAsync(
+        Customer customer)
     {
+        await using var context =
+            await _contextFactory
+                .CreateDbContextAsync();
+
         await using var transaction =
-            await _context.Database.BeginTransactionAsync();
+            await context.Database
+                .BeginTransactionAsync();
 
         try
         {
-            _context.Customers.Update(customer);
+            // Attach and update customer
+            context.Customers.Update(customer);
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-            _context.SyncQueues.Add(new SyncQueue
-            {
-                TableName = "Customers",
-                RecordId = customer.CustomerId,
-                Operation = "UPDATE",
-                CreatedAt = DateTime.UtcNow,
-                IsSynced = false
-            });
 
-            await _context.SaveChangesAsync();
+            // Add sync queue
+            context.SyncQueues.Add(
+                new SyncQueue
+                {
+                    TableName = "Customers",
+
+                    RecordId =
+                        customer.CustomerId,
+
+                    Operation = "UPDATE",
+
+                    CreatedAt =
+                        DateTime.UtcNow,
+
+                    IsSynced = false
+                });
+
+
+            await context.SaveChangesAsync();
 
             await transaction.CommitAsync();
         }
         catch
         {
             await transaction.RollbackAsync();
+
             throw;
         }
     }
 
-    public async Task DeleteAsync(int customerId)
+
+    // ==========================================
+    // DELETE
+    // ==========================================
+
+    public async Task DeleteAsync(
+        int customerId)
     {
+        await using var context =
+            await _contextFactory
+                .CreateDbContextAsync();
+
         await using var transaction =
-            await _context.Database.BeginTransactionAsync();
+            await context.Database
+                .BeginTransactionAsync();
 
         try
         {
-            var customer = await _customerRepository.GetByIdAsync(customerId);
+            var customer =
+                await context.Customers
+                    .FirstOrDefaultAsync(
+                        x =>
+                            x.CustomerId ==
+                            customerId);
+
 
             if (customer == null)
                 return;
 
-            _context.Customers.Remove(customer);
 
-            // Save deletion before adding queue record
-            await _context.SaveChangesAsync();
+            // Delete customer
+            context.Customers.Remove(customer);
 
-            _context.SyncQueues.Add(new SyncQueue
-            {
-                TableName = "Customers",
-                RecordId = customerId,
-                Operation = "DELETE",
-                CreatedAt = DateTime.UtcNow,
-                IsSynced = false
-            });
+            await context.SaveChangesAsync();
 
-            await _context.SaveChangesAsync();
+
+            // Add sync queue
+            context.SyncQueues.Add(
+                new SyncQueue
+                {
+                    TableName = "Customers",
+
+                    RecordId =
+                        customerId,
+
+                    Operation = "DELETE",
+
+                    CreatedAt =
+                        DateTime.UtcNow,
+
+                    IsSynced = false
+                });
+
+
+            await context.SaveChangesAsync();
 
             await transaction.CommitAsync();
         }
         catch
         {
             await transaction.RollbackAsync();
+
             throw;
         }
     }

@@ -34,6 +34,7 @@ public sealed partial class MainWindow : Window
         NavFrame.GoBack();
     }
 
+
     private void NavView_SelectionChanged(
         NavigationView sender,
         NavigationViewSelectionChangedEventArgs args)
@@ -54,6 +55,10 @@ public sealed partial class MainWindow : Window
                     NavigateToCustomerPage();
                     break;
 
+                case "users":
+                    NavigateToUserManagementPage();
+                    break;
+
                 case "about":
                     NavFrame.Navigate(typeof(AboutPage));
                     break;
@@ -68,6 +73,14 @@ public sealed partial class MainWindow : Window
     {
         var page = new CustomerPage(
             App.Services.GetRequiredService<CustomerService>());
+
+        NavFrame.Content = page;
+    }
+
+    private void NavigateToUserManagementPage()
+    {
+        var page =
+            App.Services.GetRequiredService<UserManagementPage>();
 
         NavFrame.Content = page;
     }

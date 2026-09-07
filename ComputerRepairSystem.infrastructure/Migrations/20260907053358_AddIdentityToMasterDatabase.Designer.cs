@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerRepairSystem.infrastructure.Migrations
 {
     [DbContext(typeof(MasterErpDbContext))]
-    [Migration("20260902064725_AddDevice")]
-    partial class AddDevice
+    [Migration("20260907053358_AddIdentityToMasterDatabase")]
+    partial class AddIdentityToMasterDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace ComputerRepairSystem.infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ComputerRepairSystem.domain.entities.Company", b =>
+            modelBuilder.Entity("ComputerRepairSystem.domain.Entities.Company", b =>
                 {
                     b.Property<int>("CompanyId")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.domain.entities.CompanyDatabase", b =>
+            modelBuilder.Entity("ComputerRepairSystem.domain.Entities.CompanyDatabase", b =>
                 {
                     b.Property<int>("CompanyDatabaseId")
                         .ValueGeneratedOnAdd()
@@ -88,7 +88,7 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                     b.ToTable("CompanyDatabases");
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.domain.entities.Device", b =>
+            modelBuilder.Entity("ComputerRepairSystem.domain.Entities.DeviceSample", b =>
                 {
                     b.Property<Guid>("DeviceID")
                         .ValueGeneratedOnAdd()
@@ -118,7 +118,83 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                     b.HasIndex("CompanyID", "DeviceCode")
                         .IsUnique();
 
-                    b.ToTable("Devices");
+                    b.ToTable("DeviceSample", (string)null);
+                });
+
+            modelBuilder.Entity("ComputerRepairSystem.infrastructure.Entities.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastLogin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -171,71 +247,6 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -319,9 +330,9 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.domain.entities.CompanyDatabase", b =>
+            modelBuilder.Entity("ComputerRepairSystem.domain.Entities.CompanyDatabase", b =>
                 {
-                    b.HasOne("ComputerRepairSystem.domain.entities.Company", "Company")
+                    b.HasOne("ComputerRepairSystem.domain.Entities.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -330,11 +341,22 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.domain.entities.Device", b =>
+            modelBuilder.Entity("ComputerRepairSystem.domain.Entities.DeviceSample", b =>
                 {
-                    b.HasOne("ComputerRepairSystem.domain.entities.Company", "Company")
+                    b.HasOne("ComputerRepairSystem.domain.Entities.Company", "Company")
                         .WithMany("Devices")
                         .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("ComputerRepairSystem.infrastructure.Entities.ApplicationUser", b =>
+                {
+                    b.HasOne("ComputerRepairSystem.domain.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -352,7 +374,7 @@ namespace ComputerRepairSystem.infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ComputerRepairSystem.infrastructure.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -361,7 +383,7 @@ namespace ComputerRepairSystem.infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ComputerRepairSystem.infrastructure.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -376,7 +398,7 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ComputerRepairSystem.infrastructure.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -385,14 +407,14 @@ namespace ComputerRepairSystem.infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ComputerRepairSystem.infrastructure.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ComputerRepairSystem.domain.entities.Company", b =>
+            modelBuilder.Entity("ComputerRepairSystem.domain.Entities.Company", b =>
                 {
                     b.Navigation("Devices");
                 });

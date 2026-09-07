@@ -20,6 +20,9 @@
 
 		<WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Pages\UserManagementPage.xaml" />
+	</ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -39,7 +42,11 @@
 	<ItemGroup>
 		<None Update="appsettings.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</None>
+		<Page Update="Pages\UserManagementPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 	</ItemGroup>
 
   <!--
@@ -69,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComputerRepairSystem.customer\ComputerRepairSystem.company.csproj" />
+    <ProjectReference Include="..\ComputerRepairSystem.infrastructure\ComputerRepairSystem.infrastructure.csproj" />
   </ItemGroup>
 
   <!--

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ComputerRepairSystem.domain.entities
+namespace ComputerRepairSystem.domain.Entities
 {
 public class Company
     {

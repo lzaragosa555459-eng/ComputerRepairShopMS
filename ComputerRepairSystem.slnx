@@ -4,8 +4,7 @@
   <Project Path="ComputerRepairSystem.domain/ComputerRepairSystem.domain.csproj" />
   <Project Path="ComputerRepairSystem.infrastructure/ComputerRepairSystem.infrastructure.csproj" />
   <Project Path="ComputerRepairSystem.winui/ComputerRepairSystem.winui.csproj">
-    <Platform Solution="Debug|*" Project="x64" />
-    <Platform Solution="Release|*" Project="x86" />
-    <Deploy Solution="Debug|*" />
+    <Platform Project="x64" />
+    <Deploy />
   </Project>
 </Solution>

@@ -2,6 +2,12 @@
 using ComputerRepairSystem.company.Interfaces;
 using ComputerRepairSystem.company.Repositories;
 using ComputerRepairSystem.company.Services;
+
+using ComputerRepairSystem.infrastructure.Entities;
+using ComputerRepairSystem_winui.Pages;
+using ComputerRepairSystem.infrastructure.data;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +19,17 @@ public partial class App : Application
 {
     private Window? _window;
 
-    public static IServiceProvider Services { get; private set; } = null!;
+    public static IServiceProvider Services { get; private set; }
+        = null!;
 
     public App()
     {
         InitializeComponent();
+
+
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
@@ -27,30 +39,104 @@ public partial class App : Application
                 reloadOnChange: true)
             .Build();
 
+
         var services = new ServiceCollection();
 
-        // Local tenant database
-        services.AddDbContext<TenantDbContext>(
-            options => options.UseSqlServer(
-                configuration.GetConnectionString("TenantLocal")),
-            ServiceLifetime.Singleton);
 
-        // Repositories
-        services.AddSingleton<ICustomerRepository, CustomerRepository>();
+        // ==========================================
+        // CONNECTION STRINGS
+        // ==========================================
 
-        // Application services
-        services.AddSingleton<CustomerService>();
+        var masterConnectionString =
+            configuration.GetConnectionString("MasterLocal")
+            ?? throw new InvalidOperationException(
+                "Connection string 'MasterLocal' was not found.");
 
-        // Windows
+
+        var tenantConnectionString =
+            configuration.GetConnectionString("TenantLocal")
+            ?? throw new InvalidOperationException(
+                "Connection string 'TenantLocal' was not found.");
+
+
+        // ==========================================
+        // MASTER DATABASE
+        // ==========================================
+
+        services.AddDbContext<MasterErpDbContext>(
+            options =>
+                options.UseSqlServer(
+                    masterConnectionString));
+
+
+        // ==========================================
+        // ASP.NET IDENTITY
+        // ==========================================
+
+        services.AddIdentityCore<ApplicationUser>(
+                options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+
+                    options.Password.RequiredLength = 6;
+                })
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<MasterErpDbContext>();
+
+
+        // ==========================================
+        // TENANT DATABASE
+        // ==========================================
+
+        services.AddDbContextFactory<TenantDbContext>(
+            options =>
+                options.UseSqlServer(
+                    tenantConnectionString));
+
+
+        // ==========================================
+        // CUSTOMER REPOSITORY
+        // ==========================================
+
+        services.AddTransient<
+            ICustomerRepository,
+            CustomerRepository>();
+
+
+        // ==========================================
+        // SERVICES
+        // ==========================================
+
+        services.AddTransient<CustomerService>();
+
+
+        // ==========================================
+        // PAGES
+        // ==========================================
+
+        services.AddTransient<UserManagementPage>();
+
+
+        // ==========================================
+        // MAIN WINDOW
+        // ==========================================
+
         services.AddSingleton<MainWindow>();
 
-        // Build dependency injection container
+
         Services = services.BuildServiceProvider();
     }
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args)
+
+    protected override void OnLaunched(
+        LaunchActivatedEventArgs args)
     {
-        _window = Services.GetRequiredService<MainWindow>();
+        _window =
+            Services.GetRequiredService<MainWindow>();
+
         _window.Activate();
     }
 }

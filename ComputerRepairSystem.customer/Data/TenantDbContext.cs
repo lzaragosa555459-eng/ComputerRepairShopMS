@@ -177,6 +177,9 @@ public class TenantDbContext : DbContext
         {
             entity.HasKey(x => x.CustomerId);
 
+            entity.HasIndex(x => x.SyncId)
+                .IsUnique();
+
             entity.Property(x => x.FirstName)
                 .HasMaxLength(100)
                 .IsRequired();

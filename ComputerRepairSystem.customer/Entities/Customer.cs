@@ -3,6 +3,7 @@
 public class Customer
 {
     public int CustomerId { get; set; }
+    public Guid SyncId { get; set; } = Guid.NewGuid();
 
     public string FirstName { get; set; } = string.Empty;
 

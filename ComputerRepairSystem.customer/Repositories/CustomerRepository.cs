@@ -7,48 +7,101 @@ namespace ComputerRepairSystem.company.Repositories;
 
 public class CustomerRepository : ICustomerRepository
 {
-    private readonly TenantDbContext _context;
+    private readonly IDbContextFactory<TenantDbContext>
+        _contextFactory;
 
-    public CustomerRepository(TenantDbContext context)
+    public CustomerRepository(
+        IDbContextFactory<TenantDbContext> contextFactory)
     {
-        _context = context;
+        _contextFactory = contextFactory;
     }
+
+
+    // ==========================================
+    // GET ALL
+    // ==========================================
 
     public async Task<List<Customer>> GetAllAsync()
     {
-        return await _context.Customers
+        await using var context =
+            await _contextFactory.CreateDbContextAsync();
+
+        return await context.Customers
             .AsNoTracking()
             .ToListAsync();
     }
 
-    public async Task<Customer?> GetByIdAsync(int customerId)
+
+    // ==========================================
+    // GET BY ID
+    // ==========================================
+
+    public async Task<Customer?> GetByIdAsync(
+        int customerId)
     {
-        return await _context.Customers
-            .FirstOrDefaultAsync(x => x.CustomerId == customerId);
+        await using var context =
+            await _contextFactory.CreateDbContextAsync();
+
+        return await context.Customers
+            .FirstOrDefaultAsync(
+                x => x.CustomerId == customerId);
     }
 
-    public Task<Customer> AddAsync(Customer customer)
-    {
-        _context.Customers.Add(customer);
 
-        return Task.FromResult(customer);
+    // ==========================================
+    // ADD
+    // ==========================================
+
+    public async Task<Customer> AddAsync(
+        Customer customer)
+    {
+        await using var context =
+            await _contextFactory.CreateDbContextAsync();
+
+        context.Customers.Add(customer);
+
+        await context.SaveChangesAsync();
+
+        return customer;
     }
 
-    public Task UpdateAsync(Customer customer)
-    {
-        _context.Customers.Update(customer);
 
-        return Task.CompletedTask;
+    // ==========================================
+    // UPDATE
+    // ==========================================
+
+    public async Task UpdateAsync(
+        Customer customer)
+    {
+        await using var context =
+            await _contextFactory.CreateDbContextAsync();
+
+        context.Customers.Update(customer);
+
+        await context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int customerId)
+
+    // ==========================================
+    // DELETE
+    // ==========================================
+
+    public async Task DeleteAsync(
+        int customerId)
     {
-        var customer = await _context.Customers
-            .FirstOrDefaultAsync(x => x.CustomerId == customerId);
+        await using var context =
+            await _contextFactory.CreateDbContextAsync();
+
+        var customer =
+            await context.Customers
+                .FirstOrDefaultAsync(
+                    x => x.CustomerId == customerId);
 
         if (customer == null)
             return;
 
-        _context.Customers.Remove(customer);
+        context.Customers.Remove(customer);
+
+        await context.SaveChangesAsync();
     }
 }

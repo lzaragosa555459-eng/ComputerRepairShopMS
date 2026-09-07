@@ -54,6 +54,14 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 
+                <NavigationViewItem
+                    Content="User Management"
+                    Tag="users">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE77B;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                
                 <NavigationViewItem Content="About" Tag="about">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEA3A;" />

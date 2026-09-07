@@ -2,25 +2,75 @@ using ComputerRepairSystem.company.Data;
 using ComputerRepairSystem.company.Interfaces;
 using ComputerRepairSystem.company.Repositories;
 using ComputerRepairSystem.company.Services;
-using ComputerRepairSystem.domain.data;
-using ComputerRepairSystem.domain.entities;
+using ComputerRepairSystem.infrastructure.Entities;
+using ComputerRepairSystem.domain.Entities;
+
+using ComputerRepairSystem.infrastructure.data;
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
-
+using ComputerRepairSystem.infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+// ==========================================
+// MASTER ERP DATABASE
+// ==========================================
+
 builder.Services.AddDbContext<MasterErpDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("MasterErp")));
+
+
+// ==========================================
+// ASP.NET IDENTITY
+// ==========================================
+
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<MasterErpDbContext>()
+    .AddDefaultTokenProviders();
+
+
+// ==========================================
+// TENANT DATABASE
+// ==========================================
+
 builder.Services.AddDbContext<TenantDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("TenantErp")));
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+
+// ==========================================
+// REPOSITORIES
+// ==========================================
+
+builder.Services.AddScoped<
+    ICustomerRepository,
+    CustomerRepository>();
+
+
+// ==========================================
+// SERVICES
+// ==========================================
+
 builder.Services.AddScoped<CustomerService>();
-// Add services to the container.
+builder.Services.AddScoped<UserService>();
+
+// ==========================================
+// CONTROLLERS
+// ==========================================
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+
+// ==========================================
+// OPENAPI / SWAGGER
+// ==========================================
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -33,41 +83,64 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1"
     });
 });
+
+
 var app = builder.Build();
+
+
+// ==========================================
+// SWAGGER
+// ==========================================
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+    app.UseSwaggerUI();
+
     app.MapOpenApi();
 }
 
+
+// ==========================================
+// HTTP PIPELINE
+// ==========================================
+
 app.UseHttpsRedirection();
+
+
+// IMPORTANT:
+// Authentication must come BEFORE Authorization
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapPost("/companies", async (
 
-  Company company,
+// ==========================================
+// COMPANY ENDPOINT
+// ==========================================
 
-  MasterErpDbContext db) =>
+app.MapPost(
+    "/companies",
 
-{
+    async (
+        Company company,
+        MasterErpDbContext db) =>
+    {
+        db.Companies.Add(company);
 
-    db.Companies.Add(company);
+        await db.SaveChangesAsync();
 
-    await db.SaveChangesAsync();
+        return Results.Created(
+            $"/companies/{company.CompanyId}",
+            company);
+    });
 
 
-
-    return Results.Created($"/companies/{company.CompanyId}", company);
-
-});
+// ==========================================
+// CONTROLLERS
+// ==========================================
 
 app.MapControllers();
 
