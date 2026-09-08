@@ -117,6 +117,8 @@ public partial class App : Application
         // PAGES
         // ==========================================
 
+        services.AddTransient<ServiceManagementPage>();
+
         services.AddTransient<UserManagementPage>();
 
 

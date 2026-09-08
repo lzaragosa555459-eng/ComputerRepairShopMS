@@ -47,7 +47,7 @@
                 </NavigationViewItem>
                 
                 <NavigationViewItem
-                    Content="Customers"
+                    Content="Service Management"
                     Tag="customers">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE77B;" />

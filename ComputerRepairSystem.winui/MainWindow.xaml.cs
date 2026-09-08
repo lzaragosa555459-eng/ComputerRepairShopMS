@@ -10,17 +10,15 @@ namespace ComputerRepairSystem_winui;
 public sealed partial class MainWindow : Window
 {
 
-    private readonly CustomerService _customerService;
-
-    public MainWindow(CustomerService customerService)
+    public MainWindow()
     {
         InitializeComponent();
 
-        _customerService = customerService;
-
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
-        AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
+        AppWindow.TitleBar.PreferredHeightOption =
+            TitleBarHeightOption.Tall;
+
         AppWindow.SetIcon("Assets/AppIcon.ico");
     }
 
@@ -52,7 +50,7 @@ public sealed partial class MainWindow : Window
                     break;
 
                 case "customers":
-                    NavigateToCustomerPage();
+                    NavigateToServiceManagementPage();
                     break;
 
                 case "users":
@@ -69,10 +67,10 @@ public sealed partial class MainWindow : Window
             }
         }
     }
-    private void NavigateToCustomerPage()
+    private void NavigateToServiceManagementPage()
     {
-        var page = new CustomerPage(
-            App.Services.GetRequiredService<CustomerService>());
+        var page =
+            App.Services.GetRequiredService<ServiceManagementPage>();
 
         NavFrame.Content = page;
     }

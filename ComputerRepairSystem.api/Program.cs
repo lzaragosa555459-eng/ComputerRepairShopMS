@@ -22,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MasterErpDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("MasterErp")));
+        builder.Configuration.GetConnectionString("MasterLocal")));
 
 
 // ==========================================
@@ -39,9 +39,9 @@ builder.Services
 // TENANT DATABASE
 // ==========================================
 
-builder.Services.AddDbContext<TenantDbContext>(options =>
+builder.Services.AddDbContextFactory<TenantDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("TenantErp")));
+        builder.Configuration.GetConnectionString("TenantLocal")));
 
 
 // ==========================================
