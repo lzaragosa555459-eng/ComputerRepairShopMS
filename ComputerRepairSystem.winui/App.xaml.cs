@@ -123,6 +123,10 @@ public partial class App : Application
 
         services.AddTransient<RepairManagementPage>();
 
+        services.AddTransient<BillingPage>();
+
+        services.AddTransient<HomePage>();
+
 
         // ==========================================
         // MAIN WINDOW

@@ -1,0 +1,328 @@
+using ComputerRepairSystem.company.Data;
+using ComputerRepairSystem.company.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+
+namespace ComputerRepairSystem_winui.Pages;
+
+public sealed partial class BillingPage : Page
+{
+    private readonly IDbContextFactory<TenantDbContext>
+        _tenantDbFactory;
+
+    public BillingPage(
+        IDbContextFactory<TenantDbContext> tenantDbFactory)
+    {
+        InitializeComponent();
+
+        _tenantDbFactory =
+            tenantDbFactory;
+
+        Loaded +=
+            BillingPage_Loaded;
+    }
+
+
+    private async void BillingPage_Loaded(
+        object sender,
+        RoutedEventArgs e)
+    {
+        await LoadCompletedRepairsAsync();
+    }
+
+
+    private async Task LoadCompletedRepairsAsync()
+    {
+        await using var db =
+            await _tenantDbFactory.CreateDbContextAsync();
+
+        var repairs =
+            await db.Repairs
+                .AsNoTracking()
+                .Where(r =>
+                    r.Status == "Completed" &&
+                    r.Invoice == null)
+                .Include(r =>
+                    r.ServiceRequest)
+                    .ThenInclude(sr =>
+                        sr.Device)
+                    .ThenInclude(d =>
+                        d.Customer)
+                .Select(r => new BillingRow
+                {
+                    RepairId =
+                        r.RepairId,
+
+                    CustomerName =
+                        r.ServiceRequest
+                            .Device
+                            .Customer
+                            .FirstName
+                        + " "
+                        + r.ServiceRequest
+                            .Device
+                            .Customer
+                            .LastName,
+
+                    DeviceName =
+                        r.ServiceRequest
+                            .Device
+                            .Brand
+                        + " "
+                        + r.ServiceRequest
+                            .Device
+                            .Model,
+
+                    RepairDescription =
+                        r.RepairDescription ??
+                        "No description"
+                })
+                .ToListAsync();
+
+        BillingList.ItemsSource =
+            repairs;
+    }
+
+
+    private async void PayButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (sender is not Button button ||
+            button.DataContext is not BillingRow row)
+        {
+            return;
+        }
+
+        await ProcessPaymentAsync(
+            row.RepairId);
+    }
+
+
+    private async Task ProcessPaymentAsync(
+        int repairId)
+    {
+        await using var db =
+            await _tenantDbFactory.CreateDbContextAsync();
+
+        var repair =
+            await db.Repairs
+                .Include(r =>
+                    r.RepairItems)
+                    .ThenInclude(ri =>
+                        ri.Item)
+                .Include(r =>
+                    r.ServiceRequest)
+                    .ThenInclude(sr =>
+                        sr.Device)
+                    .ThenInclude(d =>
+                        d.Customer)
+                .FirstOrDefaultAsync(
+                    r => r.RepairId == repairId);
+
+        if (repair == null)
+        {
+            return;
+        }
+
+        var subtotal =
+            repair.RepairItems.Sum(
+                x =>
+                    (x.Quantity * x.UnitPrice)
+                    - x.Discount);
+
+        var total =
+            subtotal;
+
+
+        var amountBox =
+            new NumberBox
+            {
+                Header = "Amount Paid",
+                Value = (double)total,
+                Minimum = (double)total,
+                SmallChange = 100
+            };
+
+
+        var paymentMethodBox =
+            new ComboBox
+            {
+                Header = "Payment Method",
+                SelectedIndex = 0
+            };
+
+        paymentMethodBox.Items.Add("Cash");
+        paymentMethodBox.Items.Add("GCash");
+        paymentMethodBox.Items.Add("Card");
+
+
+        var content =
+            new StackPanel
+            {
+                Spacing = 12
+            };
+
+        content.Children.Add(
+            new TextBlock
+            {
+                Text =
+                    $"Customer: " +
+                    $"{repair.ServiceRequest.Device.Customer.FirstName} " +
+                    $"{repair.ServiceRequest.Device.Customer.LastName}"
+            });
+
+        content.Children.Add(
+            new TextBlock
+            {
+                Text =
+                    $"Device: " +
+                    $"{repair.ServiceRequest.Device.Brand} " +
+                    $"{repair.ServiceRequest.Device.Model}"
+            });
+
+        content.Children.Add(
+            new TextBlock
+            {
+                Text =
+                    $"Subtotal: ₱{subtotal:N2}",
+                FontWeight =
+                    Microsoft.UI.Text.FontWeights.SemiBold
+            });
+
+        content.Children.Add(
+            amountBox);
+
+        content.Children.Add(
+            paymentMethodBox);
+
+
+        var dialog =
+            new ContentDialog
+            {
+                Title = "Process Payment",
+
+                Content = content,
+
+                PrimaryButtonText = "Pay",
+
+                CloseButtonText = "Cancel",
+
+                DefaultButton =
+                    ContentDialogButton.Primary,
+
+                XamlRoot = XamlRoot
+            };
+
+        var result =
+            await dialog.ShowAsync();
+
+        if (result !=
+            ContentDialogResult.Primary)
+        {
+            return;
+        }
+
+        if (double.IsNaN(amountBox.Value) ||
+            amountBox.Value < (double)total)
+        {
+            await ShowMessageAsync(
+                "Invalid Payment",
+                "The payment must cover the total amount.");
+
+            return;
+        }
+
+        var payment =
+            new Payment
+            {
+                Amount =
+                    (decimal)amountBox.Value,
+
+                PaymentMethod =
+                    paymentMethodBox.SelectedItem?
+                        .ToString()
+                    ?? "Cash",
+
+                Status =
+                    "Completed"
+            };
+
+        var invoice =
+            new Invoice
+            {
+                RepairId =
+                    repairId,
+
+                InvoiceNumber =
+                    $"INV-{DateTime.UtcNow:yyyyMMddHHmmssfff}",
+
+                Subtotal =
+                    subtotal,
+
+                Discount =
+                    0,
+
+                Tax =
+                    0,
+
+                TotalAmount =
+                    total,
+
+                Status =
+                    "Paid",
+
+                Payments =
+                    new List<Payment>
+                    {
+                        payment
+                    }
+            };
+
+        db.Invoices.Add(invoice);
+
+        await db.SaveChangesAsync();
+
+        await LoadCompletedRepairsAsync();
+
+        await ShowMessageAsync(
+            "Payment Complete",
+            $"Payment successful.\n\n" +
+            $"Total: ₱{total:N2}\n" +
+            $"Paid: ₱{amountBox.Value:N2}\n" +
+            $"Change: ₱{amountBox.Value - (double)total:N2}");
+    }
+
+
+    private async Task ShowMessageAsync(
+        string title,
+        string message)
+    {
+        var dialog =
+            new ContentDialog
+            {
+                Title = title,
+                Content = message,
+                CloseButtonText = "OK",
+                XamlRoot = XamlRoot
+            };
+
+        await dialog.ShowAsync();
+    }
+
+
+    private sealed class BillingRow
+    {
+        public int RepairId { get; set; }
+
+        public string CustomerName { get; set; }
+            = string.Empty;
+
+        public string DeviceName { get; set; }
+            = string.Empty;
+
+        public string RepairDescription { get; set; }
+            = string.Empty;
+    }
+}

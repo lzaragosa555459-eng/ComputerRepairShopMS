@@ -169,7 +169,33 @@ public class CustomersController : ControllerBase
                                                         r.Repair.RepairDescription,
                                                         r.Repair.Status,
                                                         r.Repair.StartDate,
-                                                        r.Repair.EndDate
+                                                        r.Repair.EndDate,
+
+                                                        RepairItems =
+                                                            r.Repair.RepairItems
+                                                                .Select(ri => new
+                                                                {
+                                                                    ri.RepairItemId,
+                                                                    ri.RepairId,
+                                                                    ri.ItemId,
+                                                                    ri.Quantity,
+                                                                    ri.UnitPrice,
+                                                                    ri.Discount,
+
+                                                                    Item =
+                                                                        ri.Item == null
+                                                                            ? null
+                                                                            : new
+                                                                            {
+                                                                                ri.Item.ItemId,
+                                                                                ri.Item.ItemName,
+                                                                                ri.Item.Category,
+                                                                                ri.Item.Brand,
+                                                                                ri.Item.Model,
+                                                                                ri.Item.Unit,
+                                                                                ri.Item.UnitPrice
+                                                                            }
+                                                                })
                                                     }
                                         })
                             })

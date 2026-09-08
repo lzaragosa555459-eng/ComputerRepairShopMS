@@ -46,7 +46,7 @@ public sealed partial class MainWindow : Window
             switch (item.Tag)
             {
                 case "home":
-                    NavFrame.Navigate(typeof(HomePage));
+                    NavigateToHomePage();
                     break;
 
                 case "customers":
@@ -55,6 +55,10 @@ public sealed partial class MainWindow : Window
 
                 case "repairs":
                     NavigateToRepairManagementPage();
+                    break;
+
+                case "billing":
+                    NavigateToBillingPage();
                     break;
 
                 case "users":
@@ -90,6 +94,21 @@ public sealed partial class MainWindow : Window
     {
         var page =
             App.Services.GetRequiredService<RepairManagementPage>();
+
+        NavFrame.Content = page;
+    }
+    private void NavigateToBillingPage()
+    {
+        var page =
+            App.Services.GetRequiredService<BillingPage>();
+
+        NavFrame.Content = page;
+    }
+
+    private void NavigateToHomePage()
+    {
+        var page =
+            App.Services.GetRequiredService<HomePage>();
 
         NavFrame.Content = page;
     }
