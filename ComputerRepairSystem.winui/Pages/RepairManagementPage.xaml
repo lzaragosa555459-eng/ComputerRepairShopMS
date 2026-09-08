@@ -286,10 +286,10 @@
                         Grid.Column="4"
                         Text="{Binding Status}"/>
 
-                            <Button
-                        Grid.Column="5"
-                        Content="Open"
-                        Click="OpenRepairButton_Click"/>
+                           <Button
+                                Grid.Column="5"
+                                Content="Open"
+                                Click="OpenRepairButton_Click"/>
 
                         </Grid>
 

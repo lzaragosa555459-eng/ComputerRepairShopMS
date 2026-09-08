@@ -7,3 +7,147 @@ Accept: application/json
 DELETE {{ComputerRepairSystem.api_HostAddress}}/api/ServiceRequests/all
 
 ### 
+
+### CREATE RAM
+POST {{ComputerRepairSystem.api_HostAddress}}/api/InventoryItems
+Content-Type: application/json
+
+{
+    "itemName": "8GB DDR4 RAM",
+    "category": "RAM",
+    "description": "8GB DDR4 memory module",
+    "brand": "Kingston",
+    "model": "KVR26N19S8",
+    "unit": "Piece",
+    "unitCost": 900.00,
+    "unitPrice": 1200.00,
+    "reorderLevel": 5
+}
+
+###
+
+### CREATE SSD
+POST {{ComputerRepairSystem.api_HostAddress}}/api/InventoryItems
+Content-Type: application/json
+
+{
+    "itemName": "500GB SATA SSD",
+    "category": "Storage",
+    "description": "500GB SATA solid state drive",
+    "brand": "Kingston",
+    "model": "A400",
+    "unit": "Piece",
+    "unitCost": 1800.00,
+    "unitPrice": 2500.00,
+    "reorderLevel": 3
+}
+
+###
+
+### CREATE THERMAL PASTE
+POST {{ComputerRepairSystem.api_HostAddress}}/api/InventoryItems
+Content-Type: application/json
+
+{
+    "itemName": "Thermal Paste",
+    "category": "Consumable",
+    "description": "Thermal compound for CPU cooling",
+    "brand": "Arctic",
+    "model": "MX-4",
+    "unit": "Tube",
+    "unitCost": 250.00,
+    "unitPrice": 400.00,
+    "reorderLevel": 10
+}
+
+###
+
+### CREATE LAPTOP KEYBOARD
+POST {{ComputerRepairSystem.api_HostAddress}}/api/InventoryItems
+Content-Type: application/json
+
+{
+    "itemName": "Laptop Keyboard",
+    "category": "Keyboard",
+    "description": "Replacement laptop keyboard",
+    "brand": "Generic",
+    "model": "Universal",
+    "unit": "Piece",
+    "unitCost": 700.00,
+    "unitPrice": 1000.00,
+    "reorderLevel": 3
+}
+
+###
+
+### CREATE 65W ADAPTER
+POST {{ComputerRepairSystem.api_HostAddress}}/api/InventoryItems
+Content-Type: application/json
+
+{
+    "itemName": "65W Laptop Adapter",
+    "category": "Power Adapter",
+    "description": "Replacement laptop charger",
+    "brand": "Generic",
+    "model": "65W-UNIV",
+    "unit": "Piece",
+    "unitCost": 800.00,
+    "unitPrice": 1200.00,
+    "reorderLevel": 5
+}
+
+
+### RAM STOCK
+POST {{ComputerRepairSystem.api_HostAddress}}/api/Inventory
+Content-Type: application/json
+
+{
+    "itemId": 1,
+    "quantityOnHand": 20
+}
+
+###
+
+### SSD STOCK
+POST {{ComputerRepairSystem.api_HostAddress}}/api/Inventory
+Content-Type: application/json
+
+{
+    "itemId": 2,
+    "quantityOnHand": 10
+}
+
+###
+
+### THERMAL PASTE STOCK
+POST {{ComputerRepairSystem.api_HostAddress}}/api/Inventory
+Content-Type: application/json
+
+{
+    "itemId": 3,
+    "quantityOnHand": 25
+}
+
+###
+
+### LAPTOP KEYBOARD STOCK
+POST {{ComputerRepairSystem.api_HostAddress}}/api/Inventory
+Content-Type: application/json
+
+{
+    "itemId": 4,
+    "quantityOnHand": 8
+}
+
+###
+
+### 65W ADAPTER STOCK
+POST {{ComputerRepairSystem.api_HostAddress}}/api/Inventory
+Content-Type: application/json
+
+{
+    "itemId": 5,
+    "quantityOnHand": 12
+}
+
+###
