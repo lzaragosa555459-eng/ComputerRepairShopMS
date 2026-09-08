@@ -121,6 +121,8 @@ public partial class App : Application
 
         services.AddTransient<UserManagementPage>();
 
+        services.AddTransient<RepairManagementPage>();
+
 
         // ==========================================
         // MAIN WINDOW

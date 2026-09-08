@@ -14,7 +14,7 @@ public sealed partial class ServiceManagementPage : Page
     private readonly IDbContextFactory<TenantDbContext> _tenantDbFactory;
 
     private Customer? _selectedCustomer;
-
+    private List<Customer> _customers = new();
     public ServiceManagementPage(
         CustomerService customerService,
         IDbContextFactory<TenantDbContext> tenantDbFactory)
@@ -41,7 +41,9 @@ public sealed partial class ServiceManagementPage : Page
             var customers =
                 await _customerService.GetAllAsync();
 
-            CustomerList.ItemsSource = customers;
+            _customers = customers.ToList();
+
+            CustomerList.ItemsSource = _customers;
         }
         catch (Exception ex)
         {
@@ -347,59 +349,79 @@ public sealed partial class ServiceManagementPage : Page
 
         try
         {
+            int customerId;
+
+
             // ==========================================
-            // 1. CREATE CUSTOMER
+            // 1. CREATE OR REUSE CUSTOMER
             // ==========================================
 
-            var customer = new Customer
+            if (_selectedCustomer == null)
             {
-                FirstName =
-                    FirstNameBox.Text.Trim(),
+                // NEW CUSTOMER
 
-                MiddleName =
-                    string.IsNullOrWhiteSpace(
-                        MiddleNameBox.Text)
-                        ? null
-                        : MiddleNameBox.Text.Trim(),
+                var customer = new Customer
+                {
+                    FirstName =
+                        FirstNameBox.Text.Trim(),
 
-                LastName =
-                    LastNameBox.Text.Trim(),
+                    MiddleName =
+                        string.IsNullOrWhiteSpace(
+                            MiddleNameBox.Text)
+                            ? null
+                            : MiddleNameBox.Text.Trim(),
 
-                Phone =
-                    string.IsNullOrWhiteSpace(
-                        PhoneBox.Text)
-                        ? null
-                        : PhoneBox.Text.Trim(),
+                    LastName =
+                        LastNameBox.Text.Trim(),
 
-                Email =
-                    string.IsNullOrWhiteSpace(
-                        EmailBox.Text)
-                        ? null
-                        : EmailBox.Text.Trim(),
+                    Phone =
+                        string.IsNullOrWhiteSpace(
+                            PhoneBox.Text)
+                            ? null
+                            : PhoneBox.Text.Trim(),
 
-                Address =
-                    string.IsNullOrWhiteSpace(
-                        AddressBox.Text)
-                        ? null
-                        : AddressBox.Text.Trim()
-            };
+                    Email =
+                        string.IsNullOrWhiteSpace(
+                            EmailBox.Text)
+                            ? null
+                            : EmailBox.Text.Trim(),
+
+                    Address =
+                        string.IsNullOrWhiteSpace(
+                            AddressBox.Text)
+                            ? null
+                            : AddressBox.Text.Trim()
+                };
 
 
-            await _customerService.AddAsync(customer);
+                await _customerService.AddAsync(
+                    customer);
+
+
+                customerId =
+                    customer.CustomerId;
+            }
+            else
+            {
+                // EXISTING CUSTOMER
+
+                customerId =
+                    _selectedCustomer.CustomerId;
+            }
 
 
             // ==========================================
             // 2. CREATE DEVICE
             // ==========================================
 
-            using var context =
+            await using var context =
                 await _tenantDbFactory.CreateDbContextAsync();
 
 
             var device = new Device
             {
                 CustomerId =
-                    customer.CustomerId,
+                    customerId,
 
                 DeviceType =
                     DeviceTypeBox.Text.Trim(),
@@ -435,13 +457,17 @@ public sealed partial class ServiceManagementPage : Page
 
             var priority =
                 (PriorityBox.SelectedItem
-                    as ComboBoxItem)?.Content?.ToString()
+                    as ComboBoxItem)?
+                    .Content?
+                    .ToString()
                 ?? "Medium";
 
 
             var status =
                 (StatusBox.SelectedItem
-                    as ComboBoxItem)?.Content?.ToString()
+                    as ComboBoxItem)?
+                    .Content?
+                    .ToString()
                 ?? "Pending";
 
 
@@ -480,7 +506,7 @@ public sealed partial class ServiceManagementPage : Page
             await LoadCustomersAsync();
 
             ShowStatus(
-                "Customer, device, and service request created successfully.",
+                "Service request created successfully.",
                 InfoBarSeverity.Success);
         }
         catch (Exception ex)
@@ -617,5 +643,80 @@ public sealed partial class ServiceManagementPage : Page
                 + ex.Message,
                 InfoBarSeverity.Error);
         }
+    }
+    private void CustomerSearchBox_TextChanged(
+        object sender,
+        TextChangedEventArgs e)
+    {
+        var search =
+            CustomerSearchBox.Text.Trim();
+
+        if (string.IsNullOrWhiteSpace(search))
+        {
+            CustomerList.ItemsSource =
+                _customers;
+
+            return;
+        }
+
+        var results =
+            _customers
+                .Where(c =>
+                    c.FirstName.Contains(
+                        search,
+                        StringComparison.OrdinalIgnoreCase)
+                    ||
+                    c.LastName.Contains(
+                        search,
+                        StringComparison.OrdinalIgnoreCase)
+                    ||
+                    (
+                        c.FirstName + " " + c.LastName
+                    ).Contains(
+                        search,
+                        StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+        CustomerList.ItemsSource =
+            results;
+    }
+    private void NewCustomerButton_Click(
+    object sender,
+    RoutedEventArgs e)
+    {
+        _selectedCustomer = null;
+
+        CustomerList.SelectedItem = null;
+
+        CustomerSearchBox.Text =
+            string.Empty;
+
+        FirstNameBox.Text =
+            string.Empty;
+
+        MiddleNameBox.Text =
+            string.Empty;
+
+        LastNameBox.Text =
+            string.Empty;
+
+        PhoneBox.Text =
+            string.Empty;
+
+        EmailBox.Text =
+            string.Empty;
+
+        AddressBox.Text =
+            string.Empty;
+
+        DeviceList.ItemsSource =
+            null;
+
+        ServiceRequestList.ItemsSource =
+            null;
+
+        ShowStatus(
+            "Ready to register a new customer.",
+            InfoBarSeverity.Informational);
     }
 }

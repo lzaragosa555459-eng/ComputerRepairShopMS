@@ -53,6 +53,10 @@ public sealed partial class MainWindow : Window
                     NavigateToServiceManagementPage();
                     break;
 
+                case "repairs":
+                    NavigateToRepairManagementPage();
+                    break;
+
                 case "users":
                     NavigateToUserManagementPage();
                     break;
@@ -79,6 +83,13 @@ public sealed partial class MainWindow : Window
     {
         var page =
             App.Services.GetRequiredService<UserManagementPage>();
+
+        NavFrame.Content = page;
+    }
+    private void NavigateToRepairManagementPage()
+    {
+        var page =
+            App.Services.GetRequiredService<RepairManagementPage>();
 
         NavFrame.Content = page;
     }

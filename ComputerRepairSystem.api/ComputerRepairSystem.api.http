@@ -3,4 +3,7 @@
 GET {{ComputerRepairSystem.api_HostAddress}}/weatherforecast/
 Accept: application/json
 
-###
+### DELETE ALL TEST DATA
+DELETE {{ComputerRepairSystem.api_HostAddress}}/api/ServiceRequests/all
+
+### 

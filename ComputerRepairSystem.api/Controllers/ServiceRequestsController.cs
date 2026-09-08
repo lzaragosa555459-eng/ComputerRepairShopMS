@@ -194,4 +194,24 @@ public class ServiceRequestsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpDelete("all")]
+    public async Task<IActionResult> DeleteAll()
+    {
+        await using var db =
+            await _dbFactory.CreateDbContextAsync();
+
+        db.ServiceRequests.RemoveRange(
+            db.ServiceRequests);
+
+        db.Devices.RemoveRange(
+            db.Devices);
+
+        db.Customers.RemoveRange(
+            db.Customers);
+
+        await db.SaveChangesAsync();
+
+        return Ok("All customers, devices, and service requests have been deleted.");
+    }
 }

@@ -108,6 +108,11 @@ public class CustomersController : ControllerBase
     // GET: api/customers/{id}/services
     // ==========================================
 
+    // ==========================================
+    // GET CUSTOMER + DEVICES + SERVICE REQUESTS + REPAIRS
+    // GET: api/customers/{id}/services
+    // ==========================================
+
     [HttpGet("{id:int}/services")]
     public async Task<IActionResult> GetCustomerServices(
         int id)
@@ -149,7 +154,23 @@ public class CustomersController : ControllerBase
                                             r.RequestDate,
                                             r.Description,
                                             r.Status,
-                                            r.Priority
+                                            r.Priority,
+
+                                            Repair =
+                                                r.Repair == null
+                                                    ? null
+                                                    : new
+                                                    {
+                                                        r.Repair.RepairId,
+                                                        r.Repair.ServiceRequestId,
+                                                        r.Repair.TechnicianId,
+                                                        r.Repair.BranchId,
+                                                        r.Repair.Diagnosis,
+                                                        r.Repair.RepairDescription,
+                                                        r.Repair.Status,
+                                                        r.Repair.StartDate,
+                                                        r.Repair.EndDate
+                                                    }
                                         })
                             })
                 })

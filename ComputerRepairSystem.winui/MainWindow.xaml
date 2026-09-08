@@ -55,6 +55,14 @@
                 </NavigationViewItem>
                 
                 <NavigationViewItem
+                    Content="Repair Management"
+                    Tag="repairs">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE90F;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                
+                <NavigationViewItem
                     Content="User Management"
                     Tag="users">
                     <NavigationViewItem.Icon>
