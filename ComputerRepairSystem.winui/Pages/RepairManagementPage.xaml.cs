@@ -42,9 +42,12 @@ public sealed partial class RepairManagementPage : Page
                 await db.ServiceRequests
                     .AsNoTracking()
                     .Include(x => x.Device)
-                    .ThenInclude(x => x.Customer)
-                    .OrderByDescending(
-                        x => x.RequestDate)
+                        .ThenInclude(x => x.Customer)
+                    .Where(x =>
+                        x.Status != "In Repair" &&
+                        x.Status != "Completed" &&
+                        x.Status != "Cancelled")
+                    .OrderByDescending(x => x.RequestDate)
                     .ToListAsync();
 
             ServiceRequestList.ItemsSource =
@@ -240,9 +243,9 @@ public sealed partial class RepairManagementPage : Page
         }
     }
     private async Task CreateRepairAsync(
-    ServiceRequest request,
-    string diagnosis,
-    string repairDescription)
+        ServiceRequest request,
+        string diagnosis,
+        string repairDescription)
     {
         try
         {
@@ -265,6 +268,23 @@ public sealed partial class RepairManagementPage : Page
                 return;
             }
 
+            // Get the actual ServiceRequest tracked by this DbContext
+            var serviceRequest =
+                await db.ServiceRequests
+                    .FirstOrDefaultAsync(
+                        x =>
+                            x.ServiceRequestId ==
+                            request.ServiceRequestId);
+
+            if (serviceRequest == null)
+            {
+                await ShowMessageAsync(
+                    "Request Not Found",
+                    "The service request could not be found.");
+
+                return;
+            }
+
             var repair = new Repair
             {
                 ServiceRequestId =
@@ -280,22 +300,21 @@ public sealed partial class RepairManagementPage : Page
                     "Pending",
 
                 StartDate = null,
-
                 EndDate = null,
 
                 TechnicianId = null,
-
                 BranchId = null
             };
 
             db.Repairs.Add(repair);
 
-            request.Status =
-                "Approved";
+            // Update the tracked ServiceRequest
+            serviceRequest.Status = "In Repair";
 
             await db.SaveChangesAsync();
 
             await LoadServiceRequestsAsync();
+            await LoadRepairsAsync();
 
             await ShowMessageAsync(
                 "Repair Created",
@@ -335,6 +354,7 @@ public sealed partial class RepairManagementPage : Page
                     .Include(r => r.ServiceRequest)
                         .ThenInclude(sr => sr.Device)
                             .ThenInclude(d => d.Customer)
+                    .Where(r => r.Status != "Completed")
                     .OrderByDescending(
                         r => r.RepairId)
                     .ToListAsync();

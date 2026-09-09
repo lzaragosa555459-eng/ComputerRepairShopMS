@@ -21,10 +21,12 @@
 		<WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Pages\BillingPage.xaml" />
 	  <None Remove="Pages\UserManagementPage.xaml" />
 	</ItemGroup>
 
   <ItemGroup>
+    <Content Include="..\..\..\..\Downloads\LogoIT13CRS.png" Link="Assets\LogoIT13CRS.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
@@ -44,6 +46,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</None>
+		<Page Update="Pages\BillingPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Pages\UserManagementPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</Page>
