@@ -1,5 +1,6 @@
 using ComputerRepairSystem.company.Services;
 using ComputerRepairSystem_winui.Pages;
+using ComputerRepairSystem_winui.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -13,6 +14,8 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+        ShowLogin();
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
@@ -32,11 +35,97 @@ public sealed partial class MainWindow : Window
         NavFrame.GoBack();
     }
 
-
-    private void NavView_SelectionChanged(
-        NavigationView sender,
-        NavigationViewSelectionChangedEventArgs args)
+    public void ShowApplication()
     {
+        HomeItem.Visibility =
+            Visibility.Visible;
+
+        ServiceManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        AboutItem.Visibility =
+            Visibility.Visible;
+
+        RepairManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        BillingItem.Visibility =
+            Visibility.Collapsed;
+
+        UserManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        var role = CurrentUser.Role;
+
+        if (role == "Admin")
+        {
+            ServiceManagementItem.Visibility =
+                Visibility.Visible;
+
+            RepairManagementItem.Visibility =
+                Visibility.Visible;
+
+            BillingItem.Visibility =
+                Visibility.Visible;
+
+            UserManagementItem.Visibility =
+                Visibility.Visible;
+        }
+        else if (role == "Technician")
+        {
+            RepairManagementItem.Visibility =
+                Visibility.Visible;
+        }
+        else if (role == "Receptionist")
+        {
+            ServiceManagementItem.Visibility =
+                Visibility.Visible;
+
+            BillingItem.Visibility =
+                Visibility.Visible;
+        }
+
+        HomeItem.IsSelected = true;
+
+        NavFrame.Content =
+            App.Services
+                .GetRequiredService<HomePage>();
+    }
+    public void ShowLogin()
+    {
+        HomeItem.Visibility =
+            Visibility.Collapsed;
+
+        ServiceManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        RepairManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        BillingItem.Visibility =
+            Visibility.Collapsed;
+
+        UserManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        AboutItem.Visibility =
+            Visibility.Collapsed;
+
+        HomeItem.IsSelected = false;
+
+        NavFrame.Content =
+            App.Services
+                .GetRequiredService<LoginPage>();
+    }
+    private void NavView_SelectionChanged(
+       NavigationView sender,
+       NavigationViewSelectionChangedEventArgs args)
+    {
+        if (!CurrentUser.IsLoggedIn)
+        {
+            return;
+        }
+
         if (args.IsSettingsSelected)
         {
             NavFrame.Navigate(typeof(SettingsPage));
@@ -68,10 +157,6 @@ public sealed partial class MainWindow : Window
                 case "about":
                     NavFrame.Navigate(typeof(AboutPage));
                     break;
-
-                default:
-                    throw new InvalidOperationException(
-                        $"Unknown navigation item tag: {item.Tag}");
             }
         }
     }

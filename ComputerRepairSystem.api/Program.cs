@@ -6,8 +6,8 @@ using ComputerRepairSystem.infrastructure.Entities;
 using ComputerRepairSystem.domain.Entities;
 
 using ComputerRepairSystem.infrastructure.data;
-
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using ComputerRepairSystem.infrastructure.Services;
@@ -142,6 +142,47 @@ app.MapPost(
 // CONTROLLERS
 // ==========================================
 
+
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var userManager =
+        scope.ServiceProvider
+            .GetRequiredService<UserManager<ApplicationUser>>();
+
+    var admin =
+        await userManager.FindByNameAsync("admin");
+
+    if (admin == null)
+    {
+        Console.WriteLine("ADMIN NOT FOUND");
+    }
+    else
+    {
+        Console.WriteLine(
+            $"ADMIN FOUND: {admin.UserName}");
+
+        Console.WriteLine(
+            $"CURRENT HASH: {admin.PasswordHash}");
+
+        if (string.IsNullOrEmpty(admin.PasswordHash))
+        {
+            var result =
+                await userManager.AddPasswordAsync(
+                    admin,
+                    "Admin123!");
+
+            Console.WriteLine(
+                $"PASSWORD RESULT: {result.Succeeded}");
+
+            foreach (var error in result.Errors)
+            {
+                Console.WriteLine(
+                    $"{error.Code}: {error.Description}");
+            }
+        }
+    }
+}
 
 app.Run();

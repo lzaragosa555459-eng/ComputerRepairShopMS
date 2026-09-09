@@ -19,25 +19,31 @@
         </Grid.RowDefinitions>
 
         <TitleBar
-            x:Name="AppTitleBar"
-            Title="ComputerRepairSystem.winui"
-            BackRequested="TitleBar_BackRequested"
-            IsBackButtonVisible="{x:Bind NavFrame.CanGoBack, Mode=OneWay}"
-            IsPaneToggleButtonVisible="True"
-            PaneToggleRequested="TitleBar_PaneToggleRequested">
+        x:Name="AppTitleBar"
+        Title="ComputerRepairSystem.winui"
+        BackRequested="TitleBar_BackRequested"
+        IsBackButtonVisible="{x:Bind NavFrame.CanGoBack, Mode=OneWay}"
+        IsPaneToggleButtonVisible="True"
+        PaneToggleRequested="TitleBar_PaneToggleRequested">
+
             <TitleBar.IconSource>
-                <ImageIconSource ImageSource="Assets/AppIcon.ico" />
+                <ImageIconSource
+                ImageSource="Assets/LogoIT13CRS.png" />
             </TitleBar.IconSource>
+
         </TitleBar>
 
-        <NavigationView
+        <Grid Grid.Row="1">
+
+            <NavigationView
             x:Name="NavView"
-            Grid.Row="1"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             SelectionChanged="NavView_SelectionChanged">
-            <NavigationView.MenuItems>
-                <NavigationViewItem
+
+                <NavigationView.MenuItems>
+                    <NavigationViewItem
+                    x:Name="HomeItem"
                     Content="Home"
                     IsSelected="True"
                     Tag="home">
@@ -47,6 +53,7 @@
                 </NavigationViewItem>
                 
                 <NavigationViewItem
+                    x:Name="ServiceManagementItem"
                     Content="Service Management"
                     Tag="customers">
                     <NavigationViewItem.Icon>
@@ -55,6 +62,7 @@
                 </NavigationViewItem>
                 
                 <NavigationViewItem
+                    x:Name="RepairManagementItem"
                     Content="Repair Management"
                     Tag="repairs">
                     <NavigationViewItem.Icon>
@@ -63,6 +71,7 @@
                 </NavigationViewItem>
 
                 <NavigationViewItem
+                    x:Name="BillingItem"
                     Content="Billing"
                     Tag="billing">
                     <NavigationViewItem.Icon>
@@ -71,20 +80,27 @@
                 </NavigationViewItem>
                 
                 <NavigationViewItem
+                    x:Name="UserManagementItem"
                     Content="User Management"
                     Tag="users">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE77B;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                
-                <NavigationViewItem Content="About" Tag="about">
+
+                    <NavigationViewItem Content="About" Tag="about" x:Name="AboutItem">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEA3A;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-            </NavigationView.MenuItems>
-            <Frame x:Name="NavFrame" />
-        </NavigationView>
+                </NavigationView.MenuItems>
+
+                <Frame
+                x:Name="NavFrame" />
+
+            </NavigationView>
+
+        </Grid>
+
     </Grid>
 </Window>

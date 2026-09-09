@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
@@ -22,6 +22,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Pages\BillingPage.xaml" />
+	  <None Remove="Pages\LoginPage.xaml" />
 	  <None Remove="Pages\UserManagementPage.xaml" />
 	</ItemGroup>
 
@@ -46,6 +47,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</None>
+		<Page Update="Pages\LoginPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Pages\BillingPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</Page>
