@@ -10,7 +10,7 @@ public sealed partial class InventoryManagementPage : Page
 {
     private readonly IDbContextFactory<TenantDbContext> _dbFactory;
 
-    private List<Inventory> _inventory = new();
+    private List<InventoryDisplayItem> _inventory = new();
 
     public InventoryManagementPage(
         IDbContextFactory<TenantDbContext> dbFactory)
@@ -44,23 +44,65 @@ public sealed partial class InventoryManagementPage : Page
         await using var db =
             await _dbFactory.CreateDbContextAsync();
 
-        _inventory = await db.Inventories
+        var inventory = await db.Inventories
             .Include(x => x.Item)
             .Where(x => x.Item != null)
             .OrderBy(x => x.Item!.ItemName)
             .ToListAsync();
 
+        var itemIds = inventory
+            .Select(x => x.ItemId)
+            .ToList();
+
+        var usedQuantities = await db.RepairItems
+            .Where(x => itemIds.Contains(x.ItemId))
+            .GroupBy(x => x.ItemId)
+            .Select(g => new
+            {
+                ItemId = g.Key,
+                Quantity = g.Sum(x => x.Quantity)
+            })
+            .ToDictionaryAsync(
+                x => x.ItemId,
+                x => x.Quantity);
+
+        _inventory = inventory
+            .Select(x =>
+            {
+                var usedQuantity =
+                    usedQuantities.TryGetValue(
+                        x.ItemId,
+                        out var quantity)
+                        ? quantity
+                        : 0;
+
+                return new InventoryDisplayItem
+                {
+                    InventoryId = x.InventoryId,
+                    ItemId = x.ItemId,
+                    ItemName = x.Item!.ItemName,
+                    Category = x.Item.Category,
+                    Brand = x.Item.Brand,
+                    Model = x.Item.Model,
+                    Unit = x.Item.Unit,
+                    QuantityOnHand = x.QuantityOnHand,
+                    AvailableQuantity = x.QuantityOnHand - usedQuantity
+                };
+            })
+            .ToList();
+
         InventoryList.ItemsSource = _inventory;
     }
+
 
 
     // ==============================
     // SEARCH
     // ==============================
 
-    private void SearchBox_TextChanged(
-        object sender,
-        TextChangedEventArgs e)
+private void SearchBox_TextChanged(
+    object sender,
+    TextChangedEventArgs e)
     {
         var search =
             SearchBox.Text.Trim();
@@ -74,26 +116,24 @@ public sealed partial class InventoryManagementPage : Page
         var filtered =
             _inventory
                 .Where(x =>
-                    x.Item != null &&
-                    (
-                        x.Item.ItemName.Contains(
+                    x.ItemName.Contains(
+                        search,
+                        StringComparison.OrdinalIgnoreCase)
+
+                    || x.Category.Contains(
+                        search,
+                        StringComparison.OrdinalIgnoreCase)
+
+                    || (x.Brand ?? "")
+                        .Contains(
                             search,
                             StringComparison.OrdinalIgnoreCase)
 
-                        || x.Item.Category.Contains(
+                    || (x.Model ?? "")
+                        .Contains(
                             search,
                             StringComparison.OrdinalIgnoreCase)
-
-                        || (x.Item.Brand ?? "")
-                            .Contains(
-                                search,
-                                StringComparison.OrdinalIgnoreCase)
-
-                        || (x.Item.Model ?? "")
-                            .Contains(
-                                search,
-                                StringComparison.OrdinalIgnoreCase)
-                    ))
+                )
                 .ToList();
 
         InventoryList.ItemsSource = filtered;
@@ -392,15 +432,32 @@ public sealed partial class InventoryManagementPage : Page
         RoutedEventArgs e)
     {
         if (sender is not Button button ||
-            button.Tag is not Inventory inventory ||
-            inventory.Item is null)
+            button.Tag is not InventoryDisplayItem displayItem)
         {
             return;
         }
 
+        await using var db =
+            await _dbFactory.CreateDbContextAsync();
 
-        var item = inventory.Item;
+        var item =
+            await db.InventoryItems
+                .FirstOrDefaultAsync(
+                    x => x.ItemId == displayItem.ItemId);
 
+        if (item == null)
+        {
+            await ShowMessageAsync(
+                "Item Not Found",
+                "The inventory item could not be found.");
+
+            return;
+        }
+
+
+        // ==============================
+        // INPUT FIELDS
+        // ==============================
 
         var itemNameBox = new TextBox
         {
@@ -408,13 +465,19 @@ public sealed partial class InventoryManagementPage : Page
             Text = item.ItemName
         };
 
-
         var categoryBox = new TextBox
         {
             Header = "Category",
             Text = item.Category
         };
 
+        var descriptionBox = new TextBox
+        {
+            Header = "Description",
+            Text = item.Description ?? "",
+            AcceptsReturn = true,
+            TextWrapping = TextWrapping.Wrap
+        };
 
         var brandBox = new TextBox
         {
@@ -422,20 +485,17 @@ public sealed partial class InventoryManagementPage : Page
             Text = item.Brand ?? ""
         };
 
-
         var modelBox = new TextBox
         {
             Header = "Model",
             Text = item.Model ?? ""
         };
 
-
         var unitBox = new TextBox
         {
             Header = "Unit",
             Text = item.Unit
         };
-
 
         var unitCostBox = new NumberBox
         {
@@ -444,14 +504,12 @@ public sealed partial class InventoryManagementPage : Page
             Minimum = 0
         };
 
-
         var unitPriceBox = new NumberBox
         {
             Header = "Unit Price",
             Value = (double)item.UnitPrice,
             Minimum = 0
         };
-
 
         var reorderLevelBox = new NumberBox
         {
@@ -461,14 +519,18 @@ public sealed partial class InventoryManagementPage : Page
         };
 
 
+        // ==============================
+        // FORM
+        // ==============================
+
         var panel = new StackPanel
         {
             Spacing = 10
         };
 
-
         panel.Children.Add(itemNameBox);
         panel.Children.Add(categoryBox);
+        panel.Children.Add(descriptionBox);
         panel.Children.Add(brandBox);
         panel.Children.Add(modelBox);
         panel.Children.Add(unitBox);
@@ -484,6 +546,10 @@ public sealed partial class InventoryManagementPage : Page
         };
 
 
+        // ==============================
+        // DIALOG
+        // ==============================
+
         var dialog = new ContentDialog
         {
             Title = "Edit Inventory Item",
@@ -493,20 +559,50 @@ public sealed partial class InventoryManagementPage : Page
             XamlRoot = XamlRoot
         };
 
-
         var result =
             await dialog.ShowAsync();
-
 
         if (result != ContentDialogResult.Primary)
             return;
 
+
+        // ==============================
+        // VALIDATION
+        // ==============================
+
+        if (string.IsNullOrWhiteSpace(itemNameBox.Text))
+        {
+            await ShowMessageAsync(
+                "Missing Item Name",
+                "Please enter an item name.");
+
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(categoryBox.Text))
+        {
+            await ShowMessageAsync(
+                "Missing Category",
+                "Please enter a category.");
+
+            return;
+        }
+
+
+        // ==============================
+        // UPDATE ITEM
+        // ==============================
 
         item.ItemName =
             itemNameBox.Text.Trim();
 
         item.Category =
             categoryBox.Text.Trim();
+
+        item.Description =
+            string.IsNullOrWhiteSpace(descriptionBox.Text)
+                ? null
+                : descriptionBox.Text.Trim();
 
         item.Brand =
             string.IsNullOrWhiteSpace(brandBox.Text)
@@ -532,18 +628,14 @@ public sealed partial class InventoryManagementPage : Page
         item.ReorderLevel =
             (decimal)reorderLevelBox.Value;
 
-        await using var db =
-        await _dbFactory.CreateDbContextAsync();
 
         await db.SaveChangesAsync();
 
-
         await LoadInventoryAsync();
-
 
         await ShowMessageAsync(
             "Item Updated",
-            "The inventory item has been updated.");
+            "The inventory item has been updated successfully.");
     }
 
 

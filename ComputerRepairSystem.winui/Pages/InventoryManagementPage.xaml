@@ -83,22 +83,22 @@
             <!-- INVENTORY TABLE -->
 
             <Border
-                Grid.Row="2"
-                BorderThickness="1"
-                CornerRadius="8">
+    Grid.Row="2"
+    BorderThickness="1"
+    CornerRadius="8">
 
                 <ListView
-                    x:Name="InventoryList">
+        x:Name="InventoryList">
 
                     <ListView.Header>
 
                         <Grid
-                            Padding="16,12">
+                Padding="16,12">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2.5*"/>
                                 <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="1.2*"/>
                                 <ColumnDefinition Width="1.2*"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -106,34 +106,34 @@
 
 
                             <TextBlock
-                                Grid.Column="0"
-                                Text="Item"
-                                FontWeight="SemiBold"/>
+                    Grid.Column="0"
+                    Text="Item"
+                    FontWeight="SemiBold"/>
 
                             <TextBlock
-                                Grid.Column="1"
-                                Text="Category"
-                                FontWeight="SemiBold"/>
+                    Grid.Column="1"
+                    Text="Category"
+                    FontWeight="SemiBold"/>
 
                             <TextBlock
-                                Grid.Column="2"
-                                Text="Brand / Model"
-                                FontWeight="SemiBold"/>
+                    Grid.Column="2"
+                    Text="Brand / Model"
+                    FontWeight="SemiBold"/>
 
                             <TextBlock
-                                Grid.Column="3"
-                                Text="Unit"
-                                FontWeight="SemiBold"/>
+                    Grid.Column="3"
+                    Text="Unit"
+                    FontWeight="SemiBold"/>
 
                             <TextBlock
-                                Grid.Column="4"
-                                Text="Stock"
-                                FontWeight="SemiBold"/>
+                    Grid.Column="4"
+                    Text="Available"
+                    FontWeight="SemiBold"/>
 
                             <TextBlock
-                                Grid.Column="5"
-                                Text="Action"
-                                FontWeight="SemiBold"/>
+                    Grid.Column="5"
+                    Text="Action"
+                    FontWeight="SemiBold"/>
 
                         </Grid>
 
@@ -145,12 +145,12 @@
                         <DataTemplate>
 
                             <Grid
-                                Padding="16,12">
+                    Padding="16,12">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2.5*"/>
                                     <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="1.2*"/>
                                     <ColumnDefinition Width="1.2*"/>
                                     <ColumnDefinition Width="Auto"/>
@@ -160,29 +160,29 @@
                                 <!-- ITEM -->
 
                                 <TextBlock
-                                    Grid.Column="0"
-                                    Text="{Binding Item.ItemName}"
-                                    VerticalAlignment="Center"
-                                    FontWeight="SemiBold"/>
+                        Grid.Column="0"
+                        Text="{Binding ItemName}"
+                        VerticalAlignment="Center"
+                        FontWeight="SemiBold"/>
 
 
                                 <!-- CATEGORY -->
 
                                 <TextBlock
-                                    Grid.Column="1"
-                                    Text="{Binding Item.Category}"
-                                    VerticalAlignment="Center"/>
+                        Grid.Column="1"
+                        Text="{Binding Category}"
+                        VerticalAlignment="Center"/>
 
 
                                 <!-- BRAND / MODEL -->
 
                                 <TextBlock
-                                    Grid.Column="2"
-                                    VerticalAlignment="Center">
+                        Grid.Column="2"
+                        VerticalAlignment="Center">
 
-                                    <Run Text="{Binding Item.Brand}"/>
-                                    <Run Text=" "/>
-                                    <Run Text="{Binding Item.Model}"/>
+                        <Run Text="{Binding Brand}"/>
+                        <Run Text=" "/>
+                        <Run Text="{Binding Model}"/>
 
                                 </TextBlock>
 
@@ -190,27 +190,27 @@
                                 <!-- UNIT -->
 
                                 <TextBlock
-                                    Grid.Column="3"
-                                    Text="{Binding Item.Unit}"
-                                    VerticalAlignment="Center"/>
+                        Grid.Column="3"
+                        Text="{Binding Unit}"
+                        VerticalAlignment="Center"/>
 
 
-                                <!-- STOCK -->
+                                <!-- AVAILABLE -->
 
                                 <TextBlock
-                                    Grid.Column="4"
-                                    Text="{Binding QuantityOnHand}"
-                                    VerticalAlignment="Center"
-                                    FontWeight="SemiBold"/>
+                        Grid.Column="4"
+                        Text="{Binding AvailableQuantity}"
+                        VerticalAlignment="Center"
+                        FontWeight="SemiBold"/>
 
 
                                 <!-- ACTION -->
 
                                 <Button
-                                    Grid.Column="5"
-                                    Content="Edit"
-                                    Tag="{Binding}"
-                                    Click="EditItemButton_Click"/>
+                        Grid.Column="5"
+                        Content="Edit"
+                        Tag="{Binding}"
+                        Click="EditItemButton_Click"/>
 
                             </Grid>
 
