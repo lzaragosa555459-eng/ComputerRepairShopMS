@@ -361,26 +361,24 @@
                                 Content="New Customer"
                                 Click="NewCustomerButton_Click"/>
 
-                                </StackPanel>   
-
+                                </StackPanel>  
 
                         <!-- CUSTOMER TABLE -->
 
                         <Border
-                        BorderThickness="1"
-                        CornerRadius="8">
+                            BorderThickness="1"
+                            CornerRadius="8">
 
-                                        <ListView
-                            x:Name="CustomerList"
-                            MaxHeight="450">
+                            <ListView
+                                x:Name="CustomerList"
+                                MaxHeight="450"
+                                SelectionChanged="CustomerList_SelectionChanged">
 
-                            <ListView.Header>
+                                <ListView.Header>
 
-                                <Grid
-                                    Padding="8">
+                                    <Grid Padding="8">
 
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="60"/>
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="*"/>
@@ -389,34 +387,29 @@
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock
-                            Grid.Column="0"
-                            Text="ID"
-                            FontWeight="SemiBold"/>
+                                            Grid.Column="0"
+                                            Text="First Name"
+                                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                            Grid.Column="1"
-                            Text="First Name"
-                            FontWeight="SemiBold"/>
+                                            Grid.Column="1"
+                                            Text="Last Name"
+                                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                            Grid.Column="2"
-                            Text="Last Name"
-                            FontWeight="SemiBold"/>
+                                            Grid.Column="2"
+                                            Text="Phone"
+                                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                            Grid.Column="3"
-                            Text="Phone"
-                            FontWeight="SemiBold"/>
+                                            Grid.Column="3"
+                                            Text="Email"
+                                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                            Grid.Column="4"
-                            Text="Email"
-                            FontWeight="SemiBold"/>
-
-                                        <TextBlock
-                            Grid.Column="5"
-                            Text="Action"
-                            FontWeight="SemiBold"/>
+                                            Grid.Column="4"
+                                            Text="Action"
+                                            FontWeight="SemiBold"/>
 
                                     </Grid>
 
@@ -427,11 +420,9 @@
 
                                     <DataTemplate>
 
-                                        <Grid
-                                            Padding="8">
+                                        <Grid Padding="8">
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="60"/>
                                                 <ColumnDefinition Width="2*"/>
                                                 <ColumnDefinition Width="2*"/>
                                                 <ColumnDefinition Width="*"/>
@@ -440,31 +431,28 @@
                                             </Grid.ColumnDefinitions>
 
                                             <TextBlock
-                                Grid.Column="0"
-                                Text="{Binding CustomerId}"/>
+                                                Grid.Column="0"
+                                                Text="{Binding FirstName}"/>
 
                                             <TextBlock
-                                Grid.Column="1"
-                                Text="{Binding FirstName}"/>
+                                                Grid.Column="1"
+                                                Text="{Binding LastName}"/>
 
                                             <TextBlock
-                                Grid.Column="2"
-                                Text="{Binding LastName}"/>
+                                                Grid.Column="2"
+                                                Text="{Binding Phone}"
+                                                TextTrimming="CharacterEllipsis"/>
 
                                             <TextBlock
-                                Grid.Column="3"
-                                Text="{Binding Phone}"/>
-
-                                            <TextBlock
-                                Grid.Column="4"
-                                Text="{Binding Email}"
-                                TextTrimming="CharacterEllipsis"/>
+                                                Grid.Column="3"
+                                                Text="{Binding Email}"
+                                                TextTrimming="CharacterEllipsis"/>
 
                                             <Button
-                                Grid.Column="5"
-                                Content="View"
-                                Tag="{Binding}"
-                                Click="ViewCustomerButton_Click"/>
+                                                Grid.Column="4"
+                                                Content="View"
+                                                Tag="{Binding}"
+                                                Click="ViewCustomerButton_Click"/>
 
                                         </Grid>
 

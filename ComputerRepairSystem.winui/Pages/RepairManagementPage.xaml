@@ -69,47 +69,41 @@
                                 <Grid Padding="8">
 
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="70"/>
-                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="2.5*"/>
                                         <ColumnDefinition Width="2*"/>
                                         <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1.2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        Text="ID"
-                                        FontWeight="SemiBold"/>
-
-                                    <TextBlock
-                                        Grid.Column="1"
                                         Text="Customer"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="2"
+                                        Grid.Column="1"
                                         Text="Device"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="3"
+                                        Grid.Column="2"
                                         Text="Description"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="4"
+                                        Grid.Column="3"
                                         Text="Priority"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="5"
+                                        Grid.Column="4"
                                         Text="Status"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="6"
+                                        Grid.Column="5"
                                         Text="Action"
                                         FontWeight="SemiBold"/>
 
@@ -125,49 +119,45 @@
                                     <Grid Padding="8">
 
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="70"/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2.5*"/>
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1.2*"/>
+                                            <ColumnDefinition Width="1.5*"/>
                                         </Grid.ColumnDefinitions>
 
 
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Text="{Binding ServiceRequestId}"/>
+                                        <TextBlock Grid.Column="0">
+                                            <Run Text="{Binding Device.Customer.FirstName}"/>
+                                            <Run Text="{Binding Device.Customer.MiddleName, TargetNullValue=''}"/>
+                                            <Run Text="{Binding Device.Customer.LastName}"/>
+                                        </TextBlock>
 
 
                                         <TextBlock
                                             Grid.Column="1"
-                                            Text="{Binding Device.Customer.FirstName}"/>
-
-
-                                        <TextBlock
-                                            Grid.Column="2"
                                             Text="{Binding Device.Model}"/>
 
 
                                         <TextBlock
-                                            Grid.Column="3"
+                                            Grid.Column="2"
                                             Text="{Binding Description}"
                                             TextWrapping="Wrap"/>
 
 
                                         <TextBlock
-                                            Grid.Column="4"
+                                            Grid.Column="3"
                                             Text="{Binding Priority}"/>
 
 
                                         <TextBlock
-                                            Grid.Column="5"
+                                            Grid.Column="4"
                                             Text="{Binding Status}"/>
 
 
                                         <Button
-                                            Grid.Column="6"
+                                            Grid.Column="5"
                                             Content="Diagnose"
                                             Click="DiagnoseButton_Click"/>
 
@@ -210,42 +200,35 @@
                                 <Grid Padding="8">
 
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="70"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="2.5*"/>
                                         <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1.2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
                                     </Grid.ColumnDefinitions>
-
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        Text="ID"
-                                        FontWeight="SemiBold"/>
-
-                                    <TextBlock
-                                        Grid.Column="1"
                                         Text="Customer"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="2"
+                                        Grid.Column="1"
                                         Text="Device"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="3"
+                                        Grid.Column="2"
                                         Text="Diagnosis"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="4"
+                                        Grid.Column="3"
                                         Text="Status"
                                         FontWeight="SemiBold"/>
 
                                     <TextBlock
-                                        Grid.Column="5"
+                                        Grid.Column="4"
                                         Text="Action"
                                         FontWeight="SemiBold"/>
 
@@ -261,43 +244,40 @@
                                     <Grid Padding="8">
 
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="70"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="2.5*"/>
                                             <ColumnDefinition Width="3*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1.2*"/>
+                                            <ColumnDefinition Width="1.5*"/>
                                         </Grid.ColumnDefinitions>
 
-
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Text="{Binding RepairId}"/>
+                                        <TextBlock Grid.Column="0">
+                                            <Run Text="{Binding ServiceRequest.Device.Customer.FirstName}"/>
+                                            <Run Text=" "/>
+                                            <Run Text="{Binding ServiceRequest.Device.Customer.MiddleName, TargetNullValue=?}"/>
+                                            <Run Text=" "/>
+                                            <Run Text="{Binding ServiceRequest.Device.Customer.LastName}"/>
+                                        </TextBlock>
 
 
                                         <TextBlock
                                             Grid.Column="1"
-                                            Text="{Binding ServiceRequest.Device.Customer.FirstName}"/>
-
-
-                                        <TextBlock
-                                            Grid.Column="2"
                                             Text="{Binding ServiceRequest.Device.Model}"/>
 
 
                                         <TextBlock
-                                            Grid.Column="3"
+                                            Grid.Column="2"
                                             Text="{Binding Diagnosis}"
                                             TextWrapping="Wrap"/>
 
 
                                         <TextBlock
-                                            Grid.Column="4"
+                                            Grid.Column="3"
                                             Text="{Binding Status}"/>
 
 
                                         <Button
-                                            Grid.Column="5"
+                                            Grid.Column="4"
                                             Content="Open"
                                             Click="OpenRepairButton_Click"/>
 

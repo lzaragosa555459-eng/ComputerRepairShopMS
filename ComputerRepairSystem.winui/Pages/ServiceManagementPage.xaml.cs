@@ -610,11 +610,15 @@ public sealed partial class ServiceManagementPage : Page
     }
 
     private async void ViewCustomerButton_Click(
-    object sender,
-    RoutedEventArgs e)
+        object sender,
+        RoutedEventArgs e)
     {
-        if (sender is not Button button ||
-            button.Tag is not Customer customer)
+        if (sender is not Button button)
+        {
+            return;
+        }
+
+        if (button.Tag is not Customer customer)
         {
             return;
         }
@@ -1030,5 +1034,54 @@ public sealed partial class ServiceManagementPage : Page
                 ex.Message,
                 InfoBarSeverity.Error);
         }
+    }
+    private async void CustomerList_SelectionChanged(
+    object sender,
+    SelectionChangedEventArgs e)
+    {
+        if (CustomerList.SelectedItem is not Customer customer)
+        {
+            return;
+        }
+
+        _selectedCustomer = customer;
+
+        // ==========================================
+        // FILL CUSTOMER INFORMATION
+        // ==========================================
+
+        FirstNameBox.Text =
+            customer.FirstName;
+
+        MiddleNameBox.Text =
+            customer.MiddleName ?? string.Empty;
+
+        LastNameBox.Text =
+            customer.LastName;
+
+        PhoneBox.Text =
+            customer.Phone ?? string.Empty;
+
+        EmailBox.Text =
+            customer.Email ?? string.Empty;
+
+        AddressBox.Text =
+            customer.Address ?? string.Empty;
+
+
+        // ==========================================
+        // CLEAR DEVICE/REQUEST FORM
+        // ==========================================
+
+        DeviceTypeBox.Text = string.Empty;
+        BrandBox.Text = string.Empty;
+        ModelBox.Text = string.Empty;
+        SerialNumberBox.Text = string.Empty;
+        DeviceConditionBox.Text = string.Empty;
+
+        DescriptionBox.Text = string.Empty;
+
+        PriorityBox.SelectedIndex = 1;
+        StatusBox.SelectedIndex = 0;
     }
 }

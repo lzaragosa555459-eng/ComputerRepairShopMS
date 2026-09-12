@@ -1251,6 +1251,9 @@ public sealed partial class RepairManagementPage : Page
                     PrimaryButtonText =
                         "Save Changes",
 
+                    SecondaryButtonText =
+                        "Complete Repair",
+
                     CloseButtonText =
                         "Close",
 
@@ -1261,16 +1264,79 @@ public sealed partial class RepairManagementPage : Page
                         XamlRoot
                 };
 
-
             var result =
                 await dialog.ShowAsync();
 
+            if (result == ContentDialogResult.Secondary)
+            {
+                repair.Diagnosis =
+                    string.IsNullOrWhiteSpace(
+                        diagnosisBox.Text)
+                        ? null
+                        : diagnosisBox.Text.Trim();
 
-            if (result !=
-                ContentDialogResult.Primary)
+                repair.RepairDescription =
+                    string.IsNullOrWhiteSpace(
+                        repairDescriptionBox.Text)
+                        ? null
+                        : repairDescriptionBox.Text.Trim();
+
+                repair.Status =
+                    "Completed";
+
+                repair.EndDate =
+                    endDatePicker.Date?.DateTime
+                    ?? DateTime.UtcNow;
+
+                await db.SaveChangesAsync();
+
+                await LoadRepairsAsync();
+
+                await ShowMessageAsync(
+                    "Repair Completed",
+                    "The repair has been marked as completed.");
+
+                return;
+            }
+
+            if (result != ContentDialogResult.Primary)
             {
                 return;
             }
+
+
+            // ==========================================
+            // SAVE REPAIR
+            // ==========================================
+
+            repair.Diagnosis =
+                string.IsNullOrWhiteSpace(
+                    diagnosisBox.Text)
+                    ? null
+                    : diagnosisBox.Text.Trim();
+
+            repair.RepairDescription =
+                string.IsNullOrWhiteSpace(
+                    repairDescriptionBox.Text)
+                    ? null
+                    : repairDescriptionBox.Text.Trim();
+
+            repair.Status =
+                (statusBox.SelectedItem
+                    as ComboBoxItem)?
+                    .Content?
+                    .ToString()
+                    ?? "Pending";
+
+            repair.StartDate =
+                startDatePicker.Date?.DateTime;
+
+            repair.EndDate =
+                endDatePicker.Date?.DateTime;
+
+            await db.SaveChangesAsync();
+
+            await LoadRepairsAsync();
 
 
             // ==========================================
