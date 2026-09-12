@@ -211,43 +211,6 @@ public sealed partial class ServiceManagementPage : Page
         ClearForm();
     }
 
-    private async void CustomerList_SelectionChanged(
-        object sender,
-        SelectionChangedEventArgs e)
-    {
-
-        if (CustomerList.SelectedItem is not Customer customer)
-        {
-            DeviceList.ItemsSource = null;
-            return;
-        }
-
-        _selectedCustomer = customer;
-
-        FirstNameBox.Text =
-            customer.FirstName;
-
-        MiddleNameBox.Text =
-            customer.MiddleName ?? string.Empty;
-
-        LastNameBox.Text =
-            customer.LastName;
-
-        PhoneBox.Text =
-            customer.Phone ?? string.Empty;
-
-        EmailBox.Text =
-            customer.Email ?? string.Empty;
-
-        AddressBox.Text =
-            customer.Address ?? string.Empty;
-
-        ServiceRequestList.ItemsSource = null;
-
-        await LoadCustomerDevicesAsync(
-            customer.CustomerId);
-
-    }
 
 
     private bool ValidateInput()
@@ -575,75 +538,7 @@ public sealed partial class ServiceManagementPage : Page
 
         return true;
     }
-    private async Task LoadCustomerDevicesAsync(
-        int customerId)
-    {
-        try
-        {
-            await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
 
-            var devices =
-                await db.Devices
-                    .AsNoTracking()
-                    .Where(d =>
-                        d.CustomerId == customerId)
-                    .OrderBy(d => d.DeviceId)
-                    .ToListAsync();
-
-            DeviceList.ItemsSource = devices;
-        }
-        catch (Exception ex)
-        {
-            DeviceList.ItemsSource = null;
-
-            ShowStatus(
-                "Failed to load devices: " + ex.Message,
-                InfoBarSeverity.Error);
-        }
-    }
-    private async void DeviceList_SelectionChanged(
-        object sender,
-        SelectionChangedEventArgs e)
-    {
-        if (DeviceList.SelectedItem is not Device device)
-        {
-            ServiceRequestList.ItemsSource = null;
-            return;
-        }
-
-        await LoadServiceRequestsAsync(
-            device.DeviceId);
-    }
-    private async Task LoadServiceRequestsAsync(
-        int deviceId)
-    {
-        try
-        {
-            await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
-
-            var requests =
-                await db.ServiceRequests
-                    .AsNoTracking()
-                    .Where(r =>
-                        r.DeviceId == deviceId)
-                    .OrderByDescending(
-                        r => r.RequestDate)
-                    .ToListAsync();
-
-            ServiceRequestList.ItemsSource = requests;
-        }
-        catch (Exception ex)
-        {
-            ServiceRequestList.ItemsSource = null;
-
-            ShowStatus(
-                "Failed to load service requests: "
-                + ex.Message,
-                InfoBarSeverity.Error);
-        }
-    }
     private void CustomerSearchBox_TextChanged(
         object sender,
         TextChangedEventArgs e)
@@ -709,14 +604,431 @@ public sealed partial class ServiceManagementPage : Page
         AddressBox.Text =
             string.Empty;
 
-        DeviceList.ItemsSource =
-            null;
-
-        ServiceRequestList.ItemsSource =
-            null;
-
         ShowStatus(
             "Ready to register a new customer.",
             InfoBarSeverity.Informational);
+    }
+
+    private async void ViewCustomerButton_Click(
+    object sender,
+    RoutedEventArgs e)
+    {
+        if (sender is not Button button ||
+            button.Tag is not Customer customer)
+        {
+            return;
+        }
+
+        _selectedCustomer = customer;
+
+        await ShowCustomerDetailsAsync(
+            customer.CustomerId);
+    }
+    private async Task ShowCustomerDetailsAsync(
+        int customerId)
+    {
+        try
+        {
+            await using var db =
+                await _tenantDbFactory.CreateDbContextAsync();
+
+            // ==========================================
+            // LOAD CUSTOMER
+            // ==========================================
+
+            var customer =
+                await db.Customers
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(
+                        c =>
+                            c.CustomerId == customerId);
+
+            if (customer == null)
+            {
+                return;
+            }
+
+
+            // ==========================================
+            // LOAD DEVICES + SERVICE REQUESTS
+            // ==========================================
+
+            var devices =
+                await db.Devices
+                    .AsNoTracking()
+                    .Where(d =>
+                        d.CustomerId == customerId)
+                    .OrderBy(d =>
+                        d.DeviceId)
+                    .ToListAsync();
+
+
+            var deviceIds =
+                devices
+                    .Select(d => d.DeviceId)
+                    .ToList();
+
+
+            var serviceRequests =
+                await db.ServiceRequests
+                    .AsNoTracking()
+                    .Where(r =>
+                        deviceIds.Contains(r.DeviceId))
+                    .OrderByDescending(r =>
+                        r.RequestDate)
+                    .ToListAsync();
+
+
+            // ==========================================
+            // DEVICE EXPANDERS
+            // ==========================================
+
+            var devicePanel =
+                new StackPanel
+                {
+                    Spacing = 8
+                };
+
+
+            foreach (var device in devices)
+            {
+                var deviceRequests =
+                    serviceRequests
+                        .Where(r =>
+                            r.DeviceId ==
+                            device.DeviceId)
+                        .ToList();
+
+
+                // ------------------------------
+                // DEVICE INFORMATION
+                // ------------------------------
+
+                var deviceHeader =
+                    new StackPanel
+                    {
+                        Spacing = 2
+                    };
+
+
+                deviceHeader.Children.Add(
+                    new TextBlock
+                    {
+                        Text =
+                            $"{device.Brand} {device.Model}",
+
+                        FontWeight =
+                            Microsoft.UI.Text.FontWeights.SemiBold
+                    });
+
+
+                deviceHeader.Children.Add(
+                    new TextBlock
+                    {
+                        Text =
+                            $"{device.DeviceType} • " +
+                            $"{device.SerialNumber ?? "No serial number"}",
+
+                        Opacity = 0.7
+                    });
+
+
+                // ------------------------------
+                // REQUEST LIST
+                // ------------------------------
+
+                var requestPanel =
+                    new StackPanel
+                    {
+                        Spacing = 10
+                    };
+
+
+                if (deviceRequests.Count == 0)
+                {
+                    requestPanel.Children.Add(
+                        new TextBlock
+                        {
+                            Text =
+                                "No service requests for this device.",
+
+                            Opacity = 0.6
+                        });
+                }
+                else
+                {
+                    requestPanel.Children.Add(
+                        new TextBlock
+                        {
+                            Text =
+                                "Service Requests",
+
+                            FontWeight =
+                                Microsoft.UI.Text.FontWeights.SemiBold
+                        });
+
+
+                    foreach (var request
+                        in deviceRequests)
+                    {
+                        var requestBorder =
+                            new Border
+                            {
+                                Padding =
+                                    new Thickness(10),
+
+                                BorderThickness =
+                                    new Thickness(1),
+
+                                CornerRadius = new CornerRadius(6)
+                            };
+
+
+                        var requestContent =
+                            new StackPanel
+                            {
+                                Spacing = 4
+                            };
+
+
+                        requestContent.Children.Add(
+                            new TextBlock
+                            {
+                                Text =
+                                    $"Request #{request.ServiceRequestId}",
+
+                                FontWeight =
+                                    Microsoft.UI.Text.FontWeights.SemiBold
+                            });
+
+
+                        requestContent.Children.Add(
+                            new TextBlock
+                            {
+                                Text =
+                                    request.Description,
+
+                                TextWrapping =
+                                    TextWrapping.Wrap
+                            });
+
+
+                        requestContent.Children.Add(
+                            new TextBlock
+                            {
+                                Text =
+                                    $"Priority: {request.Priority}",
+
+                                Opacity = 0.8
+                            });
+
+
+                        requestContent.Children.Add(
+                            new TextBlock
+                            {
+                                Text =
+                                    $"Status: {request.Status}",
+
+                                Opacity = 0.8
+                            });
+
+
+                        requestContent.Children.Add(
+                            new TextBlock
+                            {
+                                Text =
+                                    request.RequestDate
+                                        .ToLocalTime()
+                                        .ToString(
+                                            "MMM dd, yyyy hh:mm tt"),
+
+                                Opacity = 0.6
+                            });
+
+
+                        requestBorder.Child =
+                            requestContent;
+
+
+                        requestPanel.Children.Add(
+                            requestBorder);
+                    }
+                }
+
+
+                // ------------------------------
+                // EXPANDER
+                // ------------------------------
+
+                var expander =
+                    new Expander
+                    {
+                        Header =
+                            deviceHeader,
+
+                        Content =
+                            requestPanel,
+
+                        HorizontalAlignment =
+                            HorizontalAlignment.Stretch,
+
+                        IsExpanded = false
+                    };
+
+
+                devicePanel.Children.Add(
+                    expander);
+            }
+
+
+            // ==========================================
+            // NO DEVICES
+            // ==========================================
+
+            if (devices.Count == 0)
+            {
+                devicePanel.Children.Add(
+                    new TextBlock
+                    {
+                        Text =
+                            "This customer has no registered devices.",
+
+                        Opacity = 0.6
+                    });
+            }
+
+
+            // ==========================================
+            // CUSTOMER INFORMATION
+            // ==========================================
+
+            var customerInfo =
+                new StackPanel
+                {
+                    Spacing = 4
+                };
+
+
+            customerInfo.Children.Add(
+                new TextBlock
+                {
+                    Text =
+                        $"{customer.FirstName} " +
+                        $"{customer.MiddleName} " +
+                        $"{customer.LastName}",
+
+                    FontSize = 24,
+
+                    FontWeight =
+                        Microsoft.UI.Text.FontWeights.SemiBold
+                });
+
+
+            customerInfo.Children.Add(
+                new TextBlock
+                {
+                    Text =
+                        customer.Email ??
+                        "No email",
+
+                    Opacity = 0.8
+                });
+
+
+            customerInfo.Children.Add(
+                new TextBlock
+                {
+                    Text =
+                        customer.Phone ??
+                        "No phone number",
+
+                    Opacity = 0.7
+                });
+
+
+            customerInfo.Children.Add(
+                new TextBlock
+                {
+                    Text =
+                        customer.Address ??
+                        "No address",
+
+                    Opacity = 0.7
+                });
+
+
+            // ==========================================
+            // MODAL CONTENT
+            // ==========================================
+
+            var content =
+                new StackPanel
+                {
+                    Spacing = 16
+                };
+
+
+            content.Children.Add(
+                customerInfo);
+
+
+            content.Children.Add(
+                new TextBlock
+                {
+                    Text = "Devices",
+                    FontSize = 20,
+
+                    FontWeight =
+                        Microsoft.UI.Text.FontWeights.SemiBold
+                });
+
+
+            var deviceScrollViewer =
+                new ScrollViewer
+                {
+                    Content =
+                        devicePanel,
+
+                    MaxHeight = 450,
+
+                    VerticalScrollBarVisibility =
+                        ScrollBarVisibility.Auto
+                };
+
+
+            content.Children.Add(
+                deviceScrollViewer);
+
+
+            // ==========================================
+            // DIALOG
+            // ==========================================
+
+            var dialog =
+                new ContentDialog
+                {
+                    Title =
+                        "Customer Details",
+
+                    Content =
+                        content,
+
+                    CloseButtonText =
+                        "Close",
+
+                    XamlRoot =
+                        XamlRoot
+                };
+
+
+            await dialog.ShowAsync();
+        }
+        catch (Exception ex)
+        {
+            ShowStatus(
+                "Failed to load customer details: " +
+                ex.Message,
+                InfoBarSeverity.Error);
+        }
     }
 }

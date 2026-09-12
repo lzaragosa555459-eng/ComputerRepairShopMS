@@ -144,8 +144,24 @@ public partial class App : Application
     protected override async void OnLaunched(
         LaunchActivatedEventArgs args)
     {
+        // Seed admin account / role
         await InitializeAdminAsync();
 
+        /* Seed tenant customers and devices
+        using var scope =
+            Services.CreateScope();
+
+        var dbFactory =
+            scope.ServiceProvider
+                .GetRequiredService<
+                    IDbContextFactory<TenantDbContext>>();
+
+        await using var db =
+            await dbFactory.CreateDbContextAsync();
+
+        await TenantDbSeeder.SeedAsync(db);*/
+
+        // Start application
         _window =
             Services.GetRequiredService<MainWindow>();
 
@@ -230,4 +246,6 @@ public partial class App : Application
                 "Admin");
         }
     }
+
+
 }

@@ -335,85 +335,49 @@
                     CornerRadius="8"
                     Padding="12">
 
-                    <StackPanel Spacing="12">
+                                    <StackPanel
+                        Spacing="12">
 
-                    <TextBlock
-                        Text="Customers"
-                        FontSize="20"
-                        FontWeight="SemiBold"/>
+                                        <TextBlock
+                            Text="Customers"
+                            FontSize="20"
+                            FontWeight="SemiBold"/>
 
-                    <TextBlock
-                        Text="Search for an existing customer or register a new one."
-                        Opacity="0.7"/>
+                                        <TextBlock
+                            Text="Search for an existing customer."
+                            Opacity="0.7"/>
 
-                    <StackPanel
-                        Orientation="Horizontal"
-                        Spacing="8">
+                                <StackPanel
+                            Orientation="Horizontal"
+                            Spacing="8">
 
-                        <TextBox
-                            x:Name="CustomerSearchBox"
-                            PlaceholderText="Search customer name..."
-                            Width="280"
-                            TextChanged="CustomerSearchBox_TextChanged"/>
+                                    <TextBox
+                                x:Name="CustomerSearchBox"
+                                PlaceholderText="Search customer name..."
+                                Width="280"
+                                TextChanged="CustomerSearchBox_TextChanged"/>
 
-                        <Button
-                            Content="New Customer"
-                            Click="NewCustomerButton_Click"/>
+                                    <Button
+                                Content="New Customer"
+                                Click="NewCustomerButton_Click"/>
 
-                    </StackPanel>
+                                </StackPanel>   
 
 
-                        <ListView
+                        <!-- CUSTOMER TABLE -->
+
+                        <Border
+                        BorderThickness="1"
+                        CornerRadius="8">
+
+                                        <ListView
                             x:Name="CustomerList"
-                            SelectionChanged="CustomerList_SelectionChanged">
+                            MaxHeight="450">
 
                             <ListView.Header>
 
-                                <Grid Padding="8">
-
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="60"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        Text="ID"
-                                        FontWeight="SemiBold"/>
-
-                                    <TextBlock
-                                        Grid.Column="1"
-                                        Text="First Name"
-                                        FontWeight="SemiBold"/>
-
-                                    <TextBlock
-                                        Grid.Column="2"
-                                        Text="Last Name"
-                                        FontWeight="SemiBold"/>
-
-                                    <TextBlock
-                                        Grid.Column="3"
-                                        Text="Phone"
-                                        FontWeight="SemiBold"/>
-
-                                    <TextBlock
-                                        Grid.Column="4"
-                                        Text="Email"
-                                        FontWeight="SemiBold"/>
-
-                                </Grid>
-
-                            </ListView.Header>
-
-
-                            <ListView.ItemTemplate>
-
-                                <DataTemplate>
-
-                                    <Grid Padding="8">
+                                <Grid
+                                    Padding="8">
 
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="60"/>
@@ -421,116 +385,96 @@
                                             <ColumnDefinition Width="2*"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="90"/>
                                         </Grid.ColumnDefinitions>
 
+                                        <TextBlock
+                            Grid.Column="0"
+                            Text="ID"
+                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                                            Grid.Column="0"
-                                            Text="{Binding CustomerId}"/>
+                            Grid.Column="1"
+                            Text="First Name"
+                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                                            Grid.Column="1"
-                                            Text="{Binding FirstName}"/>
+                            Grid.Column="2"
+                            Text="Last Name"
+                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                                            Grid.Column="2"
-                                            Text="{Binding LastName}"/>
+                            Grid.Column="3"
+                            Text="Phone"
+                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                                            Grid.Column="3"
-                                            Text="{Binding Phone}"/>
+                            Grid.Column="4"
+                            Text="Email"
+                            FontWeight="SemiBold"/>
 
                                         <TextBlock
-                                            Grid.Column="4"
-                                            Text="{Binding Email}"/>
-                                        
+                            Grid.Column="5"
+                            Text="Action"
+                            FontWeight="SemiBold"/>
 
                                     </Grid>
 
-                                </DataTemplate>
-
-                            </ListView.ItemTemplate>
+                                </ListView.Header>
 
 
-                        </ListView>
-                        
-                        <TextBlock
-                            Text="Customer Devices"
-                            FontSize="20"
-                            FontWeight="SemiBold"
-                            Margin="0,20,0,0"/>
+                                <ListView.ItemTemplate>
 
-                        <ListView
-                            x:Name="DeviceList"
-                            SelectionMode="Single"
-                            SelectionChanged="DeviceList_SelectionChanged">
+                                    <DataTemplate>
 
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel
-                                        Padding="8"
-                                        Spacing="2">
+                                        <Grid
+                                            Padding="8">
 
-                                        <TextBlock
-                                            Text="{Binding DeviceType}"
-                                            FontWeight="SemiBold"/>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="60"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition Width="90"/>
+                                            </Grid.ColumnDefinitions>
 
-                                        <TextBlock
-                                            Text="{Binding Brand}"/>
+                                            <TextBlock
+                                Grid.Column="0"
+                                Text="{Binding CustomerId}"/>
 
-                                        <TextBlock
-                                            Text="{Binding Model}"/>
+                                            <TextBlock
+                                Grid.Column="1"
+                                Text="{Binding FirstName}"/>
 
-                                        <TextBlock
-                                            Text="{Binding SerialNumber}"
-                                            Opacity="0.7"/>
+                                            <TextBlock
+                                Grid.Column="2"
+                                Text="{Binding LastName}"/>
 
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
+                                            <TextBlock
+                                Grid.Column="3"
+                                Text="{Binding Phone}"/>
 
-                        </ListView>
-                        
-                        <TextBlock
-                            Text="Service Requests"
-                            FontSize="20"
-                            FontWeight="SemiBold"
-                            Margin="0,20,0,0"/>
+                                            <TextBlock
+                                Grid.Column="4"
+                                Text="{Binding Email}"
+                                TextTrimming="CharacterEllipsis"/>
 
-                        <ListView
-                            x:Name="ServiceRequestList"
-                            SelectionMode="Single">
+                                            <Button
+                                Grid.Column="5"
+                                Content="View"
+                                Tag="{Binding}"
+                                Click="ViewCustomerButton_Click"/>
 
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
+                                        </Grid>
 
-                                    <StackPanel
-                                        Padding="8"
-                                        Spacing="4">
+                                    </DataTemplate>
 
-                                        <TextBlock
-                                            Text="{Binding Description}"
-                                            FontWeight="SemiBold"
-                                            TextWrapping="Wrap"/>
+                                </ListView.ItemTemplate>
 
-                                        <TextBlock
-                                            Text="{Binding Priority}"
-                                            Opacity="0.8"/>
+                            </ListView>
 
-                                        <TextBlock
-                                            Text="{Binding Status}"
-                                            Opacity="0.8"/>
-
-                                        <TextBlock
-                                            Text="{Binding RequestDate}"
-                                            Opacity="0.6"/>
-
-                                    </StackPanel>
-
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-
-                        </ListView>
+                        </Border>
 
                     </StackPanel>
 
