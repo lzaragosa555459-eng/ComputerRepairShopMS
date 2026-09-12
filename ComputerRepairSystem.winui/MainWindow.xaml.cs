@@ -17,6 +17,7 @@ public sealed partial class MainWindow : Window
 
         ShowLogin();
 
+
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
         AppWindow.TitleBar.PreferredHeightOption =
@@ -25,25 +26,25 @@ public sealed partial class MainWindow : Window
         AppWindow.SetIcon("Assets/AppIcon.ico");
     }
 
-    private void TitleBar_PaneToggleRequested(TitleBar sender, object args)
+    private void TitleBar_PaneToggleRequested(
+        object sender,
+        RoutedEventArgs e)
     {
         NavView.IsPaneOpen = !NavView.IsPaneOpen;
     }
 
-    private void TitleBar_BackRequested(TitleBar sender, object args)
-    {
-        NavFrame.GoBack();
-    }
 
     public void ShowApplication()
     {
+        UpdateUserHeader();
+
         HomeItem.Visibility =
             Visibility.Visible;
 
         ServiceManagementItem.Visibility =
             Visibility.Collapsed;
 
-        AboutItem.Visibility =
+        InventoryItem.Visibility =
             Visibility.Visible;
 
         RepairManagementItem.Visibility =
@@ -108,7 +109,7 @@ public sealed partial class MainWindow : Window
         UserManagementItem.Visibility =
             Visibility.Collapsed;
 
-        AboutItem.Visibility =
+        InventoryItem.Visibility =
             Visibility.Collapsed;
 
         HomeItem.IsSelected = false;
@@ -154,8 +155,8 @@ public sealed partial class MainWindow : Window
                     NavigateToUserManagementPage();
                     break;
 
-                case "about":
-                    NavFrame.Navigate(typeof(AboutPage));
+                case "inventory":
+                    NavigateToInventoryPage();
                     break;
             }
         }
@@ -196,5 +197,87 @@ public sealed partial class MainWindow : Window
             App.Services.GetRequiredService<HomePage>();
 
         NavFrame.Content = page;
+    }
+
+    private void NavigateToInventoryPage()
+    {
+        var page =
+            App.Services.GetRequiredService<InventoryManagementPage>();
+
+        NavFrame.Content = page;
+    }
+    private void UpdateUserHeader()
+    {
+        UserNameText.Text = CurrentUser.UserName;
+    }
+    private async void GlobalSearchButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "Search",
+            Content = new TextBox
+            {
+                PlaceholderText = "Search customers, repairs, devices..."
+            },
+            CloseButtonText = "Close",
+            XamlRoot = Content.XamlRoot
+        };
+
+        await dialog.ShowAsync();
+    }
+    private async void NotificationButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "Notifications",
+            Content = new TextBlock
+            {
+                Text = "No new notifications.",
+                TextWrapping = TextWrapping.Wrap
+            },
+            CloseButtonText = "Close",
+            XamlRoot = Content.XamlRoot
+        };
+
+        await dialog.ShowAsync();
+    }
+    private async void ProfileButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = CurrentUser.UserName,
+            Content = new StackPanel
+            {
+                Spacing = 8,
+                Children =
+            {
+                new TextBlock
+                {
+                    Text = $"Username: {CurrentUser.UserName}"
+                },
+                new TextBlock
+                {
+                    Text = $"Role: {CurrentUser.Role}"
+                }
+            }
+            },
+            PrimaryButtonText = "Logout",
+            CloseButtonText = "Close",
+            XamlRoot = Content.XamlRoot
+        };
+
+        var result = await dialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            CurrentUser.Logout();
+            ShowLogin();
+        }
     }
 }

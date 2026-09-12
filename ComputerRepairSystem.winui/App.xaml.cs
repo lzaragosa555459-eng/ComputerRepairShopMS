@@ -127,6 +127,8 @@ public partial class App : Application
 
         services.AddTransient<BillingPage>();
 
+        services.AddTransient<InventoryManagementPage>();
+
         services.AddTransient<HomePage>();
 
 

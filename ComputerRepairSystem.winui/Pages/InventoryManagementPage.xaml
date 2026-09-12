@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Page
+    x:Class="ComputerRepairSystem_winui.Pages.InventoryManagementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <ScrollViewer
+        VerticalScrollBarVisibility="Auto">
+
+        <Grid
+            Padding="32"
+            RowSpacing="24">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+
+            <!-- HEADER -->
+
+            <StackPanel
+                Grid.Row="0"
+                Spacing="6">
+
+                <TextBlock
+                    Text="Inventory Management"
+                    FontSize="32"
+                    FontWeight="SemiBold"/>
+
+                <TextBlock
+                    Text="Manage inventory items and available stock."
+                    Opacity="0.7"/>
+
+            </StackPanel>
+
+
+            <!-- SEARCH + BUTTONS -->
+
+            <Grid
+                Grid.Row="1"
+                ColumnSpacing="12">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+
+                <!-- SEARCH -->
+
+                <TextBox
+                    x:Name="SearchBox"
+                    Grid.Column="0"
+                    PlaceholderText="Search inventory items..."
+                    TextChanged="SearchBox_TextChanged"/>
+
+
+                <!-- NEW ITEM -->
+
+                <Button
+                    x:Name="NewItemButton"
+                    Grid.Column="1"
+                    Content="+ New Item"
+                    Click="NewItemButton_Click"/>
+
+
+                <!-- ADD STOCK -->
+
+                <Button
+                    x:Name="AddStockButton"
+                    Grid.Column="2"
+                    Content="+ Add Stock"
+                    Click="AddStockButton_Click"/>
+
+            </Grid>
+
+
+            <!-- INVENTORY TABLE -->
+
+            <Border
+                Grid.Row="2"
+                BorderThickness="1"
+                CornerRadius="8">
+
+                <ListView
+                    x:Name="InventoryList">
+
+                    <ListView.Header>
+
+                        <Grid
+                            Padding="16,12">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="Item"
+                                FontWeight="SemiBold"/>
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="Category"
+                                FontWeight="SemiBold"/>
+
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="Brand / Model"
+                                FontWeight="SemiBold"/>
+
+                            <TextBlock
+                                Grid.Column="3"
+                                Text="Unit"
+                                FontWeight="SemiBold"/>
+
+                            <TextBlock
+                                Grid.Column="4"
+                                Text="Stock"
+                                FontWeight="SemiBold"/>
+
+                            <TextBlock
+                                Grid.Column="5"
+                                Text="Action"
+                                FontWeight="SemiBold"/>
+
+                        </Grid>
+
+                    </ListView.Header>
+
+
+                    <ListView.ItemTemplate>
+
+                        <DataTemplate>
+
+                            <Grid
+                                Padding="16,12">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="1.2*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+
+                                <!-- ITEM -->
+
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Text="{Binding Item.ItemName}"
+                                    VerticalAlignment="Center"
+                                    FontWeight="SemiBold"/>
+
+
+                                <!-- CATEGORY -->
+
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Text="{Binding Item.Category}"
+                                    VerticalAlignment="Center"/>
+
+
+                                <!-- BRAND / MODEL -->
+
+                                <TextBlock
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center">
+
+                                    <Run Text="{Binding Item.Brand}"/>
+                                    <Run Text=" "/>
+                                    <Run Text="{Binding Item.Model}"/>
+
+                                </TextBlock>
+
+
+                                <!-- UNIT -->
+
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Text="{Binding Item.Unit}"
+                                    VerticalAlignment="Center"/>
+
+
+                                <!-- STOCK -->
+
+                                <TextBlock
+                                    Grid.Column="4"
+                                    Text="{Binding QuantityOnHand}"
+                                    VerticalAlignment="Center"
+                                    FontWeight="SemiBold"/>
+
+
+                                <!-- ACTION -->
+
+                                <Button
+                                    Grid.Column="5"
+                                    Content="Edit"
+                                    Tag="{Binding}"
+                                    Click="EditItemButton_Click"/>
+
+                            </Grid>
+
+                        </DataTemplate>
+
+                    </ListView.ItemTemplate>
+
+                </ListView>
+
+            </Border>
+
+        </Grid>
+
+    </ScrollViewer>
+
+</Page>

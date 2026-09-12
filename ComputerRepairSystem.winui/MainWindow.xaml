@@ -18,20 +18,131 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TitleBar
-        x:Name="AppTitleBar"
-        Title="ComputerRepairSystem.winui"
-        BackRequested="TitleBar_BackRequested"
-        IsBackButtonVisible="{x:Bind NavFrame.CanGoBack, Mode=OneWay}"
-        IsPaneToggleButtonVisible="True"
-        PaneToggleRequested="TitleBar_PaneToggleRequested">
+        <!-- CUSTOM TITLE BAR -->
+        <Grid
+    x:Name="AppTitleBar"
+    Height="48"
+    Background="#1D1C28"
+    Padding="12,0,150,0">
 
-            <TitleBar.IconSource>
-                <ImageIconSource
-                ImageSource="Assets/LogoIT13CRS.png" />
-            </TitleBar.IconSource>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        </TitleBar>
+
+            <!-- MENU BUTTON -->
+
+            <Button
+        Grid.Column="0"
+        x:Name="PaneToggleButton"
+        Width="40"
+        Height="40"
+        Padding="0"
+        VerticalAlignment="Center"
+        Click="TitleBar_PaneToggleRequested">
+
+                <SymbolIcon
+            Symbol="GlobalNavigationButton"/>
+
+            </Button>
+
+
+            <!-- LOGO -->
+
+            <Image
+        Grid.Column="1"
+        Source="ms-appx:///Assets/LogoIT13CRS.png"
+        Width="30"
+        Height="30"
+        Margin="8,0,8,0"
+        VerticalAlignment="Center"
+        Stretch="Uniform"/>
+
+
+            <!-- FIXFLOW -->
+
+            <TextBlock
+        Grid.Column="2"
+        Text="FIXFLOW"
+        VerticalAlignment="Center"
+        FontSize="18"
+        FontWeight="SemiBold"/>
+
+
+            <!-- RIGHT SIDE -->
+
+            <StackPanel
+        Grid.Column="3"
+        Orientation="Horizontal"
+        VerticalAlignment="Center"
+        Spacing="6">
+
+
+                <!-- SEARCH -->
+
+                <Button
+            x:Name="GlobalSearchButton"
+            Width="40"
+            Height="40"
+            Padding="0"
+            ToolTipService.ToolTip="Search"
+            Click="GlobalSearchButton_Click">
+
+                    <SymbolIcon
+                Symbol="Find"/>
+
+                </Button>
+
+
+                <!-- NOTIFICATIONS -->
+
+                <Button
+            x:Name="NotificationButton"
+            Width="40"
+            Height="40"
+            Padding="0"
+            ToolTipService.ToolTip="Notifications"
+            Click="NotificationButton_Click">
+
+                    <SymbolIcon
+                Symbol="OtherUser"/>
+
+                </Button>
+
+
+                <!-- PROFILE -->
+
+                <Button
+            x:Name="ProfileButton"
+            Height="40"
+            Padding="8,0"
+            ToolTipService.ToolTip="Profile"
+            Click="ProfileButton_Click">
+
+                    <StackPanel
+                Orientation="Horizontal"
+                VerticalAlignment="Center"
+                Spacing="8">
+
+                        <PersonPicture
+                    Width="30"
+                    Height="30"/>
+
+                        <TextBlock
+                    x:Name="UserNameText"
+                    VerticalAlignment="Center"
+                    FontWeight="SemiBold"/>
+
+                    </StackPanel>
+
+                </Button>
+
+            </StackPanel>
+
+        </Grid>
 
         <Grid Grid.Row="1">
 
@@ -88,10 +199,15 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                    <NavigationViewItem Content="About" Tag="about" x:Name="AboutItem">
+                <NavigationViewItem
+                    Content="Inventory"
+                    Tag="inventory"
+                    x:Name="InventoryItem">
+
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEA3A;" />
+                        <FontIcon Glyph="&#xE7B8;" />
                     </NavigationViewItem.Icon>
+
                 </NavigationViewItem>
                 </NavigationView.MenuItems>
 

@@ -15,6 +15,8 @@ public sealed partial class ServiceManagementPage : Page
 
     private Customer? _selectedCustomer;
     private List<Customer> _customers = new();
+    private int _currentPage = 1;
+    private const int _pageSize = 5;
     public ServiceManagementPage(
         CustomerService customerService,
         IDbContextFactory<TenantDbContext> tenantDbFactory)
@@ -43,7 +45,9 @@ public sealed partial class ServiceManagementPage : Page
 
             _customers = customers.ToList();
 
-            CustomerList.ItemsSource = _customers;
+            _currentPage = 1;
+
+            UpdateCustomerPagination();
         }
         catch (Exception ex)
         {
@@ -1083,5 +1087,71 @@ public sealed partial class ServiceManagementPage : Page
 
         PriorityBox.SelectedIndex = 1;
         StatusBox.SelectedIndex = 0;
+    }
+
+    private void UpdateCustomerPagination()
+    {
+        var totalPages =
+            Math.Max(
+                1,
+                (int)Math.Ceiling(
+                    (double)_customers.Count /
+                    _pageSize));
+
+        if (_currentPage > totalPages)
+        {
+            _currentPage = totalPages;
+        }
+
+        var pagedCustomers =
+            _customers
+                .Skip(
+                    (_currentPage - 1) *
+                    _pageSize)
+                .Take(_pageSize)
+                .ToList();
+
+        CustomerList.ItemsSource =
+            pagedCustomers;
+
+        PageInfoText.Text =
+            $"Page {_currentPage} of {totalPages}";
+
+        PreviousPageButton.IsEnabled =
+            _currentPage > 1;
+
+        NextPageButton.IsEnabled =
+            _currentPage < totalPages;
+    }
+    private void PreviousPageButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        if (_currentPage <= 1)
+        {
+            return;
+        }
+
+        _currentPage--;
+
+        UpdateCustomerPagination();
+    }
+    private void NextPageButton_Click(
+        object sender,
+        RoutedEventArgs e)
+    {
+        var totalPages =
+            (int)Math.Ceiling(
+                (double)_customers.Count /
+                _pageSize);
+
+        if (_currentPage >= totalPages)
+        {
+            return;
+        }
+
+        _currentPage++;
+
+        UpdateCustomerPagination();
     }
 }

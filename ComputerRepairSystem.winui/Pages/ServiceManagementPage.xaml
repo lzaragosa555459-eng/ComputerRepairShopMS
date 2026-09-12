@@ -363,106 +363,136 @@
 
                                 </StackPanel>  
 
-                        <!-- CUSTOMER TABLE -->
+                    
+                                <Border
+                                    BorderThickness="1"
+                                    CornerRadius="8">
 
-                        <Border
-                            BorderThickness="1"
-                            CornerRadius="8">
+                                    <StackPanel>
 
-                            <ListView
-                                x:Name="CustomerList"
-                                MaxHeight="450"
-                                SelectionChanged="CustomerList_SelectionChanged">
+                                        <!-- CUSTOMER TABLE -->
 
-                                <ListView.Header>
+                                        <ListView
+                                            x:Name="CustomerList"
+                                            MaxHeight="450"
+                                            SelectionChanged="CustomerList_SelectionChanged">
 
-                                    <Grid Padding="8">
+                                            <ListView.Header>
 
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="2*"/>
-                                            <ColumnDefinition Width="90"/>
-                                        </Grid.ColumnDefinitions>
+                                                <Grid Padding="8">
 
-                                        <TextBlock
-                                            Grid.Column="0"
-                                            Text="First Name"
-                                            FontWeight="SemiBold"/>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="90"/>
+                                                    </Grid.ColumnDefinitions>
 
-                                        <TextBlock
-                                            Grid.Column="1"
-                                            Text="Last Name"
-                                            FontWeight="SemiBold"/>
+                                                    <TextBlock
+                                                        Grid.Column="0"
+                                                        Text="First Name"
+                                                        FontWeight="SemiBold"/>
 
-                                        <TextBlock
-                                            Grid.Column="2"
-                                            Text="Phone"
-                                            FontWeight="SemiBold"/>
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        Text="Last Name"
+                                                        FontWeight="SemiBold"/>
 
-                                        <TextBlock
-                                            Grid.Column="3"
-                                            Text="Email"
-                                            FontWeight="SemiBold"/>
+                                                    <TextBlock
+                                                        Grid.Column="2"
+                                                        Text="Phone"
+                                                        FontWeight="SemiBold"/>
 
-                                        <TextBlock
-                                            Grid.Column="4"
-                                            Text="Action"
-                                            FontWeight="SemiBold"/>
+                                                    <TextBlock
+                                                        Grid.Column="3"
+                                                        Text="Email"
+                                                        FontWeight="SemiBold"/>
 
-                                    </Grid>
+                                                    <TextBlock
+                                                        Grid.Column="4"
+                                                        Text="Action"
+                                                        FontWeight="SemiBold"/>
 
-                                </ListView.Header>
+                                                </Grid>
+
+                                            </ListView.Header>
 
 
-                                <ListView.ItemTemplate>
+                                            <ListView.ItemTemplate>
 
-                                    <DataTemplate>
+                                                <DataTemplate>
 
-                                        <Grid Padding="8">
+                                                    <Grid Padding="8">
 
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="90"/>
-                                            </Grid.ColumnDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="2*"/>
+                                                            <ColumnDefinition Width="2*"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="2*"/>
+                                                            <ColumnDefinition Width="90"/>
+                                                        </Grid.ColumnDefinitions>
 
-                                            <TextBlock
-                                                Grid.Column="0"
-                                                Text="{Binding FirstName}"/>
+                                                        <TextBlock
+                                                            Grid.Column="0"
+                                                            Text="{Binding FirstName}"/>
 
-                                            <TextBlock
-                                                Grid.Column="1"
-                                                Text="{Binding LastName}"/>
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            Text="{Binding LastName}"/>
 
-                                            <TextBlock
-                                                Grid.Column="2"
-                                                Text="{Binding Phone}"
-                                                TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock
+                                                            Grid.Column="2"
+                                                            Text="{Binding Phone}"
+                                                            TextTrimming="CharacterEllipsis"/>
 
-                                            <TextBlock
-                                                Grid.Column="3"
-                                                Text="{Binding Email}"
-                                                TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock
+                                                            Grid.Column="3"
+                                                            Text="{Binding Email}"
+                                                            TextTrimming="CharacterEllipsis"/>
+
+                                                        <Button
+                                                            Grid.Column="4"
+                                                            Content="View"
+                                                            Tag="{Binding}"
+                                                            Click="ViewCustomerButton_Click"/>
+
+                                                    </Grid>
+
+                                                </DataTemplate>
+
+                                            </ListView.ItemTemplate>
+
+                                        </ListView>
+
+
+                                        <!-- PAGINATION -->
+
+                                        <StackPanel
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Center"
+                                            Spacing="12"
+                                            Margin="0,12,0,0">
 
                                             <Button
-                                                Grid.Column="4"
-                                                Content="View"
-                                                Tag="{Binding}"
-                                                Click="ViewCustomerButton_Click"/>
+                                                x:Name="PreviousPageButton"
+                                                Content="Previous"
+                                                Click="PreviousPageButton_Click"/>
 
-                                        </Grid>
+                                            <TextBlock
+                                                x:Name="PageInfoText"
+                                                VerticalAlignment="Center"/>
 
-                                    </DataTemplate>
+                                            <Button
+                                                x:Name="NextPageButton"
+                                                Content="Next"
+                                                Click="NextPageButton_Click"/>
 
-                                </ListView.ItemTemplate>
+                                        </StackPanel>
 
-                            </ListView>
+                                    </StackPanel>
 
-                        </Border>
+                                </Border>
 
                     </StackPanel>
 
