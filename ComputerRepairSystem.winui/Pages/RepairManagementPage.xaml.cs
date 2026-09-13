@@ -1,6 +1,7 @@
 using ComputerRepairSystem.company.Data;
 using ComputerRepairSystem.company.Entities;
-
+using ComputerRepairSystem.infrastructure.data;
+using ComputerRepairSystem_winui.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -9,10 +10,10 @@ namespace ComputerRepairSystem_winui.Pages;
 
 public sealed partial class RepairManagementPage : Page
 {
-    private readonly IDbContextFactory<TenantDbContext> _tenantDbFactory;
+    private readonly TenantDbContextFactory _tenantDbFactory;
 
     public RepairManagementPage(
-        IDbContextFactory<TenantDbContext> tenantDbFactory)
+        TenantDbContextFactory tenantDbFactory)
     {
         InitializeComponent();
 
@@ -36,7 +37,7 @@ public sealed partial class RepairManagementPage : Page
         try
         {
             await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
+                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
             var requests =
                 await db.ServiceRequests
@@ -207,7 +208,7 @@ public sealed partial class RepairManagementPage : Page
         try
         {
             await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
+                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
             var request =
                 await db.ServiceRequests
@@ -250,7 +251,7 @@ public sealed partial class RepairManagementPage : Page
         try
         {
             await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
+                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
             var existingRepair =
                 await db.Repairs
@@ -346,7 +347,7 @@ public sealed partial class RepairManagementPage : Page
         try
         {
             await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
+                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
             var repairs =
                 await db.Repairs
@@ -379,7 +380,7 @@ public sealed partial class RepairManagementPage : Page
         try
         {
             await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
+                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
             var repair =
                 await db.Repairs
@@ -1395,7 +1396,7 @@ public sealed partial class RepairManagementPage : Page
         try
         {
             await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
+                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
             // Load inventory with available stock
             var inventory =

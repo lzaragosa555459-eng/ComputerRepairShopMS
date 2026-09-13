@@ -1,23 +1,24 @@
 using ComputerRepairSystem.company.Data;
 using ComputerRepairSystem.company.Entities;
+using ComputerRepairSystem.infrastructure.data;
+using ComputerRepairSystem_winui.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-
 namespace ComputerRepairSystem_winui.Pages;
 
 public sealed partial class InventoryManagementPage : Page
 {
-    private readonly IDbContextFactory<TenantDbContext> _dbFactory;
+    private readonly TenantDbContextFactory _tenantDbFactory;
 
     private List<InventoryDisplayItem> _inventory = new();
 
     public InventoryManagementPage(
-        IDbContextFactory<TenantDbContext> dbFactory)
+        TenantDbContextFactory tenantDbFactory)
     {
         InitializeComponent();
 
-        _dbFactory = dbFactory;
+        _tenantDbFactory = tenantDbFactory;
 
         Loaded += InventoryManagementPage_Loaded;
     }
@@ -42,7 +43,7 @@ public sealed partial class InventoryManagementPage : Page
     private async Task LoadInventoryAsync()
     {
         await using var db =
-            await _dbFactory.CreateDbContextAsync();
+            await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
         var inventory = await db.Inventories
             .Include(x => x.Item)
@@ -263,7 +264,7 @@ private void SearchBox_TextChanged(
 
 
         await using var db =
-            await _dbFactory.CreateDbContextAsync();
+            await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
 
         var item = new InventoryItem
@@ -309,7 +310,7 @@ private void SearchBox_TextChanged(
         RoutedEventArgs e)
     {
         await using var db =
-            await _dbFactory.CreateDbContextAsync();
+            await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
 
         var items = await db.InventoryItems
@@ -438,7 +439,7 @@ private void SearchBox_TextChanged(
         }
 
         await using var db =
-            await _dbFactory.CreateDbContextAsync();
+            await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
         var item =
             await db.InventoryItems

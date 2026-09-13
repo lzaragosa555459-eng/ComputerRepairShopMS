@@ -1,5 +1,7 @@
 using ComputerRepairSystem.company.Data;
 using ComputerRepairSystem.company.Entities;
+using ComputerRepairSystem.infrastructure.data;
+using ComputerRepairSystem_winui.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -8,11 +10,11 @@ namespace ComputerRepairSystem_winui.Pages;
 
 public sealed partial class HomePage : Page
 {
-    private readonly IDbContextFactory<TenantDbContext>
+    private readonly TenantDbContextFactory
         _tenantDbFactory;
 
     public HomePage(
-        IDbContextFactory<TenantDbContext> tenantDbFactory)
+        TenantDbContextFactory tenantDbFactory)
     {
         InitializeComponent();
 
@@ -37,7 +39,7 @@ public sealed partial class HomePage : Page
         {
             await using var db =
                 await _tenantDbFactory
-                    .CreateDbContextAsync();
+                    .CreateAsync(CurrentUser.CompanyId);
 
             var settings =
                 await db.SystemSettings
