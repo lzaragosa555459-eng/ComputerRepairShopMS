@@ -1,10 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace ComputerRepairSystem.company.Entities;
 
-namespace ComputerRepairSystem.customer.Entities
+public class SystemSettings
 {
-    internal class SystemSetting
-    {
-    }
+    public int SystemSettingsId { get; set; }
+
+    public string ShopName { get; set; } = string.Empty;
+
+    public string? ShopAddress { get; set; }
+
+    public decimal LowLaborRate { get; set; }
+
+    public decimal MediumLaborRate { get; set; }
+
+    public decimal HighLaborRate { get; set; }
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

@@ -131,6 +131,7 @@ public partial class App : Application
 
         services.AddTransient<HomePage>();
 
+        services.AddTransient<SettingsPage>();
 
         // ==========================================
         // MAIN WINDOW

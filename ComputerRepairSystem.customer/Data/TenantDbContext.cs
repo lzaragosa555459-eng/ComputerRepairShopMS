@@ -56,6 +56,10 @@ public class TenantDbContext : DbContext
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<Payment> Payments => Set<Payment>();
 
+    // System Settings
+
+    public DbSet<SystemSettings> SystemSettings { get; set; }
+
 
     // ==========================================
     // Entity Relationships & Constraints

@@ -12,6 +12,8 @@ public class Invoice
 
     public decimal Subtotal { get; set; }
 
+    public decimal LaborAmount { get; set; }
+
     public decimal Discount { get; set; }
 
     public decimal Tax { get; set; }

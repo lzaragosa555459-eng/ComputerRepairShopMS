@@ -150,7 +150,8 @@
             x:Name="NavView"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
-            SelectionChanged="NavView_SelectionChanged">
+            SelectionChanged="NavView_SelectionChanged"
+            IsSettingsVisible="False">
 
                 <NavigationView.MenuItems>
                     <NavigationViewItem
@@ -206,6 +207,17 @@
 
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE7B8;" />
+                    </NavigationViewItem.Icon>
+
+                </NavigationViewItem>
+                    
+                <NavigationViewItem
+                    x:Name="SystemSettingsItem"
+                    Content="System Settings"
+                    Tag="settings">
+
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;" />
                     </NavigationViewItem.Icon>
 
                 </NavigationViewItem>

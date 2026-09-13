@@ -56,6 +56,9 @@ public sealed partial class MainWindow : Window
         UserManagementItem.Visibility =
             Visibility.Collapsed;
 
+        SystemSettingsItem.Visibility =
+            Visibility.Collapsed;
+
         var role = CurrentUser.Role;
 
         if (role == "Admin")
@@ -70,6 +73,12 @@ public sealed partial class MainWindow : Window
                 Visibility.Visible;
 
             UserManagementItem.Visibility =
+                Visibility.Visible;
+
+            InventoryItem.Visibility =
+                Visibility.Visible;
+
+            SystemSettingsItem.Visibility =
                 Visibility.Visible;
         }
         else if (role == "Technician")
@@ -112,6 +121,9 @@ public sealed partial class MainWindow : Window
         InventoryItem.Visibility =
             Visibility.Collapsed;
 
+        SystemSettingsItem.Visibility =
+            Visibility.Collapsed;
+
         HomeItem.IsSelected = false;
 
         NavFrame.Content =
@@ -125,11 +137,6 @@ public sealed partial class MainWindow : Window
         if (!CurrentUser.IsLoggedIn)
         {
             return;
-        }
-
-        if (args.IsSettingsSelected)
-        {
-            NavFrame.Navigate(typeof(SettingsPage));
         }
         else if (args.SelectedItem is NavigationViewItem item)
         {
@@ -157,6 +164,10 @@ public sealed partial class MainWindow : Window
 
                 case "inventory":
                     NavigateToInventoryPage();
+                    break;
+
+                case "settings":
+                    NavigateToSettingsPage();
                     break;
             }
         }
@@ -279,5 +290,12 @@ public sealed partial class MainWindow : Window
             CurrentUser.Logout();
             ShowLogin();
         }
+    }
+    private void NavigateToSettingsPage()
+    {
+        var page =
+            App.Services.GetRequiredService<SettingsPage>();
+
+        NavFrame.Content = page;
     }
 }

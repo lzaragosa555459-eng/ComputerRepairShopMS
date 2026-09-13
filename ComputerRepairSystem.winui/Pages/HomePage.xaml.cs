@@ -39,6 +39,14 @@ public sealed partial class HomePage : Page
                 await _tenantDbFactory
                     .CreateDbContextAsync();
 
+            var settings =
+                await db.SystemSettings
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+
+            ShopNameText.Text =
+                settings?.ShopName ?? "Computer Repair Shop";
+
 
             // ==========================================
             // CUSTOMERS
@@ -108,6 +116,11 @@ public sealed partial class HomePage : Page
 
             TotalRevenueText.Text =
                 $"₱{totalRevenue:N2}";
+
+
+            //System Settings
+
+
         }
         catch (Exception ex)
         {

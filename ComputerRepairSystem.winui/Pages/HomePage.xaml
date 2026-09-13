@@ -66,6 +66,12 @@
                     Stretch="Uniform"/>
 
                 <TextBlock
+                    x:Name="ShopNameText"
+                    Text="Computer Repair Shop"
+                    FontSize="20"
+                    FontWeight="SemiBold"/>
+
+                <TextBlock
                     Text="Dashboard"
                     FontSize="32"
                     FontWeight="SemiBold"/>

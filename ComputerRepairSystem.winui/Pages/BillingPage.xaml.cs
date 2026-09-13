@@ -132,8 +132,31 @@ public sealed partial class BillingPage : Page
                     (x.Quantity * x.UnitPrice)
                     - x.Discount);
 
+        var settings =
+            await db.SystemSettings
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+        if (settings == null)
+        {
+            await ShowMessageAsync(
+                "System Settings Missing",
+                "Please configure the labor rates in System Settings first.");
+
+            return;
+        }
+
+        var laborAmount =
+            repair.ServiceRequest.Priority switch
+            {
+                "Low" => settings.LowLaborRate,
+                "Medium" => settings.MediumLaborRate,
+                "High" => settings.HighLaborRate,
+                _ => settings.MediumLaborRate
+            };
+
         var total =
-            subtotal;
+            subtotal + laborAmount;
 
 
         var amountBox =
@@ -186,7 +209,33 @@ public sealed partial class BillingPage : Page
             new TextBlock
             {
                 Text =
-                    $"Subtotal: ₱{subtotal:N2}",
+                    $"Priority: {repair.ServiceRequest.Priority}"
+            });
+
+        content.Children.Add(
+            new TextBlock
+            {
+                Text =
+                    $"Labor: ₱{laborAmount:N2}",
+                FontWeight =
+                    Microsoft.UI.Text.FontWeights.SemiBold
+            });
+
+        content.Children.Add(
+            new TextBlock
+            {
+                Text =
+                    $"Parts: ₱{subtotal:N2}",
+                FontWeight =
+                    Microsoft.UI.Text.FontWeights.SemiBold
+            });
+
+        content.Children.Add(
+            new TextBlock
+            {
+                Text =
+                    $"Total: ₱{total:N2}",
+                FontSize = 18,
                 FontWeight =
                     Microsoft.UI.Text.FontWeights.SemiBold
             });
@@ -260,6 +309,8 @@ public sealed partial class BillingPage : Page
 
                 Subtotal =
                     subtotal,
+
+                LaborAmount = laborAmount,
 
                 Discount =
                     0,

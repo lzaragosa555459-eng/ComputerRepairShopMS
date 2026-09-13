@@ -4,6 +4,7 @@ using ComputerRepairSystem.company.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerRepairSystem.company.Migrations
 {
     [DbContext(typeof(TenantDbContext))]
-    partial class TenantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260913051104_LaborAddInInvoice")]
+    partial class LaborAddInInvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -537,38 +540,6 @@ namespace ComputerRepairSystem.company.Migrations
                     b.HasIndex("IsSynced", "CreatedAt");
 
                     b.ToTable("SyncQueues");
-                });
-
-            modelBuilder.Entity("ComputerRepairSystem.company.Entities.SystemSettings", b =>
-                {
-                    b.Property<int>("SystemSettingsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SystemSettingsId"));
-
-                    b.Property<decimal>("HighLaborRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("LowLaborRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("MediumLaborRate")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ShopAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShopName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("SystemSettingsId");
-
-                    b.ToTable("SystemSettings");
                 });
 
             modelBuilder.Entity("Repair", b =>
