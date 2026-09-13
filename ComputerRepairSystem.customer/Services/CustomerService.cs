@@ -8,8 +8,12 @@ namespace ComputerRepairSystem.company.Services;
 public class CustomerService
 {
     private readonly
-        IDbContextFactory<TenantDbContext>
-        _contextFactory;
+        ITenantDbContextFactory
+        _tenantDbFactory;
+
+    private readonly
+        ICompanyContext
+        _companyContext;
 
     private readonly
         ICustomerRepository
@@ -17,17 +21,13 @@ public class CustomerService
 
 
     public CustomerService(
-        IDbContextFactory<TenantDbContext>
-            contextFactory,
-
-        ICustomerRepository
-            customerRepository)
+        ITenantDbContextFactory tenantDbFactory,
+        ICompanyContext companyContext,
+        ICustomerRepository customerRepository)
     {
-        _contextFactory =
-            contextFactory;
-
-        _customerRepository =
-            customerRepository;
+        _tenantDbFactory = tenantDbFactory;
+        _companyContext = companyContext;
+        _customerRepository = customerRepository;
     }
 
 
@@ -63,8 +63,8 @@ public class CustomerService
         AddAsync(Customer customer)
     {
         await using var context =
-            await _contextFactory
-                .CreateDbContextAsync();
+        await _tenantDbFactory
+    .CreateAsync(_companyContext.CompanyId);
 
         await using var transaction =
             await context.Database
@@ -119,8 +119,8 @@ public class CustomerService
         Customer customer)
     {
         await using var context =
-            await _contextFactory
-                .CreateDbContextAsync();
+await _tenantDbFactory
+    .CreateAsync(_companyContext.CompanyId);
 
         await using var transaction =
             await context.Database
@@ -173,8 +173,8 @@ public class CustomerService
         int customerId)
     {
         await using var context =
-            await _contextFactory
-                .CreateDbContextAsync();
+            await _tenantDbFactory
+                .CreateAsync(_companyContext.CompanyId);
 
         await using var transaction =
             await context.Database

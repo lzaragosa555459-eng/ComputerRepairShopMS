@@ -3,17 +3,19 @@ using ComputerRepairSystem.company.Entities;
 using ComputerRepairSystem.company.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace ComputerRepairSystem.company.Repositories;
 
 public class CustomerRepository : ICustomerRepository
 {
-    private readonly IDbContextFactory<TenantDbContext>
-        _contextFactory;
-
+    private readonly ITenantDbContextFactory _contextFactory;
+    private readonly ICompanyContext _companyContext;
     public CustomerRepository(
-        IDbContextFactory<TenantDbContext> contextFactory)
+        ITenantDbContextFactory contextFactory,
+        ICompanyContext companyContext)
     {
         _contextFactory = contextFactory;
+        _companyContext = companyContext;
     }
 
 
@@ -24,7 +26,7 @@ public class CustomerRepository : ICustomerRepository
     public async Task<List<Customer>> GetAllAsync()
     {
         await using var context =
-            await _contextFactory.CreateDbContextAsync();
+           await _contextFactory.CreateAsync(_companyContext.CompanyId);
 
         return await context.Customers
             .AsNoTracking()
@@ -40,7 +42,7 @@ public class CustomerRepository : ICustomerRepository
         int customerId)
     {
         await using var context =
-            await _contextFactory.CreateDbContextAsync();
+           await _contextFactory.CreateAsync(_companyContext.CompanyId);
 
         return await context.Customers
             .FirstOrDefaultAsync(
@@ -56,7 +58,7 @@ public class CustomerRepository : ICustomerRepository
         Customer customer)
     {
         await using var context =
-            await _contextFactory.CreateDbContextAsync();
+           await _contextFactory.CreateAsync(_companyContext.CompanyId);
 
         context.Customers.Add(customer);
 
@@ -74,7 +76,7 @@ public class CustomerRepository : ICustomerRepository
         Customer customer)
     {
         await using var context =
-            await _contextFactory.CreateDbContextAsync();
+           await _contextFactory.CreateAsync(_companyContext.CompanyId);
 
         context.Customers.Update(customer);
 
@@ -90,7 +92,7 @@ public class CustomerRepository : ICustomerRepository
         int customerId)
     {
         await using var context =
-            await _contextFactory.CreateDbContextAsync();
+           await _contextFactory.CreateAsync(_companyContext.CompanyId);
 
         var customer =
             await context.Customers

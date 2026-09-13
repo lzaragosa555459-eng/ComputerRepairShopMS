@@ -1,24 +1,20 @@
-﻿using ComputerRepairSystem.company.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 namespace ComputerRepairSystem.company.Data;
 
-public class TenantDbContextFactory
+public class TenantDbContextDesignFactory
     : IDesignTimeDbContextFactory<TenantDbContext>
 {
-    public TenantDbContext CreateDbContext(
-        string[] args)
+    public TenantDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder =
             new DbContextOptionsBuilder<TenantDbContext>();
 
         optionsBuilder.UseSqlServer(
-            "Server=db66781.public.databaseasp.net;" +
-            "Database=db66781;" +
-            "User Id=db66781;" +
-            "Password=YOUR_PASSWORD;" +
-            "Encrypt=True;" +
+            "Server=(localdb)\\TenantLocalDB;" +
+            "Database=CRSMS_Tenant;" +
+            "Trusted_Connection=True;" +
             "TrustServerCertificate=True;");
 
         return new TenantDbContext(

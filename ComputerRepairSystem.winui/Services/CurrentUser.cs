@@ -4,24 +4,25 @@ public static class CurrentUser
 {
     public static bool IsLoggedIn { get; private set; }
 
-    public static string UserId { get; private set; }
-        = string.Empty;
+    public static string UserId { get; private set; } = string.Empty;
 
-    public static string UserName { get; private set; }
-        = string.Empty;
+    public static string UserName { get; private set; } = string.Empty;
 
-    public static string Role { get; private set; }
-        = string.Empty;
+    public static string Role { get; private set; } = string.Empty;
+
+    public static int CompanyId { get; private set; }
 
 
     public static void Login(
         string userId,
         string userName,
-        string role)
+        string role,
+        int companyId)
     {
         UserId = userId;
         UserName = userName;
         Role = role;
+        CompanyId = companyId;
 
         IsLoggedIn = true;
     }
@@ -32,6 +33,7 @@ public static class CurrentUser
         UserId = string.Empty;
         UserName = string.Empty;
         Role = string.Empty;
+        CompanyId = 0;
 
         IsLoggedIn = false;
     }

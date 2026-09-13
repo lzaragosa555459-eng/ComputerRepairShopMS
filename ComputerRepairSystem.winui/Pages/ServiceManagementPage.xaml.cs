@@ -1,17 +1,18 @@
-﻿using ComputerRepairSystem.company.Data;
+﻿using ComputerRepairSystem.infrastructure.data;
 using ComputerRepairSystem.company.Entities;
 using ComputerRepairSystem.company.Services;
-
+using ComputerRepairSystem_winui.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+
 
 namespace ComputerRepairSystem_winui.Pages;
 
 public sealed partial class ServiceManagementPage : Page
 {
     private readonly CustomerService _customerService;
-    private readonly IDbContextFactory<TenantDbContext> _tenantDbFactory;
+    private readonly TenantDbContextFactory _tenantDbFactory;
 
     private Customer? _selectedCustomer;
     private List<Customer> _customers = new();
@@ -19,7 +20,7 @@ public sealed partial class ServiceManagementPage : Page
     private const int _pageSize = 5;
     public ServiceManagementPage(
         CustomerService customerService,
-        IDbContextFactory<TenantDbContext> tenantDbFactory)
+        TenantDbContextFactory tenantDbFactory)
     {
         InitializeComponent();
 
@@ -382,7 +383,7 @@ public sealed partial class ServiceManagementPage : Page
             // ==========================================
 
             await using var context =
-                await _tenantDbFactory.CreateDbContextAsync();
+                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
 
             var device = new Device
@@ -638,7 +639,7 @@ public sealed partial class ServiceManagementPage : Page
         try
         {
             await using var db =
-                await _tenantDbFactory.CreateDbContextAsync();
+                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
 
             // ==========================================
             // LOAD CUSTOMER

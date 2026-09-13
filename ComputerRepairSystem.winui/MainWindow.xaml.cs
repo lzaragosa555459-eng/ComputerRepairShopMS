@@ -1,11 +1,12 @@
 using ComputerRepairSystem.company.Services;
 using ComputerRepairSystem_winui.Pages;
 using ComputerRepairSystem_winui.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-
+using ComputerRepairSystem.infrastructure.data;
 namespace ComputerRepairSystem_winui;
 
 public sealed partial class MainWindow : Window

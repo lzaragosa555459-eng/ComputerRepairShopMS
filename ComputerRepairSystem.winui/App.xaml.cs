@@ -2,16 +2,16 @@
 using ComputerRepairSystem.company.Interfaces;
 using ComputerRepairSystem.company.Repositories;
 using ComputerRepairSystem.company.Services;
-
+using ComputerRepairSystem.infrastructure.data;
 using ComputerRepairSystem.infrastructure.Entities;
 using ComputerRepairSystem_winui.Pages;
-using ComputerRepairSystem.infrastructure.data;
-
+using ComputerRepairSystem_winui.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+
 
 namespace ComputerRepairSystem_winui;
 
@@ -67,6 +67,14 @@ public partial class App : Application
             options =>
                 options.UseSqlServer(
                     masterConnectionString));
+
+        services.AddTransient<TenantDbContextFactory>();
+
+        services.AddTransient<ITenantDbContextFactory>(
+            provider =>
+                provider.GetRequiredService<TenantDbContextFactory>());
+
+        services.AddSingleton<ICompanyContext, CompanyContext>();
 
 
         // ==========================================

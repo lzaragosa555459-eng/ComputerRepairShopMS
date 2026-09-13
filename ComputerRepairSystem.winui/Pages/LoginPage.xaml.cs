@@ -101,8 +101,9 @@ public sealed partial class LoginPage : Page
 
             CurrentUser.Login(
                 user.Id,
-                user.UserName ?? username,
-                role);
+                user.UserName,
+                role,
+                user.CompanyId);
 
 
             var mainWindow =

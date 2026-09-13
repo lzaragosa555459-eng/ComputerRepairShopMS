@@ -90,6 +90,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ComputerRepairSystem.customer\ComputerRepairSystem.company.csproj" />
     <ProjectReference Include="..\ComputerRepairSystem.infrastructure\ComputerRepairSystem.infrastructure.csproj" />
+	<ProjectReference Include="..\ComputerRepairSystem.domain\ComputerRepairSystem.domain.csproj" />
   </ItemGroup>
 
   <!--
