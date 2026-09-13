@@ -3,19 +3,24 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-
+using Windows.ApplicationModel.Contacts;
+using ComputerRepairSystem.infrastructure.data;
+using ComputerRepairSystem.domain.Entities;
 namespace ComputerRepairSystem_winui.Pages;
 
 public sealed partial class UserManagementPage : Page
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly MasterErpDbContext _masterDb;
 
     public UserManagementPage(
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        MasterErpDbContext masterDb)
     {
         InitializeComponent();
 
         _userManager = userManager;
+        _masterDb = masterDb;
 
         Loaded += UserManagementPage_Loaded;
     }
@@ -46,7 +51,30 @@ public sealed partial class UserManagementPage : Page
                     .AsNoTracking()
                     .ToListAsync();
 
-            UsersListView.ItemsSource = users;
+            var companies =
+                await _masterDb.Companies
+                    .AsNoTracking()
+                    .ToListAsync();
+
+            var userRows =
+                users
+                    .Select(user =>
+                    {
+                        var company =
+                            companies.FirstOrDefault(
+                                c => c.CompanyId == user.CompanyId);
+
+                        return new UserRow
+                        {
+                            User = user,
+                            CompanyName =
+                                company?.CompanyName
+                                ?? "Unknown Company"
+                        };
+                    })
+                    .ToList();
+
+            UsersListView.ItemsSource = userRows;
 
             EditUserButton.IsEnabled =
                 UsersListView.SelectedItem != null;
@@ -87,191 +115,256 @@ public sealed partial class UserManagementPage : Page
         object sender,
         RoutedEventArgs e)
     {
-        var usernameBox = new TextBox
+
+        try
         {
-            Header = "Username",
-            PlaceholderText = "Enter username"
-        };
 
-        var emailBox = new TextBox
-        {
-            Header = "Email",
-            PlaceholderText = "Enter email"
-        };
+            var usernameBox = new TextBox
+            {
+                Header = "Username",
+                PlaceholderText = "Enter username"
+            };
 
-        var passwordBox = new PasswordBox
-        {
-            Header = "Password",
-            PlaceholderText = "Enter password"
-        };
+            var emailBox = new TextBox
+            {
+                Header = "Email",
+                PlaceholderText = "Enter email"
+            };
 
-        var companyIdBox = new NumberBox
-        {
-            Header = "Company ID",
-            Value = 4,
-            Minimum = 1,
-            SpinButtonPlacementMode =
-                NumberBoxSpinButtonPlacementMode.Compact
-        };
+            var passwordBox = new PasswordBox
+            {
+                Header = "Password",
+                PlaceholderText = "Enter password"
+            };
+            var roleBox = new ComboBox
+            {
+                Header = "Role",
+                PlaceholderText = "Select a role"
+            };
 
-        var activeCheckBox = new CheckBox
-        {
-            Content = "Active",
-            IsChecked = true
-        };
+            roleBox.Items.Add("Admin");
+            roleBox.Items.Add("Technician");
+            roleBox.Items.Add("Receptionist");
 
-        var panel = new StackPanel
-        {
-            Spacing = 12
-        };
+            roleBox.SelectedIndex = 1;
+            var companies =
+                await _masterDb.Companies
+                    .Where(c => c.IsActive)
+                    .OrderBy(c => c.CompanyName)
+                    .ToListAsync();
 
-        panel.Children.Add(usernameBox);
-        panel.Children.Add(emailBox);
-        panel.Children.Add(passwordBox);
-        panel.Children.Add(companyIdBox);
-        panel.Children.Add(activeCheckBox);
+            var companyBox = new ComboBox
+            {
+                Header = "Company",
+                PlaceholderText = "Select a company",
+                DisplayMemberPath = "CompanyName"
+            };
+
+            foreach (var company in companies)
+            {
+                companyBox.Items.Add(company);
+            }
+
+            if (companies.Count > 0)
+            {
+                companyBox.SelectedIndex = 0;
+            }
+
+            var activeCheckBox = new CheckBox
+            {
+                Content = "Active",
+                IsChecked = true
+            };
+
+            var panel = new StackPanel
+            {
+                Spacing = 12
+            };
+
+            panel.Children.Add(usernameBox);
+            panel.Children.Add(emailBox);
+            panel.Children.Add(passwordBox);
+            panel.Children.Add(roleBox);
+            panel.Children.Add(companyBox);
+            panel.Children.Add(activeCheckBox);
 
 
-        var dialog = new ContentDialog
-        {
-            Title = "Add User",
-            Content = panel,
+            var dialog = new ContentDialog
+            {
+                Title = "Add User",
+                Content = panel,
 
-            PrimaryButtonText = "Add",
-            CloseButtonText = "Cancel",
+                PrimaryButtonText = "Add",
+                CloseButtonText = "Cancel",
 
-            DefaultButton =
-                ContentDialogButton.Primary,
+                DefaultButton =
+                    ContentDialogButton.Primary,
 
-            XamlRoot = XamlRoot
-        };
-
-
-        var result =
-            await dialog.ShowAsync();
-
-        if (result != ContentDialogResult.Primary)
-            return;
+                XamlRoot = XamlRoot
+            };
 
 
-        // ==========================================
-        // VALIDATION
-        // ==========================================
+            var result =
+                await dialog.ShowAsync();
 
-        if (string.IsNullOrWhiteSpace(usernameBox.Text))
+            if (result != ContentDialogResult.Primary)
+                return;
+
+
+            // ==========================================
+            // VALIDATION
+            // ==========================================
+
+            if (string.IsNullOrWhiteSpace(usernameBox.Text))
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Username is required.");
+
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(emailBox.Text))
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Email is required.");
+
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(passwordBox.Password))
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Password is required.");
+
+                return;
+            }
+
+            if (roleBox.SelectedItem == null)
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Please select a role.");
+
+                return;
+            }
+
+            if (companyBox.SelectedItem is not Company selectedCompany)
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Please select a company.");
+
+                return;
+            }
+
+
+            // ==========================================
+            // CHECK DUPLICATE USERNAME
+            // ==========================================
+
+            var existingUsername =
+                await _userManager.FindByNameAsync(
+                    usernameBox.Text.Trim());
+
+            if (existingUsername != null)
+            {
+                await ShowMessageAsync(
+                    "User Already Exists",
+                    "That username is already being used.");
+
+                return;
+            }
+
+
+            // ==========================================
+            // CHECK DUPLICATE EMAIL
+            // ==========================================
+
+            var existingEmail =
+                await _userManager.FindByEmailAsync(
+                    emailBox.Text.Trim());
+
+            if (existingEmail != null)
+            {
+                await ShowMessageAsync(
+                    "Email Already Exists",
+                    "That email is already being used.");
+
+                return;
+            }
+
+
+            // ==========================================
+            // CREATE USER
+            // ==========================================
+            var selectedRole =
+                roleBox.SelectedItem.ToString();
+            var user = new ApplicationUser
+            {
+                UserName =
+                    usernameBox.Text.Trim(),
+
+                Email =
+                    emailBox.Text.Trim(),
+
+                CompanyId =
+                    selectedCompany.CompanyId,
+
+                IsActive =
+                    activeCheckBox.IsChecked == true
+            };
+
+
+            var createResult =
+                await _userManager.CreateAsync(
+                    user,
+                    passwordBox.Password);
+
+            var roleResult =
+                await _userManager.AddToRoleAsync(
+                    user,
+                    selectedRole);
+
+            if (!roleResult.Succeeded)
+            {
+                await ShowIdentityErrorsAsync(
+                    "Unable to Assign Role",
+                    roleResult);
+
+                await _userManager.DeleteAsync(user);
+
+                return;
+            }
+
+
+            if (!createResult.Succeeded)
+            {
+                await ShowIdentityErrorsAsync(
+                    "Unable to Add User",
+                    createResult);
+
+                return;
+            }
+
+
+            await LoadUsersAsync();
+
+            await ShowMessageAsync(
+                "User Added",
+                $"User '{user.UserName}' was created successfully.");
+        }
+        catch (Exception ex)
         {
             await ShowMessageAsync(
-                "Validation Error",
-                "Username is required.");
+                "Add User Error",
+                ex.ToString());
 
-            return;
+            System.Diagnostics.Debug.WriteLine(ex);
         }
 
-        if (string.IsNullOrWhiteSpace(emailBox.Text))
-        {
-            await ShowMessageAsync(
-                "Validation Error",
-                "Email is required.");
-
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(passwordBox.Password))
-        {
-            await ShowMessageAsync(
-                "Validation Error",
-                "Password is required.");
-
-            return;
-        }
-
-        if (companyIdBox.Value < 1)
-        {
-            await ShowMessageAsync(
-                "Validation Error",
-                "Company ID must be greater than 0.");
-
-            return;
-        }
-
-
-        // ==========================================
-        // CHECK DUPLICATE USERNAME
-        // ==========================================
-
-        var existingUsername =
-            await _userManager.FindByNameAsync(
-                usernameBox.Text.Trim());
-
-        if (existingUsername != null)
-        {
-            await ShowMessageAsync(
-                "User Already Exists",
-                "That username is already being used.");
-
-            return;
-        }
-
-
-        // ==========================================
-        // CHECK DUPLICATE EMAIL
-        // ==========================================
-
-        var existingEmail =
-            await _userManager.FindByEmailAsync(
-                emailBox.Text.Trim());
-
-        if (existingEmail != null)
-        {
-            await ShowMessageAsync(
-                "Email Already Exists",
-                "That email is already being used.");
-
-            return;
-        }
-
-
-        // ==========================================
-        // CREATE USER
-        // ==========================================
-
-        var user = new ApplicationUser
-        {
-            UserName =
-                usernameBox.Text.Trim(),
-
-            Email =
-                emailBox.Text.Trim(),
-
-            CompanyId =
-                (int)companyIdBox.Value,
-
-            IsActive =
-                activeCheckBox.IsChecked == true
-        };
-
-
-        var createResult =
-            await _userManager.CreateAsync(
-                user,
-                passwordBox.Password);
-
-
-        if (!createResult.Succeeded)
-        {
-            await ShowIdentityErrorsAsync(
-                "Unable to Add User",
-                createResult);
-
-            return;
-        }
-
-
-        await LoadUsersAsync();
-
-        await ShowMessageAsync(
-            "User Added",
-            $"User '{user.UserName}' was created successfully.");
     }
 
 
@@ -288,7 +381,7 @@ public sealed partial class UserManagementPage : Page
         // ==========================================
 
         if (UsersListView.SelectedItem
-            is not ApplicationUser selectedUser)
+            is not UserRow selectedRow)
         {
             await ShowMessageAsync(
                 "No User Selected",
@@ -296,6 +389,8 @@ public sealed partial class UserManagementPage : Page
 
             return;
         }
+
+        var selectedUser = selectedRow.User;
 
 
         try
@@ -338,14 +433,32 @@ public sealed partial class UserManagementPage : Page
                 PlaceholderText = "Enter email"
             };
 
-            var companyIdBox = new NumberBox
+            var companies =
+                await _masterDb.Companies
+                    .Where(c => c.IsActive)
+                    .OrderBy(c => c.CompanyName)
+                    .ToListAsync();
+
+            var companyBox = new ComboBox
             {
-                Header = "Company ID",
-                Value = user.CompanyId,
-                Minimum = 1,
-                SpinButtonPlacementMode =
-                    NumberBoxSpinButtonPlacementMode.Compact
+                Header = "Company",
+                PlaceholderText = "Select a company",
+                DisplayMemberPath = "CompanyName"
             };
+
+            foreach (var company in companies)
+            {
+                companyBox.Items.Add(company);
+            }
+
+            var currentCompany =
+                companies.FirstOrDefault(
+                    c => c.CompanyId == user.CompanyId);
+
+            if (currentCompany != null)
+            {
+                companyBox.SelectedItem = currentCompany;
+            }
 
             var activeCheckBox = new CheckBox
             {
@@ -365,7 +478,7 @@ public sealed partial class UserManagementPage : Page
 
             panel.Children.Add(usernameBox);
             panel.Children.Add(emailBox);
-            panel.Children.Add(companyIdBox);
+            panel.Children.Add(companyBox);
             panel.Children.Add(activeCheckBox);
 
 
@@ -401,8 +514,14 @@ public sealed partial class UserManagementPage : Page
             var email =
                 emailBox.Text.Trim();
 
-            var companyId =
-                (int)companyIdBox.Value;
+            if (companyBox.SelectedItem is not Company selectedCompany)
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Please select a company.");
+
+                return;
+            }
 
 
             if (string.IsNullOrWhiteSpace(username))
@@ -424,15 +543,6 @@ public sealed partial class UserManagementPage : Page
                 return;
             }
 
-
-            if (companyId < 1)
-            {
-                await ShowMessageAsync(
-                    "Validation Error",
-                    "Company ID must be greater than 0.");
-
-                return;
-            }
 
 
             // ==========================================
@@ -527,7 +637,8 @@ public sealed partial class UserManagementPage : Page
             // UPDATE CUSTOM FIELDS
             // ==========================================
 
-            user.CompanyId = companyId;
+            user.CompanyId =
+                selectedCompany.CompanyId;
 
             user.IsActive =
                 activeCheckBox.IsChecked == true;
@@ -578,7 +689,8 @@ public sealed partial class UserManagementPage : Page
         object sender,
         RoutedEventArgs e)
     {
-        if (UsersListView.SelectedItem is not ApplicationUser selectedUser)
+        if (UsersListView.SelectedItem
+            is not UserRow selectedRow)
         {
             await ShowMessageAsync(
                 "No User Selected",
@@ -586,6 +698,8 @@ public sealed partial class UserManagementPage : Page
 
             return;
         }
+
+        var selectedUser = selectedRow.User;
 
         var username =
             selectedUser.UserName ?? "this user";

@@ -95,7 +95,7 @@
 
                     <TextBlock
                 Grid.Column="2"
-                Text="Company ID"
+                Text="Company Name"
                 FontWeight="SemiBold" />
 
                     <TextBlock
@@ -137,10 +137,9 @@
 
 
                         <!-- Company -->
-
-                        <TextBlock
-                    Grid.Column="2"
-                    Text="{Binding CompanyId}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Text="{Binding CompanyName}" />
 
 
                         <!-- Status -->

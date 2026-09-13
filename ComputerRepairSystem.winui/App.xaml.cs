@@ -178,11 +178,21 @@ public partial class App : Application
             scope.ServiceProvider
                 .GetRequiredService<RoleManager<IdentityRole>>();
 
-                if (!await roleManager.RoleExistsAsync("Admin"))
-                {
-                    await roleManager.CreateAsync(
-                        new IdentityRole("Admin"));
-                }
+        var roles = new[]
+        {
+            "Admin",
+            "Technician",
+            "Receptionist"
+        };
+
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(
+                    new IdentityRole(role));
+            }
+        }
         var userManager =
             scope.ServiceProvider
                 .GetRequiredService<UserManager<ApplicationUser>>();
