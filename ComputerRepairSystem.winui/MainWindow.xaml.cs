@@ -60,6 +60,9 @@ public sealed partial class MainWindow : Window
         SystemSettingsItem.Visibility =
             Visibility.Collapsed;
 
+        CustomerManagementItem.Visibility =
+            Visibility.Collapsed;
+
         var role = CurrentUser.Role;
 
         if (role == "Admin")
@@ -81,6 +84,10 @@ public sealed partial class MainWindow : Window
 
             SystemSettingsItem.Visibility =
                 Visibility.Visible;
+            CustomerManagementItem.Visibility =
+                Visibility.Visible;
+
+
         }
         else if (role == "Technician")
         {
@@ -93,6 +100,9 @@ public sealed partial class MainWindow : Window
                 Visibility.Visible;
 
             BillingItem.Visibility =
+                Visibility.Visible;
+
+            CustomerManagementItem.Visibility =
                 Visibility.Visible;
         }
 
@@ -157,6 +167,10 @@ public sealed partial class MainWindow : Window
 
                 case "billing":
                     NavigateToBillingPage();
+                    break;
+
+                case "customer-management":
+                    NavigateToCustomerManagementPage();
                     break;
 
                 case "users":
@@ -296,6 +310,13 @@ public sealed partial class MainWindow : Window
     {
         var page =
             App.Services.GetRequiredService<SettingsPage>();
+
+        NavFrame.Content = page;
+    }
+    private void NavigateToCustomerManagementPage()
+    {
+        var page =
+            App.Services.GetRequiredService<CustomerManagementPage>();
 
         NavFrame.Content = page;
     }

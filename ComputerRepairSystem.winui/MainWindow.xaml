@@ -153,75 +153,97 @@
             SelectionChanged="NavView_SelectionChanged"
             IsSettingsVisible="False">
 
-                <NavigationView.MenuItems>
-                    <NavigationViewItem
+            <NavigationView.MenuItems>
+
+                <!-- HOME -->
+                <NavigationViewItem
                     x:Name="HomeItem"
                     Content="Home"
                     IsSelected="True"
                     Tag="home">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE80F;" />
+                        <SymbolIcon Symbol="Home"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                
+
+
+                <!-- SERVICE MANAGEMENT -->
                 <NavigationViewItem
                     x:Name="ServiceManagementItem"
                     Content="Service Management"
                     Tag="customers">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE77B;" />
+                        <SymbolIcon Symbol="Contact"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                
+
+
+                <!-- REPAIR MANAGEMENT -->
                 <NavigationViewItem
                     x:Name="RepairManagementItem"
                     Content="Repair Management"
                     Tag="repairs">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE90F;" />
+                        <SymbolIcon Symbol="Repair"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+
+                <!-- BILLING -->
                 <NavigationViewItem
                     x:Name="BillingItem"
                     Content="Billing"
                     Tag="billing">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE8C7;" />
+                        <SymbolIcon Symbol="Calculator"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                
+
+
+                <!-- USER MANAGEMENT -->
                 <NavigationViewItem
                     x:Name="UserManagementItem"
                     Content="User Management"
                     Tag="users">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE77B;" />
+                        <SymbolIcon Symbol="People"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
+
+                <!-- CUSTOMER MANAGEMENT -->
                 <NavigationViewItem
-                    Content="Inventory"
-                    Tag="inventory"
-                    x:Name="InventoryItem">
-
+                    x:Name="CustomerManagementItem"
+                    Content="Customers"
+                    Tag="customer-management">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE7B8;" />
+                        <SymbolIcon Symbol="Contact2"/>
                     </NavigationViewItem.Icon>
-
                 </NavigationViewItem>
-                    
+
+
+                <!-- INVENTORY -->
+                <NavigationViewItem
+                    x:Name="InventoryItem"
+                    Content="Inventory"
+                    Tag="inventory">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Shop"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+
+                <!-- SYSTEM SETTINGS -->
                 <NavigationViewItem
                     x:Name="SystemSettingsItem"
                     Content="System Settings"
                     Tag="settings">
-
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE713;" />
+                        <SymbolIcon Symbol="Setting"/>
                     </NavigationViewItem.Icon>
-
                 </NavigationViewItem>
-                </NavigationView.MenuItems>
+
+            </NavigationView.MenuItems>
 
                 <Frame
                 x:Name="NavFrame" />

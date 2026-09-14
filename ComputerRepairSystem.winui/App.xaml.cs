@@ -141,6 +141,8 @@ public partial class App : Application
 
         services.AddTransient<SettingsPage>();
 
+        services.AddTransient<CustomerManagementPage>();
+
         // ==========================================
         // MAIN WINDOW
         // ==========================================
