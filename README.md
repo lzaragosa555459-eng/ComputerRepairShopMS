@@ -112,6 +112,153 @@ Each company has its own Tenant Database containing its operational data.
 The Tenant Database is responsible for the day-to-day operations of a specific company.
 
 ---
+## Database Design
+
+```mermaid
+erDiagram
+    Customer ||--o{ Device : "owns"
+    Device ||--o{ ServiceRequest : "has"
+    ServiceRequest ||--o| Repair : "becomes"
+    Employee ||--o{ Repair : "technician"
+    Repair ||--o| Invoice : "generates"
+    Invoice ||--o{ Payment : "receives"
+    Repair ||--o{ RepairItem : "uses"
+    InventoryItem ||--o{ RepairItem : "used_in"
+    InventoryItem ||--o{ Inventory : "stocked_as"
+
+    Customer {
+        int CustomerId PK
+        uniqueidentifier SyncId
+        nvarchar FirstName
+        nvarchar MiddleName "nullable"
+        nvarchar LastName
+        nvarchar Phone "nullable"
+        nvarchar Email "nullable"
+        nvarchar Address "nullable"
+        datetime CreatedAt
+    }
+
+    Device {
+        int DeviceId PK
+        int CustomerId FK
+        nvarchar DeviceType
+        nvarchar Brand
+        nvarchar Model
+        nvarchar SerialNumber "nullable"
+        nvarchar DeviceCondition "nullable"
+    }
+
+    ServiceRequest {
+        int ServiceRequestId PK
+        int DeviceId FK
+        datetime RequestDate
+        nvarchar Description
+        nvarchar Status
+        nvarchar Priority
+    }
+
+    Employee {
+        int EmployeeId PK
+        int MasterUserId "nullable"
+        nvarchar FirstName
+        nvarchar MiddleName "nullable"
+        nvarchar LastName
+        nvarchar Phone "nullable"
+        nvarchar Email "nullable"
+        nvarchar Address "nullable"
+        nvarchar Position
+        date HireDate
+        bit IsActive
+    }
+
+    Repair {
+        int RepairId PK
+        int ServiceRequestId FK
+        int TechnicianId FK "nullable"
+        int BranchId "nullable"
+        nvarchar Diagnosis "nullable"
+        nvarchar RepairDescription "nullable"
+        nvarchar Status
+        datetime StartDate "nullable"
+        datetime EndDate "nullable"
+    }
+
+    Invoice {
+        int InvoiceId PK
+        int RepairId FK
+        nvarchar InvoiceNumber
+        datetime InvoiceDate
+        decimal Subtotal
+        decimal LaborAmount
+        decimal Discount
+        decimal Tax
+        decimal TotalAmount
+        nvarchar Status
+    }
+
+    Payment {
+        int PaymentId PK
+        int InvoiceId FK
+        datetime PaymentDate
+        decimal Amount
+        nvarchar PaymentMethod
+        nvarchar ReferenceNumber "nullable"
+        nvarchar Status
+    }
+
+    InventoryItem {
+        int ItemId PK
+        nvarchar ItemName
+        nvarchar Category
+        nvarchar Description "nullable"
+        nvarchar Brand "nullable"
+        nvarchar Model "nullable"
+        nvarchar Unit
+        decimal UnitCost
+        decimal UnitPrice
+        decimal ReorderLevel
+        bit IsActive
+        datetime CreatedAt
+    }
+
+    Inventory {
+        int InventoryId PK
+        int BranchId "nullable"
+        int ItemId FK
+        decimal QuantityOnHand
+    }
+
+    RepairItem {
+        int RepairItemId PK
+        int RepairId FK
+        int ItemId FK
+        decimal Quantity
+        decimal UnitPrice
+        decimal Discount
+    }
+
+    SystemSettings {
+        int SystemSettingsId PK
+        nvarchar ShopName
+        nvarchar ShopAddress "nullable"
+        decimal LowLaborRate
+        decimal MediumLaborRate
+        decimal HighLaborRate
+        datetime UpdatedAt
+    }
+
+    SyncQueue {
+        int SyncId PK
+        nvarchar TableName
+        int RecordId
+        nvarchar Operation
+        datetime CreatedAt
+        bit IsSynced
+        datetime SyncedAt "nullable"
+    }
+...
+```
+---
 
 # 🧩 Main System Modules
 
