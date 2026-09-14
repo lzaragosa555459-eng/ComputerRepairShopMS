@@ -112,7 +112,7 @@ Each company has its own Tenant Database containing its operational data.
 The Tenant Database is responsible for the day-to-day operations of a specific company.
 
 ---
-## Database Design
+# Computer Repair System – Database Design (Micro)
 
 ```mermaid
 erDiagram
@@ -256,9 +256,7 @@ erDiagram
         bit IsSynced
         datetime SyncedAt "nullable"
     }
-...
 ```
----
 
 # 🧩 Main System Modules
 
