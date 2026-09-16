@@ -143,6 +143,8 @@ public partial class App : Application
 
         services.AddTransient<CustomerManagementPage>();
 
+        services.AddTransient<CompanyManagementPage>();
+
         // ==========================================
         // MAIN WINDOW
         // ==========================================
@@ -190,6 +192,7 @@ public partial class App : Application
 
         var roles = new[]
         {
+            "Super Admin",
             "Admin",
             "Technician",
             "Receptionist"
@@ -267,6 +270,50 @@ public partial class App : Application
             await userManager.AddToRoleAsync(
                 admin,
                 "Admin");
+        }
+        // ==========================================
+        // CREATE INITIAL SUPER ADMIN
+        // ==========================================
+
+        var superAdmin =
+            await userManager.FindByNameAsync("superadmin");
+
+        if (superAdmin == null)
+        {
+            superAdmin = new ApplicationUser
+            {
+                UserName = "superadmin",
+                Email = "superadmin@fixflow.com",
+                EmailConfirmed = true,
+                CompanyId = 4,
+                IsActive = true
+            };
+
+            var createResult =
+                await userManager.CreateAsync(
+                    superAdmin,
+                    "SuperAdmin123!");
+
+            if (!createResult.Succeeded)
+            {
+                foreach (var error in createResult.Errors)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        $"{error.Code}: {error.Description}");
+                }
+
+                return;
+            }
+        }
+
+        // Make sure Super Admin has the correct role
+        if (!await userManager.IsInRoleAsync(
+                superAdmin,
+                "Super Admin"))
+        {
+            await userManager.AddToRoleAsync(
+                superAdmin,
+                "Super Admin");
         }
     }
 

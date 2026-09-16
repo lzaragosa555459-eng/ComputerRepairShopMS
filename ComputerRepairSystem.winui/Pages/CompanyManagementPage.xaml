@@ -1,0 +1,121 @@
+<Page
+    x:Class="ComputerRepairSystem_winui.Pages.CompanyManagementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Padding="24">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- TITLE -->
+
+        <TextBlock
+            Text="Company Management"
+            FontSize="28"
+            FontWeight="SemiBold"/>
+
+
+        <!-- ACTIONS -->
+
+        <StackPanel
+            Grid.Row="1"
+            Orientation="Horizontal"
+            Spacing="12"
+            Margin="0,20,0,16">
+
+            <Button
+                Content="+ New Company"
+                Click="NewCompanyButton_Click"/>
+
+            <Button
+                Content="Edit"
+                Click="EditCompanyButton_Click"/>
+
+            <Button
+                Content="Activate / Deactivate"
+                Click="ToggleCompanyButton_Click"/>
+
+        </StackPanel>
+
+
+        <!-- COMPANY LIST -->
+
+        <ListView
+            x:Name="CompanyList"
+            Grid.Row="2"
+            SelectionChanged="CompanyList_SelectionChanged">
+
+            <ListView.Header>
+
+                <Grid Padding="8">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Text="Company Code"/>
+
+                    <TextBlock
+                        Grid.Column="1"
+                        Text="Company Name"/>
+
+                    <TextBlock
+                        Grid.Column="2"
+                        Text="Database"/>
+
+                    <TextBlock
+                        Grid.Column="3"
+                        Text="Status"/>
+
+                </Grid>
+
+            </ListView.Header>
+
+
+            <ListView.ItemTemplate>
+
+                <DataTemplate>
+
+                    <Grid Padding="8">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Text="{Binding CompanyCode}"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding CompanyName}"/>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            Text="{Binding DatabaseName}"/>
+
+                        <TextBlock
+                            Grid.Column="3"
+                            Text="{Binding Status}"/>
+
+                    </Grid>
+
+                </DataTemplate>
+
+            </ListView.ItemTemplate>
+
+        </ListView>
+
+    </Grid>
+
+</Page>

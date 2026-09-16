@@ -40,13 +40,13 @@ public sealed partial class MainWindow : Window
         UpdateUserHeader();
 
         HomeItem.Visibility =
-            Visibility.Visible;
+            Visibility.Collapsed;
 
         ServiceManagementItem.Visibility =
             Visibility.Collapsed;
 
         InventoryItem.Visibility =
-            Visibility.Visible;
+            Visibility.Collapsed;
 
         RepairManagementItem.Visibility =
             Visibility.Collapsed;
@@ -57,6 +57,9 @@ public sealed partial class MainWindow : Window
         UserManagementItem.Visibility =
             Visibility.Collapsed;
 
+        CompanyManagementItem.Visibility =
+            Visibility.Collapsed;
+
         SystemSettingsItem.Visibility =
             Visibility.Collapsed;
 
@@ -64,6 +67,44 @@ public sealed partial class MainWindow : Window
             Visibility.Collapsed;
 
         var role = CurrentUser.Role;
+
+        if (role == "Super Admin")
+        {
+            HomeItem.Visibility =
+                Visibility.Collapsed;
+
+            CustomerManagementItem.Visibility =
+                Visibility.Collapsed;
+
+            ServiceManagementItem.Visibility =
+                Visibility.Collapsed;
+
+            RepairManagementItem.Visibility =
+                Visibility.Collapsed;
+
+            BillingItem.Visibility =
+                Visibility.Collapsed;
+
+            InventoryItem.Visibility =
+                Visibility.Collapsed;
+
+            SystemSettingsItem.Visibility =
+                Visibility.Collapsed;
+
+            UserManagementItem.Visibility =
+                Visibility.Visible;
+
+            CompanyManagementItem.Visibility =
+                Visibility.Visible;
+
+            HomeItem.IsSelected = true;
+
+            NavFrame.Content =
+                App.Services
+                    .GetRequiredService<HomePage>();
+
+            return;
+        }
 
         if (role == "Admin")
         {
@@ -135,6 +176,12 @@ public sealed partial class MainWindow : Window
         SystemSettingsItem.Visibility =
             Visibility.Collapsed;
 
+        CustomerManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        CompanyManagementItem.Visibility =
+            Visibility.Collapsed;
+
         HomeItem.IsSelected = false;
 
         NavFrame.Content =
@@ -176,6 +223,9 @@ public sealed partial class MainWindow : Window
                 case "users":
                     NavigateToUserManagementPage();
                     break;
+                case "companies":
+                    NavigateToCompanyManagementPage();
+                    break;
 
                 case "inventory":
                     NavigateToInventoryPage();
@@ -208,7 +258,7 @@ public sealed partial class MainWindow : Window
             App.Services.GetRequiredService<RepairManagementPage>();
 
         NavFrame.Content = page;
-    }
+    }   
     private void NavigateToBillingPage()
     {
         var page =
@@ -317,6 +367,14 @@ public sealed partial class MainWindow : Window
     {
         var page =
             App.Services.GetRequiredService<CustomerManagementPage>();
+
+        NavFrame.Content = page;
+    }
+    private void NavigateToCompanyManagementPage()
+    {
+        var page =
+            App.Services
+                .GetRequiredService<CompanyManagementPage>();
 
         NavFrame.Content = page;
     }

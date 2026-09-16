@@ -151,7 +151,8 @@
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="False"
             SelectionChanged="NavView_SelectionChanged"
-            IsSettingsVisible="False">
+            IsSettingsVisible="False"
+            IsPaneOpen="False">
 
             <NavigationView.MenuItems>
 
@@ -200,14 +201,28 @@
                 </NavigationViewItem>
 
 
+                <!-- COMPANY MANAGEMENT -->
+                <NavigationViewItem
+                    x:Name="CompanyManagementItem"
+                    Content="Company Management"
+                    Tag="companies">
+
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Shop"/>
+                    </NavigationViewItem.Icon>
+
+                </NavigationViewItem>
+
                 <!-- USER MANAGEMENT -->
                 <NavigationViewItem
                     x:Name="UserManagementItem"
                     Content="User Management"
                     Tag="users">
+
                     <NavigationViewItem.Icon>
                         <SymbolIcon Symbol="People"/>
                     </NavigationViewItem.Icon>
+
                 </NavigationViewItem>
 
 
@@ -227,9 +242,11 @@
                     x:Name="InventoryItem"
                     Content="Inventory"
                     Tag="inventory">
+
                     <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Shop"/>
-                    </NavigationViewItem.Icon>
+                           <FontIcon Glyph="&#xE8A5;" />
+                        </NavigationViewItem.Icon>
+
                 </NavigationViewItem>
 
 
