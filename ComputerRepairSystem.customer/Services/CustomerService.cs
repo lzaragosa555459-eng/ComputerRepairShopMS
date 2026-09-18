@@ -62,9 +62,15 @@ public class CustomerService
     public async Task<Customer>
         AddAsync(Customer customer)
     {
+        if (!_companyContext.CompanyId.HasValue)
+        {
+            throw new InvalidOperationException(
+                "A company is required to access customer data.");
+        }
+
         await using var context =
-        await _tenantDbFactory
-    .CreateAsync(_companyContext.CompanyId);
+            await _tenantDbFactory.CreateAsync(
+                _companyContext.CompanyId.Value);
 
         await using var transaction =
             await context.Database
@@ -118,9 +124,15 @@ public class CustomerService
     public async Task UpdateAsync(
         Customer customer)
     {
+        if (!_companyContext.CompanyId.HasValue)
+        {
+            throw new InvalidOperationException(
+                "A company is required to access customer data.");
+        }
+
         await using var context =
-await _tenantDbFactory
-    .CreateAsync(_companyContext.CompanyId);
+            await _tenantDbFactory.CreateAsync(
+                _companyContext.CompanyId.Value);
 
         await using var transaction =
             await context.Database
@@ -172,9 +184,15 @@ await _tenantDbFactory
     public async Task DeleteAsync(
         int customerId)
     {
+        if (!_companyContext.CompanyId.HasValue)
+        {
+            throw new InvalidOperationException(
+                "A company is required to access customer data.");
+        }
+
         await using var context =
-            await _tenantDbFactory
-                .CreateAsync(_companyContext.CompanyId);
+            await _tenantDbFactory.CreateAsync(
+                _companyContext.CompanyId.Value);
 
         await using var transaction =
             await context.Database

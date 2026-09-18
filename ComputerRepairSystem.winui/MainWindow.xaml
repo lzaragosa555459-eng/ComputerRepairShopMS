@@ -235,6 +235,18 @@
                         <SymbolIcon Symbol="Contact2"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                
+                <!-- EMPLOYEE MANAGEMENT -->
+                <NavigationViewItem
+                    x:Name="EmployeeManagementItem"
+                    Content="Employees"
+                    Tag="employee-management">
+
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Contact"/>
+                    </NavigationViewItem.Icon>
+
+                </NavigationViewItem>
 
 
                 <!-- INVENTORY -->

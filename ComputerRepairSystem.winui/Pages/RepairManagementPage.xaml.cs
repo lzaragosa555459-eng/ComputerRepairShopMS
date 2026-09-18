@@ -36,8 +36,14 @@ public sealed partial class RepairManagementPage : Page
     {
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
-                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
             var requests =
                 await db.ServiceRequests
@@ -207,8 +213,14 @@ public sealed partial class RepairManagementPage : Page
     {
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
-                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
             var request =
                 await db.ServiceRequests
@@ -250,8 +262,14 @@ public sealed partial class RepairManagementPage : Page
     {
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
-                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
             var existingRepair =
                 await db.Repairs
@@ -346,8 +364,14 @@ public sealed partial class RepairManagementPage : Page
     {
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
-                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
             var repairs =
                 await db.Repairs
@@ -379,8 +403,14 @@ public sealed partial class RepairManagementPage : Page
     {
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
-                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
             var repair =
                 await db.Repairs
@@ -1395,8 +1425,14 @@ public sealed partial class RepairManagementPage : Page
     {
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
-                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
             // Load inventory with available stock
             var inventory =

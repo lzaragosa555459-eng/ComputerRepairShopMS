@@ -2,5 +2,5 @@
 
 public interface ICompanyContext
 {
-    int CompanyId { get; }
+    int? CompanyId { get; }
 }

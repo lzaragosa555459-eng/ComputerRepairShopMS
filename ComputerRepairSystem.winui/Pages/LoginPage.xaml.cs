@@ -101,7 +101,7 @@ public sealed partial class LoginPage : Page
 
             CurrentUser.Login(
                 user.Id,
-                user.UserName,
+                user.UserName ?? string.Empty,
                 role,
                 user.CompanyId);
 

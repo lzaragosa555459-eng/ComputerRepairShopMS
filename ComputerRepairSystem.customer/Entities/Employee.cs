@@ -5,9 +5,9 @@ public class Employee
     public int EmployeeId { get; set; }
 
     // Reference to the Master DB user
-    public int? MasterUserId { get; set; }
+    public string? MasterUserId { get; set; }
 
-    public int BranchId { get; set; }
+    public int? BranchId { get; set; }
     public int? DepartmentId { get; set; }
 
     public string FirstName { get; set; } = string.Empty;
@@ -22,6 +22,6 @@ public class Employee
     public DateTime HireDate { get; set; }
     public bool IsActive { get; set; } = true;
 
-    public Branch Branch { get; set; } = null!;
+    public Branch? Branch { get; set; } = null!;
     public Department? Department { get; set; }
 }

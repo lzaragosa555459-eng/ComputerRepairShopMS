@@ -1,3 +1,5 @@
+using ComputerRepairSystem.company.Data;
+using ComputerRepairSystem.company.Entities;
 using ComputerRepairSystem.domain.Entities;
 using ComputerRepairSystem.infrastructure.data;
 using ComputerRepairSystem.infrastructure.Entities;
@@ -13,15 +15,18 @@ public sealed partial class UserManagementPage : Page
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly MasterErpDbContext _masterDb;
+    private readonly TenantDbContextFactory _tenantDbFactory;
 
     public UserManagementPage(
         UserManager<ApplicationUser> userManager,
-        MasterErpDbContext masterDb)
+        MasterErpDbContext masterDb,
+        TenantDbContextFactory tenantDbFactory)
     {
         InitializeComponent();
 
         _userManager = userManager;
         _masterDb = masterDb;
+        _tenantDbFactory = tenantDbFactory;
 
         Loaded += UserManagementPage_Loaded;
     }
@@ -154,9 +159,11 @@ public sealed partial class UserManagementPage : Page
         object sender,
         RoutedEventArgs e)
     {
-
         try
         {
+            // ==========================================
+            // USER INFORMATION
+            // ==========================================
 
             var usernameBox = new TextBox
             {
@@ -175,15 +182,19 @@ public sealed partial class UserManagementPage : Page
                 Header = "Password",
                 PlaceholderText = "Enter password"
             };
+
             var roleBox = new ComboBox
             {
                 Header = "Role",
                 PlaceholderText = "Select a role"
             };
+
             roleBox.Items.Add("Super Admin");
             roleBox.Items.Add("Admin");
             roleBox.Items.Add("Technician");
             roleBox.Items.Add("Receptionist");
+
+
 
             if (CurrentUser.Role == "Admin")
             {
@@ -191,6 +202,81 @@ public sealed partial class UserManagementPage : Page
             }
 
             roleBox.SelectedIndex = 1;
+
+
+            // ==========================================
+            // EMPLOYEE INFORMATION
+            // ==========================================
+
+            var firstNameBox = new TextBox
+            {
+                Header = "First Name",
+                PlaceholderText = "Enter first name"
+            };
+
+            var middleNameBox = new TextBox
+            {
+                Header = "Middle Name",
+                PlaceholderText = "Enter middle name"
+            };
+
+            var lastNameBox = new TextBox
+            {
+                Header = "Last Name",
+                PlaceholderText = "Enter last name"
+            };
+
+            var phoneBox = new TextBox
+            {
+                Header = "Phone",
+                PlaceholderText = "Enter phone number"
+            };
+
+            var addressBox = new TextBox
+            {
+                Header = "Address",
+                PlaceholderText = "Enter address"
+            };
+
+            var positionBox = new TextBox
+            {
+                Header = "Job Position",
+                PlaceholderText = "Enter job position"
+            };
+
+            roleBox.SelectionChanged += (_, _) =>
+            {
+                switch (roleBox.SelectedItem?.ToString())
+                {
+                    case "Admin":
+                        positionBox.Text = "Administrator";
+                        break;
+
+                    case "Technician":
+                        positionBox.Text = "Computer Technician";
+                        break;
+
+                    case "Receptionist":
+                        positionBox.Text = "Receptionist";
+                        break;
+
+                    case "Super Admin":
+                        positionBox.Text = string.Empty;
+                        break;
+                }
+            };
+
+            var hireDatePicker = new DatePicker
+            {
+                Header = "Hire Date",
+                Date = DateTimeOffset.Now
+            };
+
+
+            // ==========================================
+            // COMPANY
+            // ==========================================
+
             var companies =
                 await _masterDb.Companies
                     .Where(c => c.IsActive)
@@ -203,6 +289,7 @@ public sealed partial class UserManagementPage : Page
                 PlaceholderText = "Select a company",
                 DisplayMemberPath = "CompanyName"
             };
+
             if (CurrentUser.Role == "Admin")
             {
                 companyBox.IsEnabled = false;
@@ -229,29 +316,79 @@ public sealed partial class UserManagementPage : Page
                 }
             }
 
+
+            // ==========================================
+            // ACTIVE
+            // ==========================================
+
             var activeCheckBox = new CheckBox
             {
                 Content = "Active",
                 IsChecked = true
             };
 
+
+            // ==========================================
+            // PANEL
+            // ==========================================
+
             var panel = new StackPanel
             {
                 Spacing = 12
             };
+
+            panel.Children.Add(
+                new TextBlock
+                {
+                    Text = "Account Information",
+                    FontSize = 18,
+                    FontWeight =
+                        Microsoft.UI.Text.FontWeights.SemiBold
+                });
 
             panel.Children.Add(usernameBox);
             panel.Children.Add(emailBox);
             panel.Children.Add(passwordBox);
             panel.Children.Add(roleBox);
             panel.Children.Add(companyBox);
+
+            panel.Children.Add(
+                new TextBlock
+                {
+                    Text = "Employee Information",
+                    FontSize = 18,
+                    FontWeight =
+                        Microsoft.UI.Text.FontWeights.SemiBold,
+                    Margin = new Thickness(0, 12, 0, 0)
+                });
+
+            panel.Children.Add(firstNameBox);
+            panel.Children.Add(middleNameBox);
+            panel.Children.Add(lastNameBox);
+            panel.Children.Add(phoneBox);
+            panel.Children.Add(addressBox);
+            panel.Children.Add(positionBox);
+            panel.Children.Add(hireDatePicker);
+
             panel.Children.Add(activeCheckBox);
 
+
+            // ==========================================
+            // DIALOG
+            // ==========================================
+
+            var scrollViewer = new ScrollViewer
+            {
+                Content = panel,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                MaxHeight = 550
+            };
 
             var dialog = new ContentDialog
             {
                 Title = "Add User",
-                Content = panel,
+                Content = scrollViewer,
 
                 PrimaryButtonText = "Add",
                 CloseButtonText = "Cancel",
@@ -261,7 +398,6 @@ public sealed partial class UserManagementPage : Page
 
                 XamlRoot = XamlRoot
             };
-
 
             var result =
                 await dialog.ShowAsync();
@@ -310,13 +446,89 @@ public sealed partial class UserManagementPage : Page
                 return;
             }
 
-            if (companyBox.SelectedItem is not Company selectedCompany)
+            if (string.IsNullOrWhiteSpace(firstNameBox.Text))
             {
                 await ShowMessageAsync(
                     "Validation Error",
-                    "Please select a company.");
+                    "First name is required.");
 
                 return;
+            }
+
+            if (string.IsNullOrWhiteSpace(lastNameBox.Text))
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Last name is required.");
+
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(positionBox.Text))
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Position is required.");
+
+                return;
+            }
+
+
+            // ==========================================
+            // SELECT ROLE
+            // ==========================================
+
+            var selectedRole =
+                roleBox.SelectedItem?.ToString();
+
+            if (string.IsNullOrWhiteSpace(selectedRole))
+            {
+                await ShowMessageAsync(
+                    "Validation Error",
+                    "Please select a role.");
+
+                return;
+            }
+
+
+            // ==========================================
+            // DETERMINE COMPANY
+            // ==========================================
+
+            int? companyId = null;
+
+            if (selectedRole == "Super Admin")
+            {
+                // Super Admin is platform-level
+                companyId = null;
+            }
+            else if (CurrentUser.Role == "Admin")
+            {
+                if (CurrentUser.CompanyId == null)
+                {
+                    await ShowMessageAsync(
+                        "Validation Error",
+                        "Unable to determine your company.");
+
+                    return;
+                }
+
+                companyId =
+                    CurrentUser.CompanyId.Value;
+            }
+            else
+            {
+                if (companyBox.SelectedItem is not Company selectedCompany)
+                {
+                    await ShowMessageAsync(
+                        "Validation Error",
+                        "Please select a company.");
+
+                    return;
+                }
+
+                companyId =
+                    selectedCompany.CompanyId;
             }
 
 
@@ -357,59 +569,6 @@ public sealed partial class UserManagementPage : Page
 
 
             // ==========================================
-            // CREATE USER
-            // ==========================================
-            // ==========================================
-            // CREATE USER
-            // ==========================================
-
-            var selectedRole =
-                roleBox.SelectedItem?.ToString();
-
-            if (string.IsNullOrWhiteSpace(selectedRole))
-            {
-                await ShowMessageAsync(
-                    "Validation",
-                    "Please select a role.");
-
-                return;
-            }
-
-            int companyId;
-
-            // ==========================================
-            // DETERMINE COMPANY
-            // ==========================================
-
-            if (selectedRole == "Super Admin")
-            {
-                // Super Admin is system-level
-                companyId = 0;
-            }
-            else if (CurrentUser.Role == "Admin")
-            {
-                // Company Admin can only create users
-                // for their own company.
-                companyId = CurrentUser.CompanyId;
-            }
-            else
-            {
-                // Super Admin creating a normal company user
-                if (selectedCompany == null)
-                {
-                    await ShowMessageAsync(
-                        "Validation",
-                        "Please select a company.");
-
-                    return;
-                }
-
-                companyId =
-                    selectedCompany.CompanyId;
-            }
-
-
-            // ==========================================
             // CREATE APPLICATION USER
             // ==========================================
 
@@ -430,7 +589,7 @@ public sealed partial class UserManagementPage : Page
 
 
             // ==========================================
-            // CREATE USER IN MASTER DATABASE
+            // CREATE USER IN MASTER DB
             // ==========================================
 
             var createResult =
@@ -468,33 +627,125 @@ public sealed partial class UserManagementPage : Page
                 return;
             }
 
-            if (!roleResult.Succeeded)
+
+            // ==========================================
+            // SUPER ADMIN DOES NOT NEED EMPLOYEE
+            // ==========================================
+
+            if (selectedRole == "Super Admin")
             {
-                await ShowIdentityErrorsAsync(
-                    "Unable to Assign Role",
-                    roleResult);
+                await LoadUsersAsync();
+
+                await ShowMessageAsync(
+                    "User Added",
+                    $"Super Admin '{user.UserName}' was created successfully.");
+
+                return;
+            }
+
+
+            // ==========================================
+            // CREATE EMPLOYEE IN TENANT DB
+            // ==========================================
+
+            if (!companyId.HasValue)
+            {
+                await ShowMessageAsync(
+                    "Employee Creation Error",
+                    "A company is required for employee users.");
+
+                await _userManager.RemoveFromRoleAsync(
+                    user,
+                    selectedRole);
 
                 await _userManager.DeleteAsync(user);
 
                 return;
             }
 
-
-            if (!createResult.Succeeded)
+            try
             {
-                await ShowIdentityErrorsAsync(
-                    "Unable to Add User",
-                    createResult);
+                await using var tenantDb =
+                    await _tenantDbFactory.CreateAsync(
+                        companyId.Value);
+
+                var employee = new Employee
+                {
+                    MasterUserId = user.Id,
+
+                    BranchId = null,
+                    DepartmentId = null,
+
+                    FirstName =
+                        firstNameBox.Text.Trim(),
+
+                    MiddleName =
+                        string.IsNullOrWhiteSpace(
+                            middleNameBox.Text)
+                            ? null
+                            : middleNameBox.Text.Trim(),
+
+                    LastName =
+                        lastNameBox.Text.Trim(),
+
+                    Phone =
+                        string.IsNullOrWhiteSpace(
+                            phoneBox.Text)
+                            ? null
+                            : phoneBox.Text.Trim(),
+
+                    Email =
+                        emailBox.Text.Trim(),
+
+                    Address =
+                        string.IsNullOrWhiteSpace(
+                            addressBox.Text)
+                            ? null
+                            : addressBox.Text.Trim(),
+
+                    Position =
+                        positionBox.Text.Trim(),
+
+                    HireDate =
+                        hireDatePicker.Date.Date,
+
+                    IsActive =
+                        activeCheckBox.IsChecked == true
+                };
+
+                tenantDb.Employees.Add(employee);
+
+                await tenantDb.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Employee creation failed.
+                // Remove the Master DB user so we don't
+                // leave an account without an employee record.
+
+                await _userManager.RemoveFromRoleAsync(
+                    user,
+                    selectedRole);
+
+                await _userManager.DeleteAsync(user);
+
+                await ShowMessageAsync(
+                    "Employee Creation Error",
+                    $"The user could not be created because the employee record failed.\n\n{ex.Message}");
 
                 return;
             }
 
 
+            // ==========================================
+            // REFRESH
+            // ==========================================
+
             await LoadUsersAsync();
 
             await ShowMessageAsync(
                 "User Added",
-                $"User '{user.UserName}' was created successfully.");
+                $"User '{user.UserName}' and the employee record were created successfully.");
         }
         catch (Exception ex)
         {
@@ -504,9 +755,7 @@ public sealed partial class UserManagementPage : Page
 
             System.Diagnostics.Debug.WriteLine(ex);
         }
-
     }
-
 
     // ==========================================
     // EDIT USER
@@ -543,11 +792,6 @@ public sealed partial class UserManagementPage : Page
                 await _userManager.FindByIdAsync(
                     selectedUser.Id);
 
-            var currentRoles =
-                await _userManager.GetRolesAsync(user);
-
-            var currentRole =
-                currentRoles.FirstOrDefault();
 
             if (user == null)
             {
@@ -559,6 +803,13 @@ public sealed partial class UserManagementPage : Page
 
                 return;
             }
+
+            var currentRoles =
+                await _userManager.GetRolesAsync(user);
+
+            var currentRole =
+                currentRoles.FirstOrDefault();
+
 
             if (CurrentUser.Role == "Admin" &&
                 user.CompanyId != CurrentUser.CompanyId)

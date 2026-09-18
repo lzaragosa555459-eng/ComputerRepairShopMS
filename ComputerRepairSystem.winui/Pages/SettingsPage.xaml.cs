@@ -46,9 +46,14 @@ public sealed partial class SettingsPage : Page
 
     private async Task LoadSettingsAsync()
     {
+        if (CurrentUser.CompanyId == null)
+        {
+            return;
+        }
+
         await using var db =
             await _tenantDbFactory.CreateAsync(
-                CurrentUser.CompanyId);
+                CurrentUser.CompanyId.Value);
 
         var settings =
             await db.SystemSettings
@@ -89,9 +94,14 @@ public sealed partial class SettingsPage : Page
 
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
                 await _tenantDbFactory.CreateAsync(
-                    CurrentUser.CompanyId);
+                    CurrentUser.CompanyId.Value);
 
             var settings =
                 await db.SystemSettings

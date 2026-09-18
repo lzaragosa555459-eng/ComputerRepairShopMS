@@ -145,6 +145,8 @@ public partial class App : Application
 
         services.AddTransient<CompanyManagementPage>();
 
+        services.AddTransient<EmployeeManagementPage>();
+
         // ==========================================
         // MAIN WINDOW
         // ==========================================
@@ -285,7 +287,7 @@ public partial class App : Application
                 UserName = "superadmin",
                 Email = "superadmin@fixflow.com",
                 EmailConfirmed = true,
-                CompanyId = 4,
+                CompanyId = null,
                 IsActive = true
             };
 
@@ -304,6 +306,11 @@ public partial class App : Application
 
                 return;
             }
+        }
+
+        if (superAdmin == null)
+        {
+            return;
         }
 
         // Make sure Super Admin has the correct role

@@ -37,9 +37,14 @@ public sealed partial class HomePage : Page
     {
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
-                await _tenantDbFactory
-                    .CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
             var settings =
                 await db.SystemSettings

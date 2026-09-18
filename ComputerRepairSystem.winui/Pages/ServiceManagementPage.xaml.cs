@@ -382,8 +382,14 @@ public sealed partial class ServiceManagementPage : Page
             // 2. CREATE DEVICE
             // ==========================================
 
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var context =
-                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
 
             var device = new Device
@@ -638,8 +644,14 @@ public sealed partial class ServiceManagementPage : Page
     {
         try
         {
+            if (CurrentUser.CompanyId == null)
+            {
+                return;
+            }
+
             await using var db =
-                await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+                await _tenantDbFactory.CreateAsync(
+                    CurrentUser.CompanyId.Value);
 
             // ==========================================
             // LOAD CUSTOMER

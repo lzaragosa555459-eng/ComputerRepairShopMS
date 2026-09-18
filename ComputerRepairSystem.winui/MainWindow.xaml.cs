@@ -66,30 +66,13 @@ public sealed partial class MainWindow : Window
         CustomerManagementItem.Visibility =
             Visibility.Collapsed;
 
+        EmployeeManagementItem.Visibility =
+            Visibility.Collapsed;
+
         var role = CurrentUser.Role;
 
         if (role == "Super Admin")
         {
-            HomeItem.Visibility =
-                Visibility.Collapsed;
-
-            CustomerManagementItem.Visibility =
-                Visibility.Collapsed;
-
-            ServiceManagementItem.Visibility =
-                Visibility.Collapsed;
-
-            RepairManagementItem.Visibility =
-                Visibility.Collapsed;
-
-            BillingItem.Visibility =
-                Visibility.Collapsed;
-
-            InventoryItem.Visibility =
-                Visibility.Collapsed;
-
-            SystemSettingsItem.Visibility =
-                Visibility.Collapsed;
 
             UserManagementItem.Visibility =
                 Visibility.Visible;
@@ -97,17 +80,20 @@ public sealed partial class MainWindow : Window
             CompanyManagementItem.Visibility =
                 Visibility.Visible;
 
-            HomeItem.IsSelected = true;
+            CompanyManagementItem.IsSelected = true;
 
             NavFrame.Content =
                 App.Services
-                    .GetRequiredService<HomePage>();
+                    .GetRequiredService<CompanyManagementPage>();
 
             return;
         }
 
         if (role == "Admin")
         {
+            HomeItem.Visibility = 
+                Visibility.Visible;
+
             ServiceManagementItem.Visibility =
                 Visibility.Visible;
 
@@ -128,15 +114,35 @@ public sealed partial class MainWindow : Window
             CustomerManagementItem.Visibility =
                 Visibility.Visible;
 
+            EmployeeManagementItem.Visibility =
+                Visibility.Visible;
 
+	    HomeItem.IsSelected = true;
+
+            NavFrame.Content = 
+		App.Services
+		   .GetRequiredService<HomePage>();
+
+	    return;
+ 
         }
         else if (role == "Technician")
         {
             RepairManagementItem.Visibility =
                 Visibility.Visible;
+
+	        InventoryItem.Visibility = 
+		        Visibility.Visible;
+
+            RepairManagementItem.IsSelected = true;
+
+            NavFrame.Content =
+            App.Services
+               .GetRequiredService<RepairManagementPage>();
         }
         else if (role == "Receptionist")
         {
+
             ServiceManagementItem.Visibility =
                 Visibility.Visible;
 
@@ -145,13 +151,14 @@ public sealed partial class MainWindow : Window
 
             CustomerManagementItem.Visibility =
                 Visibility.Visible;
-        }
 
-        HomeItem.IsSelected = true;
+            ServiceManagementItem.IsSelected = true;
 
-        NavFrame.Content =
+            NavFrame.Content =
             App.Services
-                .GetRequiredService<HomePage>();
+               .GetRequiredService<ServiceManagementPage>();
+
+        }
     }
     public void ShowLogin()
     {
@@ -180,6 +187,9 @@ public sealed partial class MainWindow : Window
             Visibility.Collapsed;
 
         CompanyManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        EmployeeManagementItem.Visibility =
             Visibility.Collapsed;
 
         HomeItem.IsSelected = false;
@@ -225,6 +235,9 @@ public sealed partial class MainWindow : Window
                     break;
                 case "companies":
                     NavigateToCompanyManagementPage();
+                    break;
+                case "employee-management":
+                    NavigateToEmployeeManagement();
                     break;
 
                 case "inventory":
@@ -375,6 +388,14 @@ public sealed partial class MainWindow : Window
         var page =
             App.Services
                 .GetRequiredService<CompanyManagementPage>();
+
+        NavFrame.Content = page;
+    }
+    private void NavigateToEmployeeManagement()
+    {
+        var page =
+            App.Services
+                .GetRequiredService<EmployeeManagementPage>();
 
         NavFrame.Content = page;
     }

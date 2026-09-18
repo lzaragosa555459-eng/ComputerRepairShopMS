@@ -25,8 +25,15 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<List<Customer>> GetAllAsync()
     {
+        if (!_companyContext.CompanyId.HasValue)
+        {
+            throw new InvalidOperationException(
+                "A company is required to access customer data.");
+        }
+
         await using var context =
-           await _contextFactory.CreateAsync(_companyContext.CompanyId);
+            await _contextFactory.CreateAsync(
+                _companyContext.CompanyId.Value);
 
         return await context.Customers
             .AsNoTracking()
@@ -41,8 +48,15 @@ public class CustomerRepository : ICustomerRepository
     public async Task<Customer?> GetByIdAsync(
         int customerId)
     {
+        if (!_companyContext.CompanyId.HasValue)
+        {
+            throw new InvalidOperationException(
+                "A company is required to access customer data.");
+        }
+
         await using var context =
-           await _contextFactory.CreateAsync(_companyContext.CompanyId);
+            await _contextFactory.CreateAsync(
+                _companyContext.CompanyId.Value);
 
         return await context.Customers
             .FirstOrDefaultAsync(
@@ -57,8 +71,15 @@ public class CustomerRepository : ICustomerRepository
     public async Task<Customer> AddAsync(
         Customer customer)
     {
+        if (!_companyContext.CompanyId.HasValue)
+        {
+            throw new InvalidOperationException(
+                "A company is required to access customer data.");
+        }
+
         await using var context =
-           await _contextFactory.CreateAsync(_companyContext.CompanyId);
+            await _contextFactory.CreateAsync(
+                _companyContext.CompanyId.Value);
 
         context.Customers.Add(customer);
 
@@ -75,8 +96,15 @@ public class CustomerRepository : ICustomerRepository
     public async Task UpdateAsync(
         Customer customer)
     {
+        if (!_companyContext.CompanyId.HasValue)
+        {
+            throw new InvalidOperationException(
+                "A company is required to access customer data.");
+        }
+
         await using var context =
-           await _contextFactory.CreateAsync(_companyContext.CompanyId);
+            await _contextFactory.CreateAsync(
+                _companyContext.CompanyId.Value);
 
         context.Customers.Update(customer);
 
@@ -91,8 +119,15 @@ public class CustomerRepository : ICustomerRepository
     public async Task DeleteAsync(
         int customerId)
     {
+        if (!_companyContext.CompanyId.HasValue)
+        {
+            throw new InvalidOperationException(
+                "A company is required to access customer data.");
+        }
+
         await using var context =
-           await _contextFactory.CreateAsync(_companyContext.CompanyId);
+            await _contextFactory.CreateAsync(
+                _companyContext.CompanyId.Value);
 
         var customer =
             await context.Customers

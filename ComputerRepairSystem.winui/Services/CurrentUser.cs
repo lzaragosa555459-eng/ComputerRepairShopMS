@@ -10,14 +10,14 @@ public static class CurrentUser
 
     public static string Role { get; private set; } = string.Empty;
 
-    public static int CompanyId { get; private set; }
+    public static int? CompanyId { get; private set; }
 
 
     public static void Login(
         string userId,
         string userName,
         string role,
-        int companyId)
+        int? companyId)
     {
         UserId = userId;
         UserName = userName;
@@ -33,7 +33,7 @@ public static class CurrentUser
         UserId = string.Empty;
         UserName = string.Empty;
         Role = string.Empty;
-        CompanyId = 0;
+        CompanyId = null;
 
         IsLoggedIn = false;
     }

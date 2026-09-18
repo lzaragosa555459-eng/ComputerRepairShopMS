@@ -42,8 +42,14 @@ public sealed partial class InventoryManagementPage : Page
 
     private async Task LoadInventoryAsync()
     {
+        if (CurrentUser.CompanyId == null)
+        {
+            return;
+        }
+
         await using var db =
-            await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+            await _tenantDbFactory.CreateAsync(
+                CurrentUser.CompanyId.Value);
 
         var inventory = await db.Inventories
             .Include(x => x.Item)
@@ -263,8 +269,14 @@ private void SearchBox_TextChanged(
         }
 
 
+        if (CurrentUser.CompanyId == null)
+        {
+            return;
+        }
+
         await using var db =
-            await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+            await _tenantDbFactory.CreateAsync(
+                CurrentUser.CompanyId.Value);
 
 
         var item = new InventoryItem
@@ -309,8 +321,14 @@ private void SearchBox_TextChanged(
         object sender,
         RoutedEventArgs e)
     {
-        await using var db =
-            await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+if (CurrentUser.CompanyId == null)
+{
+    return;
+}
+
+await using var db =
+    await _tenantDbFactory.CreateAsync(
+        CurrentUser.CompanyId.Value);
 
 
         var items = await db.InventoryItems
@@ -437,9 +455,14 @@ private void SearchBox_TextChanged(
         {
             return;
         }
+        if (CurrentUser.CompanyId == null)
+        {
+            return;
+        }
 
         await using var db =
-            await _tenantDbFactory.CreateAsync(CurrentUser.CompanyId);
+            await _tenantDbFactory.CreateAsync(
+                CurrentUser.CompanyId.Value);
 
         var item =
             await db.InventoryItems

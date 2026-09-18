@@ -1,0 +1,205 @@
+<Page
+    x:Class="ComputerRepairSystem_winui.Pages.EmployeeManagementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="32">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- ========================================== -->
+        <!-- HEADER -->
+        <!-- ========================================== -->
+
+        <StackPanel
+            Grid.Row="0"
+            Spacing="6">
+
+            <TextBlock
+                Text="Employee Management"
+                FontSize="32"
+                FontWeight="SemiBold"/>
+
+            <TextBlock
+                Text="Manage employee records and employment information."
+                Opacity="0.7"/>
+
+        </StackPanel>
+
+
+        <!-- ========================================== -->
+        <!-- TOOLBAR -->
+        <!-- ========================================== -->
+
+        <Grid
+            Grid.Row="1"
+            Margin="0,24,0,16">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBox
+                x:Name="SearchBox"
+                Header="Search"
+                PlaceholderText="Search employee..."
+                TextChanged="SearchBox_TextChanged"
+                Margin="0,0,12,0"/>
+
+
+            <StackPanel
+                Grid.Column="1"
+                Orientation="Horizontal"
+                Spacing="8">
+
+                <Button
+                    x:Name="AddEmployeeButton"
+                    Content="Add Employee"
+                    Click="AddEmployeeButton_Click"/>
+
+                <Button
+                    x:Name="EditEmployeeButton"
+                    Content="Edit"
+                    IsEnabled="False"
+                    Click="EditEmployeeButton_Click"/>
+
+                <Button
+                    x:Name="DeleteEmployeeButton"
+                    Content="Delete"
+                    IsEnabled="False"
+                    Click="DeleteEmployeeButton_Click"/>
+
+            </StackPanel>
+
+        </Grid>
+
+
+        <!-- ========================================== -->
+        <!-- EMPLOYEE LIST -->
+        <!-- ========================================== -->
+
+        <ListView
+            x:Name="EmployeesListView"
+            Grid.Row="2"
+            SelectionMode="Single"
+            SelectionChanged="EmployeesListView_SelectionChanged">
+
+            <ListView.Header>
+
+                <Border
+                    Padding="12"
+                    BorderThickness="0,0,0,1"
+                    BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}">
+
+                    <Grid>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <TextBlock
+                            Text="Employee"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="Position"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            Text="Department"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="3"
+                            Text="Branch"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="4"
+                            Text="Hire Date"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="5"
+                            Text="Status"
+                            FontWeight="SemiBold"
+                            Margin="20,0,0,0"/>
+
+                    </Grid>
+
+                </Border>
+
+            </ListView.Header>
+
+
+            <ListView.ItemTemplate>
+
+                <DataTemplate>
+
+                    <Grid Padding="12">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <TextBlock
+                            Text="{Binding FullName}"
+                            TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding Position}"
+                            TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            Text="{Binding Department.DepartmentName}"
+                            TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock
+                            Grid.Column="3"
+                            Text="{Binding Branch.BranchName}"
+                            TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock
+                            Grid.Column="4"
+                            Text="{Binding HireDateText}"/>
+
+                        <TextBlock
+                            Grid.Column="5"
+                            Text="{Binding StatusText}"
+                            Margin="20,0,0,0"/>
+
+                    </Grid>
+
+                </DataTemplate>
+
+            </ListView.ItemTemplate>
+
+        </ListView>
+
+    </Grid>
+
+</Page>

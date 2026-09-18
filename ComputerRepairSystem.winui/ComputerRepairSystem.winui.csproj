@@ -22,6 +22,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Pages\BillingPage.xaml" />
+	  <None Remove="Pages\CompanyManagementPage.xaml" />
 	  <None Remove="Pages\CustomerManagementPage.xaml" />
 	  <None Remove="Pages\LoginPage.xaml" />
 	  <None Remove="Pages\UserManagementPage.xaml" />
@@ -48,6 +49,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</None>
+		<Page Update="Pages\CompanyManagementPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Pages\CustomerManagementPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</Page>

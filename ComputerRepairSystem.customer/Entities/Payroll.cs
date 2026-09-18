@@ -6,5 +6,7 @@ namespace ComputerRepairSystem.customer.Entities
 {
     internal class Payroll
     {
+        public int PayrollId { get; set; }
+
     }
 }

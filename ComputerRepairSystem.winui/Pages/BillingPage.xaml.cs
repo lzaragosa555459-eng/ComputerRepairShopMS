@@ -36,9 +36,14 @@ public sealed partial class BillingPage : Page
 
     private async Task LoadCompletedRepairsAsync()
     {
+        if (CurrentUser.CompanyId == null)
+        {
+            return;
+        }
+
         await using var db =
             await _tenantDbFactory.CreateAsync(
-                CurrentUser.CompanyId);
+                CurrentUser.CompanyId.Value);
 
         var repairs =
             await db.Repairs
@@ -106,9 +111,14 @@ public sealed partial class BillingPage : Page
     private async Task ProcessPaymentAsync(
         int repairId)
     {
+        if (CurrentUser.CompanyId == null)
+        {
+            return;
+        }
+
         await using var db =
             await _tenantDbFactory.CreateAsync(
-                CurrentUser.CompanyId);
+                CurrentUser.CompanyId.Value);
 
         var repair =
             await db.Repairs
