@@ -151,6 +151,7 @@ public partial class App : Application
 
         services.AddTransient<PayrollManagementPage>();
 
+        services.AddTransient<FinanceManagementPage>();
         // ==========================================
         // MAIN WINDOW
         // ==========================================

@@ -75,6 +75,9 @@ public sealed partial class MainWindow : Window
         PayrollManagementItem.Visibility =
             Visibility.Collapsed;
 
+        FinanceManagementItem.Visibility =
+            Visibility.Collapsed;
+
         var role = CurrentUser.Role;
 
         if (role == "Super Admin")
@@ -127,6 +130,9 @@ public sealed partial class MainWindow : Window
                 Visibility.Visible;
 
             PayrollManagementItem.Visibility =
+                Visibility.Visible;
+
+            FinanceManagementItem.Visibility =
                 Visibility.Visible;
 
             HomeItem.IsSelected = true;
@@ -210,6 +216,9 @@ public sealed partial class MainWindow : Window
         PayrollManagementItem.Visibility =
             Visibility.Collapsed;
 
+        FinanceManagementItem.Visibility =
+            Visibility.Collapsed;
+
         HomeItem.IsSelected = false;
 
         NavFrame.Content =
@@ -263,6 +272,10 @@ public sealed partial class MainWindow : Window
                     
                 case "payroll-management":
                     NavigateToPayrollManagementPage();
+                    break;
+
+                case "finance-management":
+                    NavigateToFinanceManagementPage();
                     break;
 
                 case "inventory":
@@ -439,6 +452,15 @@ public sealed partial class MainWindow : Window
         var page =
             App.Services
                 .GetRequiredService<PayrollManagementPage>();
+
+        NavFrame.Content = page;
+    }
+
+    private void NavigateToFinanceManagementPage()
+    {
+        var page =
+            App.Services
+                .GetRequiredService<FinanceManagementPage>();
 
         NavFrame.Content = page;
     }

@@ -1,0 +1,654 @@
+<Page
+    x:Class="ComputerRepairSystem_winui.Pages.FinanceManagementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid
+        Padding="32"
+        RowSpacing="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- ====================================== -->
+        <!-- HEADER -->
+        <!-- ====================================== -->
+
+        <StackPanel
+            Grid.Row="0"
+            Spacing="6">
+
+            <TextBlock
+                Text="Finance Management"
+                FontSize="32"
+                FontWeight="SemiBold"/>
+
+            <TextBlock
+                Text="Manage invoices, payments, and business expenses."
+                Opacity="0.7"/>
+
+        </StackPanel>
+
+
+        <!-- ====================================== -->
+        <!-- TABS -->
+        <!-- ====================================== -->
+
+        <TabView
+            Grid.Row="1"
+            x:Name="FinanceTabView"
+            IsAddTabButtonVisible="False">
+
+
+            <!-- ================================== -->
+            <!-- INVOICES -->
+            <!-- ================================== -->
+
+            <TabViewItem
+                Header="Invoices"
+                IsClosable="False">
+
+                <Grid
+                    Padding="0,16,0,0"
+                    RowSpacing="12">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <!-- TOOLBAR -->
+
+                    <Grid
+                        Grid.Row="0"
+                        ColumnSpacing="12">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            x:Name="InvoiceSearchBox"
+                            Grid.Column="0"
+                            Header="Search"
+                            PlaceholderText="Search invoice number..."
+                            TextChanged="InvoiceSearchBox_TextChanged"/>
+
+                        <Button
+                            Grid.Column="1"
+                            Content="Add Invoice"
+                            VerticalAlignment="Bottom"
+                            Click="AddInvoiceButton_Click"/>
+
+                    </Grid>
+
+
+                    <!-- LIST -->
+
+                    <Border
+                        Grid.Row="1"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12">
+
+                        <ListView
+                            x:Name="InvoiceList">
+
+                            <ListView.Header>
+
+                                <Grid Padding="8">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition Width="1.4*"/>
+                                        <ColumnDefinition Width="1.2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="ID"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="Invoice No."
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="Customer"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="Subtotal"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="Discount"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        Text="Tax"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="6"
+                                        Text="Total"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="7"
+                                        Text="Status"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="8"
+                                        Text="Action"
+                                        FontWeight="SemiBold"/>
+
+                                </Grid>
+
+                            </ListView.Header>
+
+
+                            <ListView.ItemTemplate>
+
+                                <DataTemplate>
+
+                                    <Grid Padding="8">
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1.3*"/>
+                                            <ColumnDefinition Width="1.3*"/>
+                                            <ColumnDefinition Width="1.3*"/>
+                                            <ColumnDefinition Width="1.4*"/>
+                                            <ColumnDefinition Width="1.2*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                        </Grid.ColumnDefinitions>
+
+
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Text="{Binding InvoiceId}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Text="{Binding InvoiceNumberText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Text="{Binding CustomerName}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="3"
+                                            Text="{Binding SubtotalText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="4"
+                                            Text="{Binding DiscountText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="5"
+                                            Text="{Binding TaxText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="6"
+                                            Text="{Binding TotalAmountText}"
+                                            VerticalAlignment="Center"
+                                            FontWeight="SemiBold"/>
+
+                                        <TextBlock
+                                            Grid.Column="7"
+                                            Text="{Binding StatusText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <StackPanel
+                                            Grid.Column="8"
+                                            Orientation="Horizontal"
+                                            Spacing="8">
+
+                                            <Button
+                                                Content="Edit"
+                                                Tag="{Binding}"
+                                                Click="EditInvoiceButton_Click"/>
+
+                                            <Button
+                                                Content="Delete"
+                                                Tag="{Binding}"
+                                                Click="DeleteInvoiceButton_Click"/>
+
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </DataTemplate>
+
+                            </ListView.ItemTemplate>
+
+                        </ListView>
+
+                    </Border>
+
+                </Grid>
+
+            </TabViewItem>
+
+
+            <!-- ================================== -->
+            <!-- PAYMENTS -->
+            <!-- ================================== -->
+
+            <TabViewItem
+                Header="Payments"
+                IsClosable="False">
+
+                <Grid
+                    Padding="0,16,0,0"
+                    RowSpacing="12">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <!-- TOOLBAR -->
+
+                    <Grid
+                        Grid.Row="0"
+                        ColumnSpacing="12">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            x:Name="PaymentSearchBox"
+                            Grid.Column="0"
+                            Header="Search"
+                            PlaceholderText="Search reference number..."
+                            TextChanged="PaymentSearchBox_TextChanged"/>
+
+                        <Button
+                            Grid.Column="1"
+                            Content="Add Payment"
+                            VerticalAlignment="Bottom"
+                            Click="AddPaymentButton_Click"/>
+
+                    </Grid>
+
+
+                    <!-- LIST -->
+
+                    <Border
+                        Grid.Row="1"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12">
+
+                        <ListView
+                            x:Name="PaymentList">
+
+                            <ListView.Header>
+
+                                <Grid Padding="8">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="1.4*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.3*"/>
+                                        <ColumnDefinition Width="1.4*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="ID"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="Invoice"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="Amount"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="Method"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="Reference No."
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        Text="Status"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="6"
+                                        Text="Date"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="7"
+                                        Text="Action"
+                                        FontWeight="SemiBold"/>
+
+                                </Grid>
+
+                            </ListView.Header>
+
+
+                            <ListView.ItemTemplate>
+
+                                <DataTemplate>
+
+                                    <Grid Padding="8">
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="1.4*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="1.3*"/>
+                                            <ColumnDefinition Width="1.4*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="1.2*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Text="{Binding PaymentId}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Text="{Binding InvoiceNumber}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Text="{Binding AmountText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="3"
+                                            Text="{Binding PaymentMethodText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="4"
+                                            Text="{Binding ReferenceNumberText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="5"
+                                            Text="{Binding StatusText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="6"
+                                            Text="{Binding PaidAtText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <StackPanel
+                                            Grid.Column="7"
+                                            Orientation="Horizontal"
+                                            Spacing="8">
+
+                                            <Button
+                                                Content="Edit"
+                                                Tag="{Binding}"
+                                                Click="EditPaymentButton_Click"/>
+
+                                            <Button
+                                                Content="Delete"
+                                                Tag="{Binding}"
+                                                Click="DeletePaymentButton_Click"/>
+
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </DataTemplate>
+
+                            </ListView.ItemTemplate>
+
+                        </ListView>
+
+                    </Border>
+
+                </Grid>
+
+            </TabViewItem>
+
+
+            <!-- ================================== -->
+            <!-- EXPENSES -->
+            <!-- ================================== -->
+
+            <TabViewItem
+                Header="Expenses"
+                IsClosable="False">
+
+                <Grid
+                    Padding="0,16,0,0"
+                    RowSpacing="12">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+
+                    <!-- TOOLBAR -->
+
+                    <Grid
+                        Grid.Row="0"
+                        ColumnSpacing="12">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox
+                            x:Name="ExpenseSearchBox"
+                            Grid.Column="0"
+                            Header="Search"
+                            PlaceholderText="Search category or description..."
+                            TextChanged="ExpenseSearchBox_TextChanged"/>
+
+                        <Button
+                            Grid.Column="1"
+                            Content="Add Expense"
+                            VerticalAlignment="Bottom"
+                            Click="AddExpenseButton_Click"/>
+
+                    </Grid>
+
+
+                    <!-- LIST -->
+
+                    <Border
+                        Grid.Row="1"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12">
+
+                        <ListView
+                            x:Name="ExpenseList">
+
+                            <ListView.Header>
+
+                                <Grid Padding="8">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="60"/>
+                                        <ColumnDefinition Width="1.4*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.6*"/>
+                                        <ColumnDefinition Width="2.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="ID"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Text="Branch"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        Text="Category"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="3"
+                                        Text="Amount"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        Text="Description"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="5"
+                                        Text="Date"
+                                        FontWeight="SemiBold"/>
+
+                                    <TextBlock
+                                        Grid.Column="6"
+                                        Text="Action"
+                                        FontWeight="SemiBold"/>
+
+                                </Grid>
+
+                            </ListView.Header>
+
+
+                            <ListView.ItemTemplate>
+
+                                <DataTemplate>
+
+                                    <Grid Padding="8">
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="1.4*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="1.6*"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Text="{Binding ExpenseId}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Text="{Binding BranchName}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Text="{Binding CategoryText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="3"
+                                            Text="{Binding AmountText}"
+                                            VerticalAlignment="Center"
+                                            FontWeight="SemiBold"/>
+
+                                        <TextBlock
+                                            Grid.Column="4"
+                                            Text="{Binding DescriptionText}"
+                                            TextWrapping="Wrap"
+                                            VerticalAlignment="Center"/>
+
+                                        <TextBlock
+                                            Grid.Column="5"
+                                            Text="{Binding ExpenseDateText}"
+                                            VerticalAlignment="Center"/>
+
+                                        <StackPanel
+                                            Grid.Column="6"
+                                            Orientation="Horizontal"
+                                            Spacing="8">
+
+                                            <Button
+                                                Content="Edit"
+                                                Tag="{Binding}"
+                                                Click="EditExpenseButton_Click"/>
+
+                                            <Button
+                                                Content="Delete"
+                                                Tag="{Binding}"
+                                                Click="DeleteExpenseButton_Click"/>
+
+                                        </StackPanel>
+
+                                    </Grid>
+
+                                </DataTemplate>
+
+                            </ListView.ItemTemplate>
+
+                        </ListView>
+
+                    </Border>
+
+                </Grid>
+
+            </TabViewItem>
+
+        </TabView>
+
+    </Grid>
+
+</Page>

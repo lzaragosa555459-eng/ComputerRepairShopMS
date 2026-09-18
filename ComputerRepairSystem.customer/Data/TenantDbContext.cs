@@ -57,6 +57,7 @@ public class TenantDbContext : DbContext
 
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Expense> Expenses => Set<Expense>();
 
     // System Settings
 
@@ -538,6 +539,32 @@ public class TenantDbContext : DbContext
             entity.HasOne(x => x.Invoice)
                 .WithMany(x => x.Payments)
                 .HasForeignKey(x => x.InvoiceId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ------------------------------------------
+        // Expense
+        // Expense * ─── 1 Branch
+        // ------------------------------------------
+
+        modelBuilder.Entity<Expense>(entity =>
+        {
+            entity.HasKey(x => x.ExpenseId);
+
+            entity.Property(x => x.Category)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.Amount)
+                .HasPrecision(18, 2);
+
+            entity.Property(x => x.Description)
+                .HasMaxLength(500);
+
+            entity.HasOne(x => x.Branch)
+                .WithMany()
+                .HasForeignKey(x => x.BranchId)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

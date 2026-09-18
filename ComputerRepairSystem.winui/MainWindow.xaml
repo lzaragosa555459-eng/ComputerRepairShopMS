@@ -271,6 +271,17 @@
                         </NavigationViewItem.Icon>
 
                     </NavigationViewItem>
+                
+                    <!--- FINANCE MANAGEMENT -->
+                    <NavigationViewItem 
+                     x:Name="FinanceManagementItem"
+                     Content="Finance Management"
+                     Tag="finance-management">
+                        <NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets"
+                                      Glyph="&#xEC59;"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
 
                     <!-- INVENTORY -->
                 <NavigationViewItem

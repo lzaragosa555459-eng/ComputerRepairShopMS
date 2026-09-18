@@ -21,10 +21,13 @@
 		<WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Pages\AttendanceManagementPage.xaml" />
 	  <None Remove="Pages\BillingPage.xaml" />
 	  <None Remove="Pages\CompanyManagementPage.xaml" />
 	  <None Remove="Pages\CustomerManagementPage.xaml" />
+	  <None Remove="Pages\EmployeeManagementPage.xaml" />
 	  <None Remove="Pages\LoginPage.xaml" />
+	  <None Remove="Pages\PayrollManagementPage.xaml" />
 	  <None Remove="Pages\UserManagementPage.xaml" />
 	</ItemGroup>
 
@@ -49,6 +52,15 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</None>
+		<Page Update="Pages\PayrollManagementPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\AttendanceManagementPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Pages\EmployeeManagementPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</Page>
 		<Page Update="Pages\CompanyManagementPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</Page>
