@@ -24,6 +24,8 @@ public class TenantDbContext : DbContext
     public DbSet<Branch> Branches => Set<Branch>();
     public DbSet<Department> Departments => Set<Department>();
     public DbSet<Employee> Employees => Set<Employee>();
+    public DbSet<Attendance> Attendances => Set<Attendance>();
+    public DbSet<Payroll> Payrolls => Set<Payroll>();
 
 
     // ==========================================
@@ -169,7 +171,51 @@ public class TenantDbContext : DbContext
         });
 
 
+        // ------------------------------------------
+        // Attendance
+        // Attendance * ─── 1 Employee
+        // ------------------------------------------
 
+        modelBuilder.Entity<Attendance>(entity =>
+        {
+            entity.HasKey(x => x.AttendanceId);
+
+            entity.Property(x => x.Status)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(x => x.Remarks)
+                .HasMaxLength(500);
+
+            entity.HasOne(x => x.Employee)
+                .WithMany()
+                .HasForeignKey(x => x.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        // ------------------------------------------
+        // Payroll
+        // Payroll * ─── 1 Employee
+        // ------------------------------------------
+
+        modelBuilder.Entity<Payroll>(entity =>
+        {
+            entity.HasKey(x => x.PayrollId);
+
+            entity.Property(x => x.BasicSalary)
+                .HasPrecision(18, 2);
+
+            entity.Property(x => x.Deductions)
+                .HasPrecision(18, 2);
+
+            entity.Property(x => x.NetSalary)
+                .HasPrecision(18, 2);
+
+            entity.HasOne(x => x.Employee)
+                .WithMany()
+                .HasForeignKey(x => x.EmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
 
         // ------------------------------------------

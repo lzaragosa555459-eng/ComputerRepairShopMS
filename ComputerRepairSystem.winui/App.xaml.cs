@@ -147,6 +147,10 @@ public partial class App : Application
 
         services.AddTransient<EmployeeManagementPage>();
 
+        services.AddTransient<AttendanceManagementPage>();
+
+        services.AddTransient<PayrollManagementPage>();
+
         // ==========================================
         // MAIN WINDOW
         // ==========================================

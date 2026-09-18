@@ -247,9 +247,32 @@
                     </NavigationViewItem.Icon>
 
                 </NavigationViewItem>
+                
+                <!-- ATTENDANCE MANAGEMENT -->
+                <NavigationViewItem
+                    x:Name="AttendanceManagementItem"
+                    Content="Attendance Management"
+                    Tag="attendance-management">
 
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Calendar"/>
+                    </NavigationViewItem.Icon>
 
-                <!-- INVENTORY -->
+                <!-- PAYROLL MANAGEMENT -->
+                </NavigationViewItem>
+
+                    <NavigationViewItem
+                    x:Name="PayrollManagementItem"
+                    Content="Payroll Management"
+                    Tag="payroll-management">
+
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Calculator"/>
+                        </NavigationViewItem.Icon>
+
+                    </NavigationViewItem>
+
+                    <!-- INVENTORY -->
                 <NavigationViewItem
                     x:Name="InventoryItem"
                     Content="Inventory"

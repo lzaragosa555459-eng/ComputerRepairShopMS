@@ -69,6 +69,12 @@ public sealed partial class MainWindow : Window
         EmployeeManagementItem.Visibility =
             Visibility.Collapsed;
 
+        AttendanceManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        PayrollManagementItem.Visibility =
+            Visibility.Collapsed;
+
         var role = CurrentUser.Role;
 
         if (role == "Super Admin")
@@ -117,7 +123,13 @@ public sealed partial class MainWindow : Window
             EmployeeManagementItem.Visibility =
                 Visibility.Visible;
 
-	    HomeItem.IsSelected = true;
+            AttendanceManagementItem.Visibility =
+                Visibility.Visible;
+
+            PayrollManagementItem.Visibility =
+                Visibility.Visible;
+
+            HomeItem.IsSelected = true;
 
             NavFrame.Content = 
 		App.Services
@@ -192,6 +204,12 @@ public sealed partial class MainWindow : Window
         EmployeeManagementItem.Visibility =
             Visibility.Collapsed;
 
+        AttendanceManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        PayrollManagementItem.Visibility =
+            Visibility.Collapsed;
+
         HomeItem.IsSelected = false;
 
         NavFrame.Content =
@@ -238,6 +256,13 @@ public sealed partial class MainWindow : Window
                     break;
                 case "employee-management":
                     NavigateToEmployeeManagement();
+                    break;
+                case "attendance-management":
+                    NavigateToAttendanceManagementPage();
+                    break;
+                    
+                case "payroll-management":
+                    NavigateToPayrollManagementPage();
                     break;
 
                 case "inventory":
@@ -396,6 +421,24 @@ public sealed partial class MainWindow : Window
         var page =
             App.Services
                 .GetRequiredService<EmployeeManagementPage>();
+
+        NavFrame.Content = page;
+    }
+
+    private void NavigateToAttendanceManagementPage()
+    {
+        var page =
+            App.Services
+                .GetRequiredService<AttendanceManagementPage>();
+
+        NavFrame.Content = page;
+    }
+
+    private void NavigateToPayrollManagementPage()
+    {
+        var page =
+            App.Services
+                .GetRequiredService<PayrollManagementPage>();
 
         NavFrame.Content = page;
     }

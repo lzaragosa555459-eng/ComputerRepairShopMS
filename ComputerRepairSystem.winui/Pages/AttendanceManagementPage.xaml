@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Page
+    x:Class="ComputerRepairSystem_winui.Pages.AttendanceManagementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid
+        Padding="32"
+        RowSpacing="20">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- ====================================== -->
+        <!-- HEADER -->
+        <!-- ====================================== -->
+
+        <StackPanel
+            Grid.Row="0"
+            Spacing="6">
+
+            <TextBlock
+                Text="Attendance Management"
+                FontSize="32"
+                FontWeight="SemiBold"/>
+
+            <TextBlock
+                Text="Manage employee attendance and time records."
+                Opacity="0.7"/>
+
+        </StackPanel>
+
+
+        <!-- ====================================== -->
+        <!-- TOOLBAR -->
+        <!-- ====================================== -->
+
+        <Grid
+            Grid.Row="1"
+            ColumnSpacing="12">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBox
+                x:Name="SearchBox"
+                Grid.Column="0"
+                PlaceholderText="Search employee..."
+                TextChanged="SearchBox_TextChanged"
+                MinWidth="250"/>
+
+
+            <StackPanel
+                Grid.Column="1"
+                Orientation="Horizontal"
+                Spacing="8">
+
+                <Button
+                    x:Name="AddAttendanceButton"
+                    Content="Add Attendance"
+                    Click="AddAttendanceButton_Click"/>
+
+                <Button
+                    x:Name="EditAttendanceButton"
+                    Content="Edit"
+                    IsEnabled="False"
+                    Click="EditAttendanceButton_Click"/>
+
+                <Button
+                    x:Name="DeleteAttendanceButton"
+                    Content="Delete"
+                    IsEnabled="False"
+                    Click="DeleteAttendanceButton_Click"/>
+
+                <Button
+                    Content="Refresh"
+                    Click="RefreshButton_Click"/>
+
+            </StackPanel>
+
+        </Grid>
+
+
+        <!-- ====================================== -->
+        <!-- ATTENDANCE TABLE -->
+        <!-- ====================================== -->
+
+        <Border
+            Grid.Row="2"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="12">
+
+            <ListView
+                x:Name="AttendanceListView"
+                SelectionChanged="AttendanceListView_SelectionChanged">
+
+                <ListView.Header>
+
+                    <Grid Padding="8">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <TextBlock
+                            Grid.Column="0"
+                            Text="Employee"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="Date"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            Text="Time In"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="3"
+                            Text="Time Out"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="4"
+                            Text="Status"
+                            FontWeight="SemiBold"/>
+
+                        <TextBlock
+                            Grid.Column="5"
+                            Text="Remarks"
+                            FontWeight="SemiBold"/>
+
+                    </Grid>
+
+                </ListView.Header>
+
+
+                <ListView.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <Grid Padding="8">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1.3*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                            </Grid.ColumnDefinitions>
+
+
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="{Binding EmployeeName}"/>
+
+                            <TextBlock
+                                Grid.Column="1"
+                                Text="{Binding AttendanceDateText}"/>
+
+                            <TextBlock
+                                Grid.Column="2"
+                                Text="{Binding TimeInText}"/>
+
+                            <TextBlock
+                                Grid.Column="3"
+                                Text="{Binding TimeOutText}"/>
+
+                            <TextBlock
+                                Grid.Column="4"
+                                Text="{Binding StatusText}"/>
+
+                            <TextBlock
+                                Grid.Column="5"
+                                Text="{Binding RemarksText}"
+                                TextWrapping="Wrap"/>
+
+                        </Grid>
+
+                    </DataTemplate>
+
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+        </Border>
+
+    </Grid>
+
+</Page>

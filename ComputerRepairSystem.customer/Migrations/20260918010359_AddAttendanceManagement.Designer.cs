@@ -4,6 +4,7 @@ using ComputerRepairSystem.company.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerRepairSystem.company.Migrations
 {
     [DbContext(typeof(TenantDbContext))]
-    partial class TenantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260918010359_AddAttendanceManagement")]
+    partial class AddAttendanceManagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -607,42 +610,6 @@ namespace ComputerRepairSystem.company.Migrations
                     b.ToTable("SystemSettings");
                 });
 
-            modelBuilder.Entity("Payroll", b =>
-                {
-                    b.Property<int>("PayrollId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PayrollId"));
-
-                    b.Property<decimal>("BasicSalary")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Deductions")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("NetSalary")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("PayPeriodEnd")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("PayPeriodStart")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("PayrollId");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Payrolls");
-                });
-
             modelBuilder.Entity("Repair", b =>
                 {
                     b.Property<int>("RepairId")
@@ -798,17 +765,6 @@ namespace ComputerRepairSystem.company.Migrations
                         .IsRequired();
 
                     b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("Payroll", b =>
-                {
-                    b.HasOne("ComputerRepairSystem.company.Entities.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Repair", b =>
