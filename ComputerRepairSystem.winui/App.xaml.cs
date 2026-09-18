@@ -4,6 +4,7 @@ using ComputerRepairSystem.company.Repositories;
 using ComputerRepairSystem.company.Services;
 using ComputerRepairSystem.infrastructure.data;
 using ComputerRepairSystem.infrastructure.Entities;
+using ComputerRepairSystem.winui.Pages;
 using ComputerRepairSystem_winui.Pages;
 using ComputerRepairSystem_winui.Services;
 using Microsoft.AspNetCore.Identity;
@@ -152,6 +153,11 @@ public partial class App : Application
         services.AddTransient<PayrollManagementPage>();
 
         services.AddTransient<FinanceManagementPage>();
+
+        services.AddTransient<SupplierManagementPage>();
+
+        services.AddTransient<TermsAndConditionsPage>();
+
         // ==========================================
         // MAIN WINDOW
         // ==========================================

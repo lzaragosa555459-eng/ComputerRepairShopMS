@@ -208,7 +208,8 @@
                     Tag="companies">
 
                     <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Shop"/>
+                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                                  Glyph="&#xEC06;"/>
                     </NavigationViewItem.Icon>
 
                 </NavigationViewItem>
@@ -294,9 +295,19 @@
                         </NavigationViewItem.Icon>
 
                 </NavigationViewItem>
+                
+                <!-- SUPPLIER MANAGEMENT -->
+                <NavigationViewItem
+                    x:Name="SupplierManagementItem"
+                    Content="Supplier Management"
+                    Tag="supplier-management">
 
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Shop"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
 
-                <!-- SYSTEM SETTINGS -->
+                    <!-- SYSTEM SETTINGS -->
                 <NavigationViewItem
                     x:Name="SystemSettingsItem"
                     Content="System Settings"
@@ -306,7 +317,16 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-            </NavigationView.MenuItems>
+                <NavigationViewItem
+                x:Name="TermsAndConditionItem"
+                Content="Terms and Conditions"
+                Tag="terms-and-conditions">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="ProtectedDocument"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                </NavigationView.MenuItems>
 
                 <Frame
                 x:Name="NavFrame" />

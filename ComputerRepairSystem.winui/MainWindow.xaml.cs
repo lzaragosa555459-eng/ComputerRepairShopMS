@@ -7,6 +7,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ComputerRepairSystem.infrastructure.data;
+using ComputerRepairSystem.winui.Pages;
 namespace ComputerRepairSystem_winui;
 
 public sealed partial class MainWindow : Window
@@ -78,6 +79,12 @@ public sealed partial class MainWindow : Window
         FinanceManagementItem.Visibility =
             Visibility.Collapsed;
 
+        SupplierManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        TermsAndConditionItem.Visibility =
+            Visibility.Collapsed;
+
         var role = CurrentUser.Role;
 
         if (role == "Super Admin")
@@ -133,6 +140,12 @@ public sealed partial class MainWindow : Window
                 Visibility.Visible;
 
             FinanceManagementItem.Visibility =
+                Visibility.Visible;
+
+            SupplierManagementItem.Visibility =
+                Visibility.Visible;
+
+            TermsAndConditionItem.Visibility =
                 Visibility.Visible;
 
             HomeItem.IsSelected = true;
@@ -219,6 +232,12 @@ public sealed partial class MainWindow : Window
         FinanceManagementItem.Visibility =
             Visibility.Collapsed;
 
+        SupplierManagementItem.Visibility =
+            Visibility.Collapsed;
+
+        TermsAndConditionItem.Visibility =
+            Visibility.Collapsed;
+
         HomeItem.IsSelected = false;
 
         NavFrame.Content =
@@ -282,8 +301,16 @@ public sealed partial class MainWindow : Window
                     NavigateToInventoryPage();
                     break;
 
+                case "supplier-management":
+                    NavigateToSupplierManagementPage();
+                    break;
+
                 case "settings":
                     NavigateToSettingsPage();
+                    break;
+
+                case "terms-and-conditions":
+                    NavigateToTermsAndConditionsPage();
                     break;
             }
         }
@@ -461,6 +488,23 @@ public sealed partial class MainWindow : Window
         var page =
             App.Services
                 .GetRequiredService<FinanceManagementPage>();
+
+        NavFrame.Content = page;
+    }
+    
+    private void NavigateToSupplierManagementPage()
+    {
+        var page =
+            App.Services
+                .GetRequiredService<SupplierManagementPage>();
+
+        NavFrame.Content = page;
+    }
+    private void NavigateToTermsAndConditionsPage()
+    {
+        var page =
+            App.Services
+                .GetRequiredService<TermsAndConditionsPage>();
 
         NavFrame.Content = page;
     }

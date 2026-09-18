@@ -1,0 +1,174 @@
+<Page
+    x:Class="ComputerRepairSystem.winui.Pages.TermsAndConditionsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="32">
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+            <StackPanel MaxWidth="900"
+                        Spacing="18">
+
+                <TextBlock
+                    Text="Terms and Conditions"
+                    FontSize="32"
+                    FontWeight="SemiBold"/>
+
+                <TextBlock
+                    Text="Please read these terms and conditions carefully before using the Computer Repair Shop Management System."
+                    FontSize="15"
+                    TextWrapping="Wrap"
+                    Opacity="0.7"/>
+
+                <!-- 1 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="1. Acceptance of Terms"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="By accessing or using the Computer Repair Shop Management System, users agree to follow these terms and conditions and any applicable policies established by the company."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 2 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="2. Use of the System"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="The system is intended to support the daily operations of the computer repair shop, including customer management, repair processing, inventory management, employee management, billing, payments, and related business activities."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 3 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="3. User Accounts"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="Users are responsible for keeping their account credentials secure and must only access functions assigned to their role. Users must not share their accounts or attempt to access information or functions without proper authorization."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 4 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="4. Company and Branch Information"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="Company and branch information entered into the system should be accurate and maintained by authorized personnel. Changes to company or branch information should only be made by users with the appropriate permissions."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 5 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="5. Customer and Repair Records"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="Customer, device, service request, and repair information should be entered accurately by authorized users. Users are responsible for ensuring that records are updated when necessary."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 6 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="6. Inventory and Supplier Information"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="Inventory quantities, item information, and supplier records should be maintained by authorized personnel. Users should ensure that inventory transactions and supplier information are recorded accurately."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 7 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="7. Billing and Payment Records"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="Invoices, payments, expenses, and related financial records must be entered and maintained by authorized personnel. The system is intended to assist with record management and does not replace the company's responsibility for financial verification and decision-making."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 8 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="8. Data Accuracy and Responsibility"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="Users are responsible for the accuracy of information they enter into the system. Incorrect, incomplete, or outdated information may affect the accuracy of system records and business operations."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 9 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="9. System Availability"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="The system may occasionally be unavailable due to maintenance, updates, technical issues, network problems, or other circumstances. Users should follow the company's procedures when the system is unavailable."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 10 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="10. Changes to These Terms"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="These terms and conditions may be updated when necessary to reflect changes to the system, business processes, or company policies. Updated terms may be published within the system."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- 11 -->
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="11. Contact and Support"
+                        FontSize="20"
+                        FontWeight="SemiBold"/>
+
+                    <TextBlock
+                        Text="For questions, concerns, or issues related to the system, users should contact the authorized administrator or the designated system support personnel."
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <Border
+                    Margin="0,12,0,0"
+                    Padding="16"
+                    CornerRadius="8">
+
+                    <TextBlock
+                        Text="Last updated: September 2026"
+                        Opacity="0.7"/>
+                </Border>
+
+            </StackPanel>
+
+        </ScrollViewer>
+
+    </Grid>
+</Page>

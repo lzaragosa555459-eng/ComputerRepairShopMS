@@ -5,6 +5,9 @@ using ComputerRepairSystem_winui.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Shapes;
+using Windows.Foundation;
 
 namespace ComputerRepairSystem_winui.Pages;
 
@@ -25,6 +28,10 @@ public sealed partial class HomePage : Page
     }
 
 
+    // ==========================================
+    // PAGE LOADED
+    // ==========================================
+
     private async void HomePage_Loaded(
         object sender,
         RoutedEventArgs e)
@@ -32,6 +39,10 @@ public sealed partial class HomePage : Page
         await LoadDashboardAsync();
     }
 
+
+    // ==========================================
+    // LOAD DASHBOARD
+    // ==========================================
 
     private async Task LoadDashboardAsync()
     {
@@ -46,46 +57,34 @@ public sealed partial class HomePage : Page
                 await _tenantDbFactory.CreateAsync(
                     CurrentUser.CompanyId.Value);
 
+
+            // ==========================================
+            // SYSTEM SETTINGS
+            // ==========================================
+
             var settings =
                 await db.SystemSettings
                     .AsNoTracking()
                     .FirstOrDefaultAsync();
 
             ShopNameText.Text =
-                settings?.ShopName ?? "Computer Repair Shop";
+                settings?.ShopName ??
+                "Computer Repair Shop";
 
 
             // ==========================================
-            // CUSTOMERS
+            // KPI
             // ==========================================
 
-            var customerCount =
-                await db.Customers.CountAsync();
+            var totalRepairs =
+                await db.Repairs.CountAsync();
 
-
-            // ==========================================
-            // SERVICE REQUESTS
-            // ==========================================
-
-            var serviceRequestCount =
-                await db.ServiceRequests.CountAsync();
-
-
-            // ==========================================
-            // ACTIVE REPAIRS
-            // ==========================================
-
-            var activeRepairCount =
+            var pendingRepairs =
                 await db.Repairs
                     .CountAsync(r =>
-                        r.Status != "Completed");
+                        r.Status == "Pending");
 
-
-            // ==========================================
-            // COMPLETED REPAIRS
-            // ==========================================
-
-            var completedRepairCount =
+            var completedRepairs =
                 await db.Repairs
                     .CountAsync(r =>
                         r.Status == "Completed");
@@ -94,40 +93,97 @@ public sealed partial class HomePage : Page
             // ==========================================
             // TOTAL REVENUE
             // ==========================================
+            //
+            // Uses completed payments, so partial
+            // payments are included in actual revenue.
+            // ==========================================
 
             var totalRevenue =
-                await db.Invoices
-                    .Where(i =>
-                        i.Status == "Paid")
-                    .Select(i =>
-                        (decimal?)i.TotalAmount)
+                await db.Payments
+                    .Where(p =>
+                        p.Status == "Completed")
+                    .Select(p =>
+                        (decimal?)p.Amount)
                     .SumAsync()
                 ?? 0;
 
 
             // ==========================================
-            // UPDATE UI
+            // UPDATE KPI UI
             // ==========================================
 
-            CustomersCountText.Text =
-                customerCount.ToString();
+            TotalRepairsCountText.Text =
+                totalRepairs.ToString();
 
-            ServiceRequestsCountText.Text =
-                serviceRequestCount.ToString();
-
-            ActiveRepairsCountText.Text =
-                activeRepairCount.ToString();
+            PendingRepairsCountText.Text =
+                pendingRepairs.ToString();
 
             CompletedRepairsCountText.Text =
-                completedRepairCount.ToString();
+                completedRepairs.ToString();
 
             TotalRevenueText.Text =
                 $"₱{totalRevenue:N2}";
 
 
-            //System Settings
+            // ==========================================
+            // REPAIR STATUS
+            // ==========================================
+
+            var inProgressRepairs =
+                await db.Repairs
+                    .CountAsync(r =>
+                        r.Status == "Diagnosing" ||
+                        r.Status == "In Repair" ||
+                        r.Status == "Ready for Pickup");
 
 
+            UpdateRepairStatus(
+                pendingRepairs,
+                inProgressRepairs,
+                completedRepairs,
+                totalRepairs);
+
+
+            // ==========================================
+            // REPAIR OVERVIEW
+            // ==========================================
+
+            await LoadRepairOverviewAsync(db);
+
+
+            // ==========================================
+            // RECENT REPAIRS
+            // ==========================================
+
+            await LoadRecentRepairsAsync(db);
+
+
+            // ==========================================
+            // RECENT TRANSACTIONS
+            // ==========================================
+
+            await LoadRecentTransactionsAsync(db);
+
+
+            // ==========================================
+            // LOW STOCK
+            // ==========================================
+
+            await LoadLowStockAsync(db);
+
+
+            // ==========================================
+            // OUTSTANDING PAYMENTS
+            // ==========================================
+
+            await LoadOutstandingPaymentsAsync(db);
+
+
+            // ==========================================
+            // TODAY'S ATTENDANCE
+            // ==========================================
+
+            await LoadTodayAttendanceAsync(db);
         }
         catch (Exception ex)
         {
@@ -135,5 +191,703 @@ public sealed partial class HomePage : Page
                 "Failed to load dashboard: " +
                 ex);
         }
+    }
+
+
+    // ==========================================
+    // REPAIR STATUS
+    // ==========================================
+
+    private void UpdateRepairStatus(
+        int pending,
+        int inProgress,
+        int completed,
+        int total)
+    {
+        PendingRepairsGraphText.Text =
+            pending.ToString();
+
+        InProgressRepairsGraphText.Text =
+            inProgress.ToString();
+
+        CompletedRepairsGraphText.Text =
+            completed.ToString();
+
+
+        if (total <= 0)
+        {
+            PendingRepairsProgress.Value = 0;
+            InProgressRepairsProgress.Value = 0;
+            CompletedRepairsProgress.Value = 0;
+
+            return;
+        }
+
+
+        PendingRepairsProgress.Value =
+            (double)pending /
+            total *
+            100;
+
+        InProgressRepairsProgress.Value =
+            (double)inProgress /
+            total *
+            100;
+
+        CompletedRepairsProgress.Value =
+            (double)completed /
+            total *
+            100;
+    }
+
+
+    // ==========================================
+    // REPAIR OVERVIEW GRAPH
+    // ==========================================
+
+    private async Task LoadRepairOverviewAsync(
+        TenantDbContext db)
+    {
+        RepairGraphContainer.Children.Clear();
+
+
+        var currentMonth =
+            new DateTime(
+                DateTime.Today.Year,
+                DateTime.Today.Month,
+                1);
+
+        var startMonth =
+            currentMonth.AddMonths(-5);
+
+        var endMonth =
+            currentMonth.AddMonths(1);
+
+
+        // Use Service Request date because every
+        // repair is connected to a service request.
+
+        var repairDates =
+            await db.Repairs
+                .AsNoTracking()
+                .Where(r =>
+                    r.ServiceRequest != null &&
+                    r.ServiceRequest.RequestDate >= startMonth &&
+                    r.ServiceRequest.RequestDate < endMonth)
+                .Select(r =>
+                    r.ServiceRequest!.RequestDate)
+                .ToListAsync();
+
+
+        var monthlyCounts =
+            new List<int>();
+
+
+        for (int i = 0; i < 6; i++)
+        {
+            var month =
+                startMonth.AddMonths(i);
+
+            var count =
+                repairDates.Count(date =>
+                    date.Year == month.Year &&
+                    date.Month == month.Month);
+
+            monthlyCounts.Add(count);
+        }
+
+
+        // ==========================================
+        // CREATE CANVAS
+        // ==========================================
+
+        var graph =
+            new Canvas
+            {
+                Height = 170,
+                HorizontalAlignment =
+                    HorizontalAlignment.Stretch
+            };
+
+
+        var graphWidth =
+            Math.Max(
+                400,
+                RepairGraphContainer.ActualWidth - 20);
+
+
+        graph.Width =
+            graphWidth;
+
+
+        var graphHeight =
+            170.0;
+
+        var leftMargin =
+            30.0;
+
+        var rightMargin =
+            15.0;
+
+        var topMargin =
+            10.0;
+
+        var bottomMargin =
+            28.0;
+
+        var plotWidth =
+            graphWidth -
+            leftMargin -
+            rightMargin;
+
+        var plotHeight =
+            graphHeight -
+            topMargin -
+            bottomMargin;
+
+
+        // ==========================================
+        // MAX VALUE
+        // ==========================================
+
+        var maxValue =
+            monthlyCounts.Count > 0
+                ? monthlyCounts.Max()
+                : 0;
+
+
+        if (maxValue == 0)
+        {
+            maxValue = 1;
+        }
+
+
+        var orangeBrush =
+            (Brush)Resources["AccentOrangeBrush"];
+
+
+        var gridBrush =
+            new SolidColorBrush(
+                Windows.UI.Color.FromArgb(
+                    45,
+                    255,
+                    255,
+                    255));
+
+
+        var textBrush =
+            new SolidColorBrush(
+                Windows.UI.Color.FromArgb(
+                    150,
+                    255,
+                    255,
+                    255));
+
+
+        // ==========================================
+        // HORIZONTAL GRID LINES
+        // ==========================================
+
+        for (int i = 0; i <= 4; i++)
+        {
+            var ratio =
+                i / 4.0;
+
+            var y =
+                topMargin +
+                plotHeight -
+                (plotHeight * ratio);
+
+
+            var line =
+                new Line
+                {
+                    X1 = leftMargin,
+                    X2 = graphWidth - rightMargin,
+                    Y1 = y,
+                    Y2 = y,
+                    Stroke = gridBrush,
+                    StrokeThickness = 1
+                };
+
+
+            graph.Children.Add(line);
+        }
+
+
+        // ==========================================
+        // GRAPH LINE
+        // ==========================================
+
+        var points =
+            new PointCollection();
+
+
+        for (int i = 0; i < 6; i++)
+        {
+            var x =
+                leftMargin +
+                (plotWidth /
+                 5 *
+                 i);
+
+
+            var ratio =
+                (double)monthlyCounts[i] /
+                maxValue;
+
+
+            var y =
+                topMargin +
+                plotHeight -
+                (plotHeight * ratio);
+
+
+            points.Add(
+                new Point(
+                    x,
+                    y));
+
+
+            // ==================================
+            // DATA POINT
+            // ==================================
+
+            var point =
+                new Ellipse
+                {
+                    Width = 8,
+                    Height = 8,
+                    Fill = orangeBrush
+                };
+
+
+            Canvas.SetLeft(
+                point,
+                x - 4);
+
+            Canvas.SetTop(
+                point,
+                y - 4);
+
+
+            graph.Children.Add(point);
+
+
+            // ==================================
+            // VALUE LABEL
+            // ==================================
+
+            var valueText =
+                new TextBlock
+                {
+                    Text =
+                        monthlyCounts[i]
+                            .ToString(),
+
+                    FontSize = 11,
+                    Foreground = textBrush
+                };
+
+
+            Canvas.SetLeft(
+                valueText,
+                Math.Max(
+                    0,
+                    x - 8));
+
+            Canvas.SetTop(
+                valueText,
+                Math.Max(
+                    0,
+                    y - 22));
+
+
+            graph.Children.Add(valueText);
+
+
+            // ==================================
+            // MONTH LABEL
+            // ==================================
+
+            var month =
+                startMonth.AddMonths(i);
+
+
+            var monthText =
+                new TextBlock
+                {
+                    Text =
+                        month.ToString("MMM"),
+
+                    FontSize = 11,
+                    Foreground = textBrush
+                };
+
+
+            Canvas.SetLeft(
+                monthText,
+                Math.Max(
+                    0,
+                    x - 12));
+
+            Canvas.SetTop(
+                monthText,
+                graphHeight - 20);
+
+
+            graph.Children.Add(
+                monthText);
+        }
+
+
+        // ==========================================
+        // CONNECT THE POINTS
+        // ==========================================
+
+        var polyline =
+            new Polyline
+            {
+                Points = points,
+                Stroke = orangeBrush,
+                StrokeThickness = 3,
+                StrokeLineJoin = PenLineJoin.Round
+            };
+
+
+        graph.Children.Add(polyline);
+
+
+        // Bring line in front of grid.
+        Canvas.SetZIndex(
+            polyline,
+            10);
+
+
+        RepairGraphContainer.Children.Add(
+            graph);
+    }
+
+
+    // ==========================================
+    // RECENT REPAIRS
+    // ==========================================
+
+    private async Task LoadRecentRepairsAsync(
+        TenantDbContext db)
+    {
+        var repairs =
+            await db.Repairs
+                .AsNoTracking()
+                .Include(r =>
+                    r.ServiceRequest)
+                    .ThenInclude(sr =>
+                        sr.Device)
+                    .ThenInclude(d =>
+                        d.Customer)
+                .OrderByDescending(
+                    r => r.RepairId)
+                .Take(5)
+                .Select(r => new RecentRepairRow
+                {
+                    RepairNumber =
+                        $"#R-{r.RepairId:D4}",
+
+                    CustomerName =
+                        r.ServiceRequest!
+                            .Device!
+                            .Customer!
+                            .FirstName
+                        + " " +
+                        r.ServiceRequest!
+                            .Device!
+                            .Customer!
+                            .LastName,
+
+                    DeviceName =
+                        (
+                            r.ServiceRequest!
+                                .Device!
+                                .Brand
+                            + " " +
+                            r.ServiceRequest!
+                                .Device!
+                                .Model
+                        ).Trim(),
+
+                    Status =
+                        r.Status
+                })
+                .ToListAsync();
+
+
+        RecentRepairsListView.ItemsSource =
+            repairs;
+    }
+
+
+    // ==========================================
+    // RECENT TRANSACTIONS
+    // ==========================================
+
+    private async Task LoadRecentTransactionsAsync(
+        TenantDbContext db)
+    {
+        var transactions =
+            await db.Payments
+                .AsNoTracking()
+                .Include(p =>
+                    p.Invoice)
+                    .ThenInclude(i =>
+                        i.Repair)
+                    .ThenInclude(r =>
+                        r.ServiceRequest)
+                    .ThenInclude(sr =>
+                        sr.Device)
+                    .ThenInclude(d =>
+                        d.Customer)
+                .OrderByDescending(
+                    p => p.PaymentDate)
+                .Take(5)
+                .Select(p => new RecentTransactionRow
+                {
+                    InvoiceNumber =
+                        p.Invoice!.InvoiceNumber,
+
+                    CustomerName =
+                        p.Invoice!
+                            .Repair!
+                            .ServiceRequest!
+                            .Device!
+                            .Customer!
+                            .FirstName
+                        + " " +
+                        p.Invoice!
+                            .Repair!
+                            .ServiceRequest!
+                            .Device!
+                            .Customer!
+                            .LastName,
+
+                    PaymentMethod =
+                        p.PaymentMethod,
+
+                    AmountText =
+                        $"₱{p.Amount:N2}"
+                })
+                .ToListAsync();
+
+
+        RecentTransactionsListView.ItemsSource =
+            transactions;
+    }
+
+
+    // ==========================================
+    // LOW STOCK
+    // ==========================================
+
+    private async Task LoadLowStockAsync(
+        TenantDbContext db)
+    {
+        var lowStock =
+            await db.Inventories
+                .AsNoTracking()
+                .Include(i =>
+                    i.Item)
+                .Where(i =>
+                    i.Item != null &&
+                    i.Item.IsActive &&
+                    i.QuantityOnHand <=
+                    i.Item.ReorderLevel)
+                .OrderBy(
+                    i => i.QuantityOnHand)
+                .Take(8)
+                .Select(i => new
+                {
+                    i.Item!.ItemName,
+                    i.QuantityOnHand,
+                    i.Item.Unit
+                })
+                .ToListAsync();
+
+
+        var lowStockTotal =
+            await db.Inventories
+                .CountAsync(i =>
+                    i.Item != null &&
+                    i.Item.IsActive &&
+                    i.QuantityOnHand <=
+                    i.Item.ReorderLevel);
+
+
+        LowStockCountText.Text =
+            $"{lowStockTotal} item" +
+            (lowStockTotal == 1
+                ? string.Empty
+                : "s");
+
+
+        LowStockListView.ItemsSource =
+            lowStock.Select(
+                x =>
+                    $"{x.ItemName} — " +
+                    $"{x.QuantityOnHand:0.##} " +
+                    $"{x.Unit}")
+                .ToList();
+    }
+
+
+    // ==========================================
+    // OUTSTANDING PAYMENTS
+    // ==========================================
+
+    private async Task LoadOutstandingPaymentsAsync(
+        TenantDbContext db)
+    {
+        var invoices =
+            await db.Invoices
+                .AsNoTracking()
+                .Include(i =>
+                    i.Payments)
+                .Where(i =>
+                    i.Status != "Cancelled")
+                .Select(i => new
+                {
+                    i.TotalAmount,
+
+                    Paid =
+                        i.Payments
+                            .Where(p =>
+                                p.Status ==
+                                "Completed")
+                            .Sum(p =>
+                                (decimal?)p.Amount)
+                        ?? 0
+                })
+                .ToListAsync();
+
+
+        var outstandingInvoices =
+            invoices
+                .Where(x =>
+                    x.TotalAmount > x.Paid)
+                .ToList();
+
+
+        var outstandingAmount =
+            outstandingInvoices.Sum(
+                x =>
+                    Math.Max(
+                        0,
+                        x.TotalAmount -
+                        x.Paid));
+
+
+        OutstandingPaymentsText.Text =
+            $"₱{outstandingAmount:N2}";
+
+
+        OutstandingInvoicesCountText.Text =
+            $"{outstandingInvoices.Count} invoice" +
+            (outstandingInvoices.Count == 1
+                ? string.Empty
+                : "s");
+    }
+
+
+    // ==========================================
+    // TODAY'S ATTENDANCE
+    // ==========================================
+
+    private async Task LoadTodayAttendanceAsync(
+        TenantDbContext db)
+    {
+        var today =
+            DateTime.Today;
+
+        var tomorrow =
+            today.AddDays(1);
+
+
+        var attendance =
+            await db.Attendances
+                .AsNoTracking()
+                .Where(a =>
+                    a.AttendanceDate >= today &&
+                    a.AttendanceDate < tomorrow)
+                .Select(a =>
+                    a.Status)
+                .ToListAsync();
+
+
+        var present =
+            attendance.Count(s =>
+                s == "Present");
+
+        var late =
+            attendance.Count(s =>
+                s == "Late");
+
+        var absent =
+            attendance.Count(s =>
+                s == "Absent");
+
+        var leave =
+            attendance.Count(s =>
+                s == "Leave");
+
+
+        PresentAttendanceText.Text =
+            $"Present: {present}";
+
+        LateAttendanceText.Text =
+            $"Late: {late}";
+
+        AbsentAttendanceText.Text =
+            $"Absent: {absent}";
+
+        LeaveAttendanceText.Text =
+            $"Leave: {leave}";
+    }
+
+
+    // ==========================================
+    // RECENT REPAIR ROW
+    // ==========================================
+
+    private sealed class RecentRepairRow
+    {
+        public string RepairNumber { get; set; }
+            = string.Empty;
+
+        public string CustomerName { get; set; }
+            = string.Empty;
+
+        public string DeviceName { get; set; }
+            = string.Empty;
+
+        public string Status { get; set; }
+            = string.Empty;
+    }
+
+
+    // ==========================================
+    // RECENT TRANSACTION ROW
+    // ==========================================
+
+    private sealed class RecentTransactionRow
+    {
+        public string InvoiceNumber { get; set; }
+            = string.Empty;
+
+        public string CustomerName { get; set; }
+            = string.Empty;
+
+        public string PaymentMethod { get; set; }
+            = string.Empty;
+
+        public string AmountText { get; set; }
+            = string.Empty;
     }
 }

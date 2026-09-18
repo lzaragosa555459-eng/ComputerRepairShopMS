@@ -50,6 +50,7 @@ public class TenantDbContext : DbContext
 
     public DbSet<InventoryItem> InventoryItems => Set<InventoryItem>();
     public DbSet<Inventory> Inventories => Set<Inventory>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
 
     // ==========================================
     // Billing & Payments
@@ -470,6 +471,34 @@ public class TenantDbContext : DbContext
                 x.ItemId
             })
             .IsUnique();
+        });
+
+        modelBuilder.Entity<Supplier>(entity =>
+        {
+            entity.HasKey(x => x.SupplierId);
+
+            entity.Property(x => x.SupplierCode)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(x => x.SupplierName)
+                .HasMaxLength(150)
+                .IsRequired();
+
+            entity.Property(x => x.ContactPerson)
+                .HasMaxLength(150);
+
+            entity.Property(x => x.Phone)
+                .HasMaxLength(50);
+
+            entity.Property(x => x.Email)
+                .HasMaxLength(150);
+
+            entity.Property(x => x.Address)
+                .HasMaxLength(500);
+
+            entity.HasIndex(x => x.SupplierCode)
+                .IsUnique();
         });
 
 
