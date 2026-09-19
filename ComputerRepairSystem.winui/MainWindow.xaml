@@ -154,113 +154,113 @@
             IsSettingsVisible="False"
             IsPaneOpen="False">
 
-            <NavigationView.MenuItems>
+                <NavigationView.MenuItems>
 
-                <!-- HOME -->
-                <NavigationViewItem
+                    <!-- HOME -->
+                    <NavigationViewItem
                     x:Name="HomeItem"
                     Content="Home"
                     IsSelected="True"
                     Tag="home">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Home"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Home"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
 
 
-                <!-- SERVICE MANAGEMENT -->
-                <NavigationViewItem
+                    <!-- SERVICE MANAGEMENT -->
+                    <NavigationViewItem
                     x:Name="ServiceManagementItem"
                     Content="Service Management"
                     Tag="customers">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Contact"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Contact"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
 
 
-                <!-- REPAIR MANAGEMENT -->
-                <NavigationViewItem
+                    <!-- REPAIR MANAGEMENT -->
+                    <NavigationViewItem
                     x:Name="RepairManagementItem"
                     Content="Repair Management"
                     Tag="repairs">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Repair"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Repair"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
 
 
-                <!-- BILLING -->
-                <NavigationViewItem
+                    <!-- BILLING -->
+                    <NavigationViewItem
                     x:Name="BillingItem"
                     Content="Billing"
                     Tag="billing">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Calculator"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Calculator"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
 
 
-                <!-- COMPANY MANAGEMENT -->
-                <NavigationViewItem
+                    <!-- COMPANY MANAGEMENT -->
+                    <NavigationViewItem
                     x:Name="CompanyManagementItem"
                     Content="Company Management"
                     Tag="companies">
 
-                    <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                        <NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets"
                                   Glyph="&#xEC06;"/>
-                    </NavigationViewItem.Icon>
+                        </NavigationViewItem.Icon>
 
-                </NavigationViewItem>
+                    </NavigationViewItem>
 
-                <!-- USER MANAGEMENT -->
-                <NavigationViewItem
+                    <!-- USER MANAGEMENT -->
+                    <NavigationViewItem
                     x:Name="UserManagementItem"
                     Content="User Management"
                     Tag="users">
 
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="People"/>
-                    </NavigationViewItem.Icon>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="People"/>
+                        </NavigationViewItem.Icon>
 
-                </NavigationViewItem>
+                    </NavigationViewItem>
 
 
-                <!-- CUSTOMER MANAGEMENT -->
-                <NavigationViewItem
+                    <!-- CUSTOMER MANAGEMENT -->
+                    <NavigationViewItem
                     x:Name="CustomerManagementItem"
                     Content="Customers"
                     Tag="customer-management">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Contact2"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                
-                <!-- EMPLOYEE MANAGEMENT -->
-                <NavigationViewItem
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Contact2"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+
+                    <!-- EMPLOYEE MANAGEMENT -->
+                    <NavigationViewItem
                     x:Name="EmployeeManagementItem"
                     Content="Employees"
                     Tag="employee-management">
 
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Contact"/>
-                    </NavigationViewItem.Icon>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Contact"/>
+                        </NavigationViewItem.Icon>
 
-                </NavigationViewItem>
-                
-                <!-- ATTENDANCE MANAGEMENT -->
-                <NavigationViewItem
+                    </NavigationViewItem>
+
+                    <!-- ATTENDANCE MANAGEMENT -->
+                    <NavigationViewItem
                     x:Name="AttendanceManagementItem"
                     Content="Attendance Management"
                     Tag="attendance-management">
 
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Calendar"/>
-                    </NavigationViewItem.Icon>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Calendar"/>
+                        </NavigationViewItem.Icon>
 
-                <!-- PAYROLL MANAGEMENT -->
-                </NavigationViewItem>
+                        <!-- PAYROLL MANAGEMENT -->
+                    </NavigationViewItem>
 
                     <NavigationViewItem
                     x:Name="PayrollManagementItem"
@@ -272,7 +272,7 @@
                         </NavigationViewItem.Icon>
 
                     </NavigationViewItem>
-                
+
                     <!--- FINANCE MANAGEMENT -->
                     <NavigationViewItem 
                      x:Name="FinanceManagementItem"
@@ -285,49 +285,59 @@
                     </NavigationViewItem>
 
                     <!-- INVENTORY -->
-                <NavigationViewItem
+                    <NavigationViewItem
                     x:Name="InventoryItem"
                     Content="Inventory"
                     Tag="inventory">
 
-                    <NavigationViewItem.Icon>
-                           <FontIcon Glyph="&#xE8A5;" />
+                        <NavigationViewItem.Icon>
+                            <FontIcon Glyph="&#xE8A5;" />
                         </NavigationViewItem.Icon>
 
-                </NavigationViewItem>
-                
-                <!-- SUPPLIER MANAGEMENT -->
-                <NavigationViewItem
+                    </NavigationViewItem>
+
+                    <!-- SUPPLIER MANAGEMENT -->
+                    <NavigationViewItem
                     x:Name="SupplierManagementItem"
                     Content="Supplier Management"
                     Tag="supplier-management">
 
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Shop"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Shop"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
 
                     <!-- SYSTEM SETTINGS -->
-                <NavigationViewItem
+                    <NavigationViewItem
                     x:Name="SystemSettingsItem"
                     Content="System Settings"
                     Tag="settings">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="Setting"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Setting"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
 
-                <NavigationViewItem
-                x:Name="TermsAndConditionItem"
-                Content="Terms and Conditions"
-                Tag="terms-and-conditions">
-                    <NavigationViewItem.Icon>
-                        <SymbolIcon Symbol="ProtectedDocument"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                    <!-- TERMS AND CONDITIONS -->
+                    <NavigationViewItem
+                    x:Name="TermsAndConditionItem"
+                    Content="Terms and Conditions"
+                    Tag="terms-and-conditions">
+                            <NavigationViewItem.Icon>
+                                <SymbolIcon Symbol="ProtectedDocument"/>
+                            </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+
+                    
+                    <NavigationViewItem 
+                    x:Name="SubscriptionManagementItem"
+                    Content="Subscription Management"
+                    Tag="subscription-management">
+                        <NavigationViewItem.Icon>
+                            <SymbolIcon Symbol="Tag"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
 
                 </NavigationView.MenuItems>
-
                 <Frame
                 x:Name="NavFrame" />
 

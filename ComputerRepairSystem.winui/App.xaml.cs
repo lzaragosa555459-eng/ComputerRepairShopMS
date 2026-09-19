@@ -158,6 +158,10 @@ public partial class App : Application
 
         services.AddTransient<TermsAndConditionsPage>();
 
+        services.AddTransient<SubscriptionManagementPage>();
+
+        services.AddTransient<SubscriptionAccessService>();
+
         // ==========================================
         // MAIN WINDOW
         // ==========================================
@@ -172,6 +176,9 @@ public partial class App : Application
     protected override async void OnLaunched(
         LaunchActivatedEventArgs args)
     {
+        // Seed Master DB
+        await InitializeMasterDbAsync();
+
         // Seed admin account / role
         await InitializeAdminAsync();
 
@@ -333,6 +340,17 @@ public partial class App : Application
                 superAdmin,
                 "Super Admin");
         }
+    }
+
+    private async Task InitializeMasterDbAsync()
+    {
+        using var scope = Services.CreateScope();
+
+        var db =
+            scope.ServiceProvider
+                .GetRequiredService<MasterErpDbContext>();
+
+        await MasterDbSeeder.SeedAsync(db);
     }
 
 

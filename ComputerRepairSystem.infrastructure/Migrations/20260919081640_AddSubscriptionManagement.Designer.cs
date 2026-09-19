@@ -4,6 +4,7 @@ using ComputerRepairSystem.infrastructure.data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ComputerRepairSystem.infrastructure.Migrations
 {
     [DbContext(typeof(MasterErpDbContext))]
-    partial class MasterErpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260919081640_AddSubscriptionManagement")]
+    partial class AddSubscriptionManagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,43 +122,6 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("ModuleDefinitions");
-                });
-
-            modelBuilder.Entity("ComputerRepairSystem.domain.Entities.Subscription", b =>
-                {
-                    b.Property<int>("SubscriptionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionId"));
-
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("SubscriptionPlanId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("TrialEndsAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("SubscriptionId");
-
-                    b.HasIndex("CompanyId");
-
-                    b.HasIndex("SubscriptionPlanId");
-
-                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("ComputerRepairSystem.domain.Entities.SubscriptionPlan", b =>
@@ -428,25 +394,6 @@ namespace ComputerRepairSystem.infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("ComputerRepairSystem.domain.Entities.Subscription", b =>
-                {
-                    b.HasOne("ComputerRepairSystem.domain.Entities.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ComputerRepairSystem.domain.Entities.SubscriptionPlan", "SubscriptionPlan")
-                        .WithMany()
-                        .HasForeignKey("SubscriptionPlanId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-
-                    b.Navigation("SubscriptionPlan");
                 });
 
             modelBuilder.Entity("ComputerRepairSystem.domain.Entities.SubscriptionPlanModule", b =>

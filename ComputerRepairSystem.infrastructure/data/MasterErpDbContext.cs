@@ -15,9 +15,17 @@ namespace ComputerRepairSystem.infrastructure.data
         public DbSet<CompanyDatabase> CompanyDatabases
             => Set<CompanyDatabase>();
 
-        public DbSet<DeviceSample> DeviceSamples
-            => Set<DeviceSample>();
+        public DbSet<ModuleDefinition> ModuleDefinitions
+            => Set<ModuleDefinition>();
 
+        public DbSet<SubscriptionPlan> SubscriptionPlans
+            => Set<SubscriptionPlan>();
+
+        public DbSet<SubscriptionPlanModule> SubscriptionPlanModules
+            => Set<SubscriptionPlanModule>();
+
+        public DbSet<Subscription> Subscriptions
+            => Set<Subscription>();
 
         public MasterErpDbContext(
             DbContextOptions<MasterErpDbContext> options)
@@ -81,40 +89,103 @@ namespace ComputerRepairSystem.infrastructure.data
                         DeleteBehavior.Restrict);
             });
 
-
             // ==========================================
-            // DEVICE SAMPLE
+            // MODULE DEFINITION
             // ==========================================
 
-            builder.Entity<DeviceSample>(entity =>
+            builder.Entity<ModuleDefinition>(entity =>
             {
-                entity.ToTable("DeviceSample");
+                entity.HasKey(x => x.ModuleDefinitionId);
 
-                entity.HasKey(x => x.DeviceID);
-
-                entity.Property(x => x.DeviceCode)
+                entity.Property(x => x.ModuleCode)
                     .HasMaxLength(50)
                     .IsRequired();
 
-                entity.Property(x => x.DeviceName)
-                    .HasMaxLength(200)
+                entity.Property(x => x.ModuleName)
+                    .HasMaxLength(150)
                     .IsRequired();
 
-                entity.HasOne(x => x.Company)
-                    .WithMany(x => x.Devices)
-                    .HasForeignKey(x => x.CompanyID)
-                    .OnDelete(
-                        DeleteBehavior.Restrict);
+                entity.Property(x => x.Description)
+                    .HasMaxLength(300);
 
-                entity.HasIndex(
-                    x => new
-                    {
-                        x.CompanyID,
-                        x.DeviceCode
-                    })
+                entity.Property(x => x.DisplayOrder)
+                    .IsRequired();
+
+                entity.HasIndex(x => x.ModuleCode)
                     .IsUnique();
             });
 
+
+            // ==========================================
+            // SUBSCRIPTION PLAN
+            // ==========================================
+
+            builder.Entity<SubscriptionPlan>(entity =>
+            {
+                entity.HasKey(x => x.SubscriptionPlanId);
+
+                entity.Property(x => x.PlanName)
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                entity.Property(x => x.Price)
+                    .HasPrecision(18, 2);
+
+                entity.Property(x => x.DurationInDays)
+                    .IsRequired();
+
+                entity.Property(x => x.IsActive)
+                    .IsRequired();
+            });
+
+            // ==========================================
+            // SUBSCRIPTION PLAN MODULE
+            // ==========================================
+
+            builder.Entity<SubscriptionPlanModule>(entity =>
+            {
+                entity.HasKey(x => x.SubscriptionPlanModuleId);
+
+                entity.HasOne(x => x.SubscriptionPlan)
+                    .WithMany()
+                    .HasForeignKey(x => x.SubscriptionPlanId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(x => x.ModuleDefinition)
+                    .WithMany()
+                    .HasForeignKey(x => x.ModuleDefinitionId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(x => new
+                {
+                    x.SubscriptionPlanId,
+                    x.ModuleDefinitionId
+                })
+                .IsUnique();
+            });
+
+            // ==========================================
+            // SUBSCRIPTION
+            // ==========================================
+
+            builder.Entity<Subscription>(entity =>
+            {
+                entity.HasKey(x => x.SubscriptionId);
+
+                entity.Property(x => x.Status)
+                    .HasMaxLength(50)
+                    .IsRequired();
+
+                entity.HasOne(x => x.Company)
+                    .WithMany()
+                    .HasForeignKey(x => x.CompanyId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(x => x.SubscriptionPlan)
+                    .WithMany()
+                    .HasForeignKey(x => x.SubscriptionPlanId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
 
             // ==========================================
             // APPLICATION USER
